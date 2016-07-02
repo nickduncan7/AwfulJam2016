@@ -17,9 +17,12 @@ public class GridGeneratorScript : MonoBehaviour {
 
     public void GenerateGrid()
     {
-        tiles = new List<GameObject>();
         Debug.Log(string.Format("Generating {0}x{1} grid...", Width, Height));
         ClearGrid();
+
+        if (tiles == null)
+            tiles = new List<GameObject>();
+
         Vector3 position = Vector3.zero;
 
         for (int q = 0; q < Width; q++)
@@ -42,8 +45,11 @@ public class GridGeneratorScript : MonoBehaviour {
 
     public void ClearGrid()
     {
-        tiles.ForEach(tile => DestroyImmediate(tile));
-        tiles.Clear();
+        if (tiles != null)
+        {
+            tiles.ForEach(tile => DestroyImmediate(tile));
+            tiles.Clear();
+        }
     }
 
 	// Use this for initialization
