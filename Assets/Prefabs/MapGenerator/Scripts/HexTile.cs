@@ -10,7 +10,16 @@ public class HexTile : MonoBehaviour {
 
     [SerializeField]
     public TileRotation Rotation = TileRotation.ZeroPercent;
-    
+
+    [SerializeField]
+    public TileType Type = TileType.Standard;
+
+    [SerializeField]
+    public Texture StandardTexture;
+
+    [SerializeField]
+    public Texture ImpassibleTexture;
+
     // Class constructor with optional coordinate parameters
     public HexTile(int q = 0, int r = 0, int s = 0)
     {
@@ -64,39 +73,51 @@ public class HexTile : MonoBehaviour {
 
     public void UpdateRotation()
     {
-        Quaternion rotation = Quaternion.Euler(0, 0, 0);
         switch (Rotation)
         {
+            default:
             case TileRotation.ZeroPercent:
-                rotation = Quaternion.Euler(0, 0, 0);
+                transform.rotation = Quaternion.Euler(90, 0, 0);
                 break;
             case TileRotation.SixtyPercent:
-                rotation = Quaternion.Euler(0, 60, 0);
+                transform.rotation = Quaternion.Euler(90, 60, 0);
                 break;
             case TileRotation.HundredTwentyPercent:
-                rotation = Quaternion.Euler(0, 120, 0);
+                transform.rotation = Quaternion.Euler(90, 120, 0);
                 break;
             case TileRotation.OneEightyPercent:
-                rotation = Quaternion.Euler(0, 180, 0);
+                transform.rotation = Quaternion.Euler(90, 180, 0);
                 break;
             case TileRotation.TwoFortyPercent:
-                rotation = Quaternion.Euler(0, 240, 0);
+                transform.rotation = Quaternion.Euler(90, 240, 0);
                 break;
             case TileRotation.ThreeHundredPercent:
-                rotation = Quaternion.Euler(0, 300, 0);
-                break;
-            default:
-                rotation = Quaternion.Euler(0, 0, 0);
+                transform.rotation = Quaternion.Euler(90, 300, 0);
                 break;
         }
+    }
 
-        transform.rotation = rotation;
+    public void UpdateMaterial()
+    {
+        var meshRenderer = GetComponent<MeshRenderer>();
+        switch(Type)
+        {
+            default:
+            case TileType.Standard:
+                meshRenderer.sharedMaterial.mainTexture = StandardTexture;
+                break;
+            case TileType.Impassible:
+                meshRenderer.sharedMaterial.mainTexture = ImpassibleTexture;
+                break;
+             
+        }
     }
 
     // Use this for initialization
     void Start ()
     {
         UpdateRotation();
+        UpdateMaterial();
 	}
 	
 	// Update is called once per frame
@@ -113,6 +134,7 @@ public class HexTile : MonoBehaviour {
     void EditorUpdate()
     {
         UpdateRotation();
+        UpdateMaterial();
     }
 
     void OnDisable()
@@ -130,4 +152,11 @@ public enum TileRotation
     OneEightyPercent,
     TwoFortyPercent,
     ThreeHundredPercent
+}
+
+[Serializable]
+public enum TileType
+{
+    Standard,
+    Impassible
 }

@@ -13,43 +13,48 @@ public class GridGeneratorScript : MonoBehaviour {
 
     public GameObject TilePrefab;
 
-    private List<GameObject> tiles;
 
     public void GenerateGrid()
     {
         Debug.Log(string.Format("Generating {0}x{1} grid...", Width, Height));
         ClearGrid();
 
-        if (tiles == null)
-            tiles = new List<GameObject>();
-
         Vector3 position = Vector3.zero;
 
+        
         for (int q = 0; q < Width; q++)
         {
+            int logicalRow = 0;
             int qOffset = q >> 1;
 
             for (int r = -qOffset; r < Height - qOffset; r++)
             {
-                var distance = 3.5f;
+                var distance = 1f;
                 position.x = distance * 3.0f / 2.0f * q;
                 position.z = distance * Mathf.Sqrt(3.0f) * (r + q / 2.0f);
 
                 var newTile = Instantiate(TilePrefab, position, Quaternion.identity) as GameObject;
+                newTile.GetComponent<HexTile>().q = q;
+                newTile.GetComponent<HexTile>().r = logicalRow++;
                 newTile.transform.parent = this.transform;
-                tiles.Add(newTile);
-            }
+            } 
         }
         Debug.Log("Generation of grid complete.");
     }
 
     public void ClearGrid()
     {
-        if (tiles != null)
-        {
-            tiles.ForEach(tile => DestroyImmediate(tile));
-            tiles.Clear();
-        }
+        Debug.Log("Clearing tiles...");
+
+        var objectsToDetroy = new List<GameObject>();
+
+        foreach(Transform child in transform)
+            objectsToDetroy.Add(child.gameObject);
+
+        foreach (GameObject objectToDestroy in objectsToDetroy)
+            DestroyImmediate(objectToDestroy);
+
+        Debug.Log("Tiles cleared.");
     }
 
 	// Use this for initialization
