@@ -104,10 +104,10 @@ public class HexTile : MonoBehaviour {
         {
             default:
             case TileType.Standard:
-                meshRenderer.sharedMaterial.mainTexture = StandardTexture;
+                meshRenderer.materials[0].mainTexture = StandardTexture;
                 break;
             case TileType.Impassible:
-                meshRenderer.sharedMaterial.mainTexture = ImpassibleTexture;
+                meshRenderer.materials[0].mainTexture = ImpassibleTexture;
                 break;
              
         }
