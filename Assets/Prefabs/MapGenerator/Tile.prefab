@@ -11,6 +11,7 @@ GameObject:
   - 114: {fileID: 11406064}
   - 33: {fileID: 3315588}
   - 23: {fileID: 2331092}
+  - 135: {fileID: 13562848}
   m_Layer: 0
   m_Name: Tile
   m_TagString: Untagged
@@ -25,7 +26,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 169640}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 71.71143, y: -3.8356545, z: 2.3108537}
+  m_LocalPosition: {x: 36.071182, y: 7.646879, z: 40.805954}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_Children: []
@@ -75,10 +76,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 628b470c7fce120419d1c8f57e227b2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _q: 0
+  _r: 0
   Rotation: 0
   Type: 0
   StandardTexture: {fileID: 2800000, guid: 87a1cac5fe1baf14e9fb0a62703607f3, type: 3}
   ImpassibleTexture: {fileID: 2800000, guid: 025156e0a6318104b9a6d78dfa2806f5, type: 3}
+--- !u!135 &13562848
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 169640}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.6
+  m_Center: {x: 0, y: 0, z: 0.42}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

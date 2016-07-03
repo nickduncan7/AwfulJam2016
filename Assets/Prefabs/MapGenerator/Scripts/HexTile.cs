@@ -6,18 +6,14 @@ using UnityEditor;
 [ExecuteInEditMode]
 public class HexTile : MonoBehaviour {
     // Private members
+    [SerializeField]
+    [HideInInspector]
     private int _q, _r;
 
-    [SerializeField]
-    public TileRotation Rotation = TileRotation.ZeroPercent;
-
-    [SerializeField]
+    // Public members
+    public TileRotation Rotation = TileRotation.ZeroDegrees;
     public TileType Type = TileType.Standard;
-
-    [SerializeField]
     public Texture StandardTexture;
-
-    [SerializeField]
     public Texture ImpassibleTexture;
 
     // Class constructor with optional coordinate parameters
@@ -76,22 +72,22 @@ public class HexTile : MonoBehaviour {
         switch (Rotation)
         {
             default:
-            case TileRotation.ZeroPercent:
+            case TileRotation.ZeroDegrees:
                 transform.rotation = Quaternion.Euler(90, 0, 0);
                 break;
-            case TileRotation.SixtyPercent:
+            case TileRotation.SixtyDegrees:
                 transform.rotation = Quaternion.Euler(90, 60, 0);
                 break;
-            case TileRotation.HundredTwentyPercent:
+            case TileRotation.HundredTwentyDegrees:
                 transform.rotation = Quaternion.Euler(90, 120, 0);
                 break;
-            case TileRotation.OneEightyPercent:
+            case TileRotation.OneEightyDegrees:
                 transform.rotation = Quaternion.Euler(90, 180, 0);
                 break;
-            case TileRotation.TwoFortyPercent:
+            case TileRotation.TwoFortyDegrees:
                 transform.rotation = Quaternion.Euler(90, 240, 0);
                 break;
-            case TileRotation.ThreeHundredPercent:
+            case TileRotation.ThreeHundredDegrees:
                 transform.rotation = Quaternion.Euler(90, 300, 0);
                 break;
         }
@@ -114,14 +110,14 @@ public class HexTile : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         UpdateRotation();
         UpdateMaterial();
 	}
 	
 	// Update is called once per frame
-	void Update ()
+	void Update()
     {
         
 	}
@@ -146,12 +142,12 @@ public class HexTile : MonoBehaviour {
 [Serializable]
 public enum TileRotation
 {
-    ZeroPercent,
-    SixtyPercent,
-    HundredTwentyPercent,
-    OneEightyPercent,
-    TwoFortyPercent,
-    ThreeHundredPercent
+    ZeroDegrees,
+    SixtyDegrees,
+    HundredTwentyDegrees,
+    OneEightyDegrees,
+    TwoFortyDegrees,
+    ThreeHundredDegrees
 }
 
 [Serializable]

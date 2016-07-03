@@ -1,18 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
+[System.Serializable]
 public class GridGeneratorScript : MonoBehaviour {
-    // Editor properties
-
-    [SerializeField]
+    // Public members
     public int Width = 8;
-
-    [SerializeField]
     public int Height = 8;
-
     public GameObject TilePrefab;
 
+    private List<GameObject> tiles
+    {
+        get
+        {
+            return GameObject.FindGameObjectsWithTag("GameTile").ToList();
+        }
+    }
 
     public void GenerateGrid()
     {
@@ -37,9 +41,22 @@ public class GridGeneratorScript : MonoBehaviour {
                 newTile.GetComponent<HexTile>().q = q;
                 newTile.GetComponent<HexTile>().r = logicalRow++;
                 newTile.transform.parent = this.transform;
+                newTile.tag = "GameTile";
             } 
         }
         Debug.Log("Generation of grid complete.");
+    }
+
+    public GameObject GetTileAtCoordinates(int q, int r)
+    {
+        foreach (var tile in tiles)
+        {
+            HexTile tileScript = tile.GetComponent<HexTile>();
+
+            if (tileScript.q == q && tileScript.r == r)
+                return tile;
+        }
+        return null;
     }
 
     public void ClearGrid()
@@ -48,23 +65,12 @@ public class GridGeneratorScript : MonoBehaviour {
 
         var objectsToDetroy = new List<GameObject>();
 
-        foreach(Transform child in transform)
-            objectsToDetroy.Add(child.gameObject);
+        foreach(GameObject tile in tiles)
+            objectsToDetroy.Add(tile);
 
         foreach (GameObject objectToDestroy in objectsToDetroy)
             DestroyImmediate(objectToDestroy);
 
         Debug.Log("Tiles cleared.");
     }
-
-	// Use this for initialization
-	void Start ()
-    { 
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-	
-	}
 }

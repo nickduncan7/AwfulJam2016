@@ -3,7 +3,6 @@ using System.Collections;
 
 public class CameraControllerScript : MonoBehaviour {
     // Constants
-    float panSpeed = 8f;
     float edgeSpeed = 14f;
     float cameraEdge = 0.04f;
     
