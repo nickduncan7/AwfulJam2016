@@ -56,7 +56,7 @@ public class PlayerCharacterManager : MonoBehaviour {
             {
                 path = Grid.CalculateRoute(location, dest.coordinate);
 
-                if (path.Count > 0)
+                if (path != null && path.Count > 0)
                 {
                     startTime = Time.time;
                     moving = true;
