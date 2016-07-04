@@ -50,7 +50,7 @@ public class GridGeneratorScript : MonoBehaviour {
         }
         else
         {
-            var leftAbove = GetTileAtCoordinates(target.q - 1, target.r - 1);
+            var leftAbove = GetTileAtCoordinates(target.q - 1, target.r + 1);
             if (leftAbove != null && leftAbove.GetComponent<HexTile>().Passable)
                 neighbors.Add(leftAbove.GetComponent<HexTile>().coordinate);
 
@@ -58,7 +58,7 @@ public class GridGeneratorScript : MonoBehaviour {
             if (leftBelow != null && leftBelow.GetComponent<HexTile>().Passable)
                 neighbors.Add(leftBelow.GetComponent<HexTile>().coordinate);
 
-            var rightAbove = GetTileAtCoordinates(target.q + 1, target.r - 1);
+            var rightAbove = GetTileAtCoordinates(target.q + 1, target.r + 1);
             if (rightAbove != null && rightAbove.GetComponent<HexTile>().Passable)
                 neighbors.Add(rightAbove.GetComponent<HexTile>().coordinate);
 
@@ -113,8 +113,10 @@ public class GridGeneratorScript : MonoBehaviour {
         {
             current = cameFrom[current];
             path.Add(current);
-            
         }
+
+        path.Reverse();
+        path.Remove(start);
 
         return path;
     }
