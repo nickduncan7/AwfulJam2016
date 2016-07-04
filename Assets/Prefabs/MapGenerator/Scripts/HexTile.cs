@@ -5,65 +5,36 @@ using UnityEditor;
 
 [ExecuteInEditMode]
 public class HexTile : MonoBehaviour {
-    // Private members
-    [SerializeField]
-    [HideInInspector]
-    private int _q, _r;
-
     // Public members
     public TileRotation Rotation = TileRotation.ZeroDegrees;
     public TileType Type = TileType.Standard;
     public Texture StandardTexture;
     public Texture ImpassibleTexture;
 
-    // Class constructor with optional coordinate parameters
-    public HexTile(int q = 0, int r = 0, int s = 0)
-    {
-        if ((q + r + s) != 0)
-        {
-            throw new UnityException(String.Format("Coordinates of hex tile must equal zero. Given coordinates were: (q:{0}, r:{1}, s:{2})", q, r, s));
-        }
-        else
-        {
-            this.q = q;
-            this.r = r;
-        }
-    }
+    [SerializeField]
+    [HideInInspector]
+    public Coordinate coordinate;
 
-    // Class properties for coordinates
-    public int q
+    public int Weight
     {
         get
         {
-            return _q;
-        }
-        set
-        {
-            _q = value;
-        }
-    }
-
-    public int r
-    {
-        get
-        {
-            return _r;
-        }
-        set
-        {
-            _r = value;
+            switch (Type)
+            {
+                default:
+                case TileType.Standard:
+                    return 1;
+                case TileType.Impassible:
+                    return -1;
+            }
         }
     }
 
-    public int s
+    public bool Passable
     {
         get
         {
-            return ( - q - r);
-        }
-        set
-        {
-            throw new UnityException("Cannot set \"s\" coordinate on hex tile directly. Hex grid utilizes axial coordinates.");
+            return (Weight != -1);
         }
     }
 

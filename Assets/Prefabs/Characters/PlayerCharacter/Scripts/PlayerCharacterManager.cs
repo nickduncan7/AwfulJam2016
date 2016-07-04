@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Text;
 
 public class PlayerCharacterManager : MonoBehaviour {
     // Private members
@@ -44,7 +45,16 @@ public class PlayerCharacterManager : MonoBehaviour {
             var dest = hit.transform.GetComponent<HexTile>();
 
             if (dest != null)
-                playerCharacter.transform.position = (Grid.GetTileAtCoordinates(dest.q, dest.r).transform.position + Vector3.up);
+            {
+                var path = Grid.CalculateRoute(new Coordinate { q = 0, r = 0 }, dest.coordinate);
+                var routeString = new StringBuilder();
+
+                routeString.Append("Route: ");
+
+                path.ForEach(coord => routeString.AppendFormat("({0}, {1})", coord.q, coord.r));
+
+                print(routeString);
+            }
         }
 
     }
