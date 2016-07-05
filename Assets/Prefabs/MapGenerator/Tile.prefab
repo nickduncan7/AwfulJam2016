@@ -76,12 +76,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 628b470c7fce120419d1c8f57e227b2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _q: 0
-  _r: 0
   Rotation: 0
   Type: 0
   StandardTexture: {fileID: 2800000, guid: 87a1cac5fe1baf14e9fb0a62703607f3, type: 3}
   ImpassibleTexture: {fileID: 2800000, guid: 025156e0a6318104b9a6d78dfa2806f5, type: 3}
+  HighlightedTexture: {fileID: 2800000, guid: 3079c574fa98a4c4e88cd115113e2740, type: 3}
+  coordinate:
+    q: 0
+    r: 0
+  highlighted: 0
 --- !u!135 &13562848
 SphereCollider:
   m_ObjectHideFlags: 1

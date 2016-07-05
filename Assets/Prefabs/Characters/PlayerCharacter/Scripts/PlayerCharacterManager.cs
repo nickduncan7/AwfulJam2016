@@ -61,6 +61,12 @@ public class PlayerCharacterManager : MonoBehaviour {
                     startTime = Time.time;
                     moving = true;
                     destination = path[0];
+
+                    foreach (var node in path)
+                    {
+                        Grid.GetTileAtCoordinates(node).GetComponent<HexTile>().highlighted = true;
+                    }
+
                     path.Remove(destination);
                 }
             }
@@ -74,6 +80,7 @@ public class PlayerCharacterManager : MonoBehaviour {
 
             if (Vector3.Distance(playerCharacter.transform.position, Grid.GetTileAtCoordinates(destination).transform.position) < 0.05f)
             {
+                Grid.GetTileAtCoordinates(destination).GetComponent<HexTile>().highlighted = false;
                 location = destination;
                 startTime = Time.time;
 

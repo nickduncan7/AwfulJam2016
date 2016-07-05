@@ -10,10 +10,14 @@ public class HexTile : MonoBehaviour {
     public TileType Type = TileType.Standard;
     public Texture StandardTexture;
     public Texture ImpassibleTexture;
+    public Texture HighlightedTexture;
 
     [SerializeField]
     [HideInInspector]
     public Coordinate coordinate;
+
+    [HideInInspector]
+    public bool highlighted = false;
 
     public int Weight
     {
@@ -67,16 +71,24 @@ public class HexTile : MonoBehaviour {
     public void UpdateMaterial()
     {
         var meshRenderer = GetComponent<MeshRenderer>();
-        switch(Type)
+        if (!highlighted)
         {
-            default:
-            case TileType.Standard:
-                meshRenderer.materials[0].mainTexture = StandardTexture;
-                break;
-            case TileType.Impassible:
-                meshRenderer.materials[0].mainTexture = ImpassibleTexture;
-                break;
-             
+            
+            switch (Type)
+            {
+                default:
+                case TileType.Standard:
+                    meshRenderer.materials[0].mainTexture = StandardTexture;
+                    break;
+                case TileType.Impassible:
+                    meshRenderer.materials[0].mainTexture = ImpassibleTexture;
+                    break;
+
+            }
+        }
+        else
+        {
+            meshRenderer.materials[0].mainTexture = HighlightedTexture;
         }
     }
 
