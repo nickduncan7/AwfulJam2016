@@ -76,17 +76,18 @@ public class PlayerCharacterManager : MonoBehaviour {
         else if (moving)
         {
             anim.SetBool("Walking", true);
-            var journeyLength = Vector3.Distance(Grid.GetTileAtCoordinates(location).transform.position, Grid.GetTileAtCoordinates(destination).transform.position);
-            var distCovered = (Time.time - startTime) * MoveSpeed;
-            var fracJourney = distCovered / journeyLength;
             var destinationPosition = Grid.GetTileAtCoordinates(destination).transform.position;
             var currentPosition = Grid.GetTileAtCoordinates(location).transform.position;
+            var journeyLength = Vector3.Distance(currentPosition, destinationPosition);
+            var distCovered = (Time.time - startTime) * MoveSpeed;
+            var fracJourney = distCovered / journeyLength;
+            
             playerCharacter.transform.position = Vector3.Lerp(currentPosition, destinationPosition, fracJourney);
 
             playerCharacter.transform.rotation = Quaternion.Lerp(playerCharacter.transform.rotation, Quaternion.LookRotation(destinationPosition - currentPosition), Time.deltaTime * 10f);
 
             if (Vector3.Distance(playerCharacter.transform.position,
-                    Grid.GetTileAtCoordinates(destination).transform.position) < 0.05f)
+                    destinationPosition) < 0.05f)
             {
                 Grid.GetTileAtCoordinates(destination).GetComponent<HexTile>().highlighted = false;
                 location = destination;
