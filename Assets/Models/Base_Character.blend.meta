@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: c22e90026a9853b459381a2b6c5f5faf
-timeCreated: 1467672316
+guid: 3f9533c72919a304ca13d9380499a790
+timeCreated: 1467739010
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -62,7 +62,8 @@ ModelImporter:
     7400006: FoundItem
     7400008: Idle
     7400010: Surrender
-    7400012: Walk
+    7400012: VeryIdle
+    7400014: Walk
     9500000: //RootNode
     13700000: Cylinder_001
   materials:
