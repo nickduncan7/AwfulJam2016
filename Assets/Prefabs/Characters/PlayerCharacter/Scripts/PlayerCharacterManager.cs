@@ -10,7 +10,8 @@ public class PlayerCharacterManager : MonoBehaviour {
     private float startTime;
     private List<Coordinate> path;
     private Coordinate destination;
-    
+    private Animator anim;
+
     // Public members
     public GameObject CharacterObject;
     public int StartQCoordinate;
@@ -38,6 +39,7 @@ public class PlayerCharacterManager : MonoBehaviour {
             location.r = StartRCoordinate;
         }
 
+	    anim = playerCharacter.GetComponent<Animator>();
         moving = false;
     }
 	
@@ -73,12 +75,18 @@ public class PlayerCharacterManager : MonoBehaviour {
         }
         else if (moving)
         {
+            anim.SetBool("Walking", true);
             var journeyLength = Vector3.Distance(Grid.GetTileAtCoordinates(location).transform.position, Grid.GetTileAtCoordinates(destination).transform.position);
             var distCovered = (Time.time - startTime) * MoveSpeed;
             var fracJourney = distCovered / journeyLength;
-            playerCharacter.transform.position = Vector3.Lerp(Grid.GetTileAtCoordinates(location).transform.position, Grid.GetTileAtCoordinates(destination).transform.position, fracJourney);
+            var destinationPosition = Grid.GetTileAtCoordinates(destination).transform.position;
+            var currentPosition = Grid.GetTileAtCoordinates(location).transform.position;
+            playerCharacter.transform.position = Vector3.Lerp(currentPosition, destinationPosition, fracJourney);
 
-            if (Vector3.Distance(playerCharacter.transform.position, Grid.GetTileAtCoordinates(destination).transform.position) < 0.05f)
+            playerCharacter.transform.rotation = Quaternion.Lerp(playerCharacter.transform.rotation, Quaternion.LookRotation(destinationPosition - currentPosition), Time.deltaTime * 10f);
+
+            if (Vector3.Distance(playerCharacter.transform.position,
+                    Grid.GetTileAtCoordinates(destination).transform.position) < 0.05f)
             {
                 Grid.GetTileAtCoordinates(destination).GetComponent<HexTile>().highlighted = false;
                 location = destination;
@@ -90,9 +98,11 @@ public class PlayerCharacterManager : MonoBehaviour {
                     path.Remove(destination);
                 }
                 else
+                {
                     moving = false;
+                    anim.SetBool("Walking", false);
+                }
             }
-
         }
     }
 }
