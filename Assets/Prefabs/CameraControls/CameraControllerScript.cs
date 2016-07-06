@@ -12,12 +12,13 @@ public class CameraControllerScript : MonoBehaviour {
 
     [SerializeField]
     public GameObject CameraObject;
+    public GridGeneratorScript Grid;
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start ()
     {
         // Instantiate camera instance
-        cameraInstance = Instantiate(CameraObject, Vector3.zero + Vector3.up * 10, Quaternion.identity) as GameObject;
+        cameraInstance = Instantiate(CameraObject, Grid.GetTileAtCoordinates(Grid.MainSpawn).transform.position, Quaternion.identity) as GameObject;
 	}
 	
 	// Update is called once per frame

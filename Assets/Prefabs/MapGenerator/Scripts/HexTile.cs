@@ -11,10 +11,6 @@ public class HexTile : MonoBehaviour {
     public TileType Type = TileType.Standard;
     public TileRotation Rotation = TileRotation.ZeroDegrees;
     public TileContents Contents = TileContents.Nothing;
-    public GameObject CratePrefab;
-    public Texture StandardTexture;
-    public Texture ImpassibleTexture;
-    public Texture HighlightedTexture;
 
     [SerializeField]
     [HideInInspector]
@@ -22,6 +18,14 @@ public class HexTile : MonoBehaviour {
 
     [HideInInspector]
     public bool highlighted = false;
+
+    [HideInInspector]
+    public bool pathHighlighted = false;
+
+    private GridGeneratorScript gridGenerator
+    {
+        get { return transform.parent.GetComponent<GridGeneratorScript>(); }
+    }
 
     public int Weight
     {
@@ -52,22 +56,22 @@ public class HexTile : MonoBehaviour {
         {
             default:
             case TileRotation.ZeroDegrees:
-                transform.rotation = Quaternion.Euler(90, 0, 0);
+                transform.rotation = Quaternion.Euler(-90, 0, 90);
                 break;
             case TileRotation.SixtyDegrees:
-                transform.rotation = Quaternion.Euler(90, 60, 0);
+                transform.rotation = Quaternion.Euler(-90, 60, 90);
                 break;
             case TileRotation.HundredTwentyDegrees:
-                transform.rotation = Quaternion.Euler(90, 120, 0);
+                transform.rotation = Quaternion.Euler(-90, 120, 90);
                 break;
             case TileRotation.OneEightyDegrees:
-                transform.rotation = Quaternion.Euler(90, 180, 0);
+                transform.rotation = Quaternion.Euler(-90, 180, 90);
                 break;
             case TileRotation.TwoFortyDegrees:
-                transform.rotation = Quaternion.Euler(90, 240, 0);
+                transform.rotation = Quaternion.Euler(-90, 240, 90);
                 break;
             case TileRotation.ThreeHundredDegrees:
-                transform.rotation = Quaternion.Euler(90, 300, 0);
+                transform.rotation = Quaternion.Euler(-90, 300, 90);
                 break;
         }
     }
@@ -75,25 +79,32 @@ public class HexTile : MonoBehaviour {
     public void UpdateMaterial()
     {
         var meshRenderer = GetComponent<MeshRenderer>();
-        if (!highlighted)
+        var materials = meshRenderer.sharedMaterials;
+        if (pathHighlighted)
+        {
+            materials[1] = gridGenerator.PathMaterial;
+        }
+        else if (highlighted)
+        {
+            materials[1] = gridGenerator.HighlightedMaterial;
+        }
+        else
         {
             
             switch (Type)
             {
                 default:
                 case TileType.Standard:
-                    meshRenderer.materials[0].mainTexture = StandardTexture;
+                    materials[1] = gridGenerator.StandardMaterial;
                     break;
                 case TileType.Impassible:
-                    meshRenderer.materials[0].mainTexture = ImpassibleTexture;
+                    materials[1] = gridGenerator.ImpassibleMaterial;
                     break;
 
             }
         }
-        else
-        {
-            meshRenderer.materials[0].mainTexture = HighlightedTexture;
-        }
+
+        meshRenderer.materials = materials;
     }
 
     public void SpawnContents()
@@ -101,7 +112,7 @@ public class HexTile : MonoBehaviour {
         switch (Contents)
         {
             case TileContents.Crate:
-                contentInstance = Instantiate(CratePrefab, transform.position, Quaternion.identity) as GameObject;
+                contentInstance = Instantiate(gridGenerator.CratePrefab, transform.position, Quaternion.identity) as GameObject;
                 ((GameObject)contentInstance).transform.parent = null;
                 break;
         }

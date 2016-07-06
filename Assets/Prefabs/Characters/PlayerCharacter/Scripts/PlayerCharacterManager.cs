@@ -8,14 +8,21 @@ public class PlayerCharacterManager : MonoBehaviour {
     private bool moving;
     private Coordinate location;
     private float startTime;
+    private List<Coordinate> previousHighlightedPath;
+    private List<Coordinate> highlightedPath;
     private List<Coordinate> path;
     private Coordinate destination;
     private Animator anim;
 
+    // Private members for ray polling
+    private float pollInterval = 0.1f;
+    private float currentTime;
+
     // Public members
-    public GameObject CharacterObject;
+    public GameObject CharacterObjectPrefab;
     public float MoveSpeed = 4f;
     public GridGeneratorScript Grid;
+    public GameObject NameCanvasPrefab;
 
     private GameObject playerCharacter
     {
@@ -31,10 +38,13 @@ public class PlayerCharacterManager : MonoBehaviour {
         var startTile = Grid.GetTileAtCoordinates(Grid.MainSpawn);
         if (startTile != null)
         {
-            (Instantiate(CharacterObject, startTile.transform.position, Quaternion.identity) as GameObject)
-                .tag = "PlayerCharacter";
+            var firstPlayerObject = Instantiate(CharacterObjectPrefab, startTile.transform.position, Quaternion.identity) as GameObject;
+            firstPlayerObject.tag = "PlayerCharacter";
             location.q = Grid.MainSpawn.q;
             location.r = Grid.MainSpawn.r;
+
+            firstPlayerObject.GetComponent<PlayerCharacterScript>().NameCanvas =
+                Instantiate(NameCanvasPrefab, startTile.transform.position, Quaternion.identity) as GameObject;
         }
 
 	    anim = playerCharacter.GetComponent<Animator>();
@@ -43,67 +53,106 @@ public class PlayerCharacterManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update()
-    {
-        if (Input.GetMouseButtonDown(1) && !moving)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            Physics.Raycast(ray, out hit);
+	{
+	    currentTime += Time.deltaTime;
 
-            var dest = hit.transform.GetComponent<HexTile>();
+	    if (currentTime >= pollInterval)
+	    {
+	        if (!moving)
+	        {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                Physics.Raycast(ray, out hit);
 
-            if (dest != null)
-            {
-                path = Grid.CalculateRoute(location, dest.Coordinate);
+                previousHighlightedPath = highlightedPath;
 
-                if (path != null && path.Count > 0)
+                if (previousHighlightedPath != null && previousHighlightedPath.Count > 0)
                 {
-                    startTime = Time.time;
-                    moving = true;
-                    destination = path[0];
-
-                    foreach (var node in path)
+                    Grid.GetTileAtCoordinates(location).GetComponent<HexTile>().highlighted = false;
+                    foreach (var node in previousHighlightedPath)
                     {
-                        Grid.GetTileAtCoordinates(node).GetComponent<HexTile>().highlighted = true;
+                        Grid.GetTileAtCoordinates(node).GetComponent<HexTile>().highlighted = false;
                     }
-
-                    path.Remove(destination);
                 }
-            }
-        }
-        else if (moving)
+
+                if (hit.transform != null)
+	            {
+	                var dest = hit.transform.GetComponent<HexTile>();
+
+	                if (dest != null)
+	                {
+	                    highlightedPath = Grid.CalculateRoute(location, dest.Coordinate);
+
+	                    if (highlightedPath != null && highlightedPath.Count > 0)
+	                    {
+                            Grid.GetTileAtCoordinates(location).GetComponent<HexTile>().highlighted = true;
+                            foreach (var node in highlightedPath)
+	                        {
+	                            Grid.GetTileAtCoordinates(node).GetComponent<HexTile>().highlighted = true;
+	                        }
+                        }
+	                }
+	            }
+	        }
+
+	        currentTime = 0f;
+	    }
+
+        if (!moving && Input.GetMouseButtonDown(1))
         {
-            anim.SetBool("Walking", true);
-            var destinationPosition = Grid.GetTileAtCoordinates(destination).transform.position;
-            var currentPosition = Grid.GetTileAtCoordinates(location).transform.position;
-            var journeyLength = Vector3.Distance(currentPosition, destinationPosition);
-            var distCovered = (Time.time - startTime) * MoveSpeed;
-            var fracJourney = distCovered / journeyLength;
-            
-            playerCharacter.transform.position = Vector3.Lerp(currentPosition, destinationPosition, fracJourney);
+            Grid.GetTileAtCoordinates(location).GetComponent<HexTile>().highlighted = false;
+            path = highlightedPath;
 
-            playerCharacter.transform.rotation = Quaternion.Lerp(playerCharacter.transform.rotation, Quaternion.LookRotation(destinationPosition - currentPosition), Time.deltaTime * 10f);
-
-            if (Vector3.Distance(playerCharacter.transform.position,
-                    destinationPosition) < 0.05f)
+            if (path != null)
             {
-                var newLocationScript = Grid.GetTileAtCoordinates(destination).GetComponent<HexTile>();
-                newLocationScript.highlighted = false;
-                newLocationScript.DestroyContents();
-                location = destination;
-                startTime = Time.time;
+                foreach (var node in path)
+                {
+                    Grid.GetTileAtCoordinates(node).GetComponent<HexTile>().highlighted = false;
+                    Grid.GetTileAtCoordinates(node).GetComponent<HexTile>().pathHighlighted = true;
+                }
 
-                if (path.Count != 0)
-                {
-                    destination = path[0];
-                    path.Remove(destination);
-                }
-                else
-                {
-                    moving = false;
-                    anim.SetBool("Walking", false);
-                }
+                startTime = Time.time;
+                destination = path[0];
+                moving = true;
             }
         }
-    }
+
+	    if (moving)
+	    {
+	        anim.SetBool("Walking", true);
+	        var destinationPosition = Grid.GetTileAtCoordinates(destination).transform.position;
+	        var currentPosition = Grid.GetTileAtCoordinates(location).transform.position;
+	        var journeyLength = Vector3.Distance(currentPosition, destinationPosition);
+	        var distCovered = (Time.time - startTime)*MoveSpeed;
+	        var fracJourney = Mathf.Clamp(distCovered/journeyLength, 0f, 1f);
+
+	        if (destinationPosition != currentPosition)
+	        {
+	            playerCharacter.transform.position = Vector3.Lerp(currentPosition, destinationPosition, fracJourney);
+	            playerCharacter.transform.rotation = Quaternion.Lerp(playerCharacter.transform.rotation,
+	                Quaternion.LookRotation(destinationPosition - currentPosition), Time.deltaTime*10f);
+	        }
+
+	        if (Vector3.Distance(playerCharacter.transform.position,
+	            destinationPosition) < 0.05f)
+	        {
+	            var newLocationScript = Grid.GetTileAtCoordinates(destination).GetComponent<HexTile>();
+	            newLocationScript.pathHighlighted = false;
+	            newLocationScript.DestroyContents();
+	            location = destination;
+	            startTime = Time.time;
+
+	            if (path.Count != 0)
+	            {
+	                destination = path[0];
+	                path.Remove(destination);
+	            }
+	            else
+	            {
+	                moving = false;
+	                anim.SetBool("Walking", false);
+	            }
+	        }
+	    }
+	}
 }

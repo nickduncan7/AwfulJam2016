@@ -31,8 +31,11 @@ public class HexTileInspector : Editor
     void EditorUpdate()
     {
         HexTile tile = target as HexTile;
-        tile.UpdateRotation();
-        tile.UpdateMaterial();
+        if (tile != null)
+        {
+            tile.UpdateRotation();
+            tile.UpdateMaterial();
+        }
     }
 
 

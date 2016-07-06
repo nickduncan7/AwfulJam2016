@@ -9,6 +9,12 @@ public class GridGeneratorScript : MonoBehaviour {
     public int Width = 8;
     public int Height = 8;
     public GameObject TilePrefab;
+    public GameObject CratePrefab;
+
+    public Material StandardMaterial;
+    public Material ImpassibleMaterial;
+    public Material HighlightedMaterial;
+    public Material PathMaterial;
 
     // Class properties
     private List<GameObject> tiles
@@ -160,10 +166,15 @@ public class GridGeneratorScript : MonoBehaviour {
                 position.z = distance * Mathf.Sqrt(3.0f) * (r + q / 2.0f);
 
                 var newTile = Instantiate(TilePrefab, position, Quaternion.identity) as GameObject;
-                newTile.GetComponent<HexTile>().Coordinate.q = q;
-                newTile.GetComponent<HexTile>().Coordinate.r = logicalRow++;
+                var newTileScript = newTile.GetComponent<HexTile>();
+
+                newTileScript.Coordinate.q = q;
+                newTileScript.Coordinate.r = logicalRow++;
                 newTile.transform.parent = this.transform;
                 newTile.tag = "GameTile";
+
+                newTileScript.UpdateMaterial();
+                newTileScript.UpdateRotation();
             } 
         }
         Debug.Log("Generation of grid complete.");

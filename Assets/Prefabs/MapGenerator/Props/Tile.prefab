@@ -8,10 +8,10 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 433266}
-  - 114: {fileID: 11406064}
-  - 33: {fileID: 3315588}
-  - 23: {fileID: 2331092}
-  - 135: {fileID: 13562848}
+  - 33: {fileID: 3307914}
+  - 23: {fileID: 2331924}
+  - 114: {fileID: 11488382}
+  - 135: {fileID: 13578082}
   m_Layer: 0
   m_Name: Tile
   m_TagString: Untagged
@@ -25,14 +25,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 169640}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 36.071182, y: 7.646879, z: 40.805954}
-  m_LocalScale: {x: 2, y: 2, z: 2}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalRotation: {x: -0.5, y: 0.5, z: 0.5, w: 0.5}
+  m_LocalPosition: {x: -2.3877807, y: 3.489171, z: -5.3618526}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: -90, y: -270, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!23 &2331092
+--- !u!23 &2331924
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -42,7 +42,8 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 2100000, guid: 4dd73e94c93aba243b3283729c8dccc4, type: 2}
+  - {fileID: 2100000, guid: 059aa841d805a174ca4e8f6ee0e038dc, type: 2}
+  - {fileID: 2100000, guid: 96bd1af578f2b2d4cb1503e314b0a4e7, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 1
@@ -58,14 +59,14 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!33 &3315588
+--- !u!33 &3307914
 MeshFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 169640}
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &11406064
+  m_Mesh: {fileID: 4300000, guid: 867e9623550b8b54a85479b58c13276e, type: 3}
+--- !u!114 &11488382
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -79,15 +80,12 @@ MonoBehaviour:
   Type: 0
   Rotation: 0
   Contents: 0
-  CratePrefab: {fileID: 110258, guid: 1fea2c6eeee77f84badf1fd8e05fc2e0, type: 2}
-  StandardTexture: {fileID: 2800000, guid: 87a1cac5fe1baf14e9fb0a62703607f3, type: 3}
-  ImpassibleTexture: {fileID: 2800000, guid: 025156e0a6318104b9a6d78dfa2806f5, type: 3}
-  HighlightedTexture: {fileID: 2800000, guid: 3079c574fa98a4c4e88cd115113e2740, type: 3}
   Coordinate:
     q: 0
     r: 0
   highlighted: 0
---- !u!135 &13562848
+  pathHighlighted: 0
+--- !u!135 &13578082
 SphereCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -97,8 +95,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.6
-  m_Center: {x: 0, y: 0, z: 0.42}
+  m_Radius: 2
+  m_Center: {x: 0, y: 0, z: -1.75}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
