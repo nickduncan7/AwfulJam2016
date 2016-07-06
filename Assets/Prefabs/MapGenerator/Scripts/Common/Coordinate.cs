@@ -1,12 +1,15 @@
-﻿using System;
-using UnityEngine;
-
-[System.Serializable]
+﻿[System.Serializable]
 public struct Coordinate
 {
     public int q;
 
     public int r;
+
+    public Coordinate(int q = -1, int r = -1)
+    {
+        this.q = q;
+        this.r = r;
+    }
 
     public override bool Equals(object other)
     {

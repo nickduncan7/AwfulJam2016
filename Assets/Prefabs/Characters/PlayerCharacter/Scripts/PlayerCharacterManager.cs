@@ -14,8 +14,6 @@ public class PlayerCharacterManager : MonoBehaviour {
 
     // Public members
     public GameObject CharacterObject;
-    public int StartQCoordinate;
-    public int StartRCoordinate;
     public float MoveSpeed = 4f;
     public GridGeneratorScript Grid;
 
@@ -30,13 +28,13 @@ public class PlayerCharacterManager : MonoBehaviour {
 	// Use this for initialization
 	void Start()
     {
-        var startTile = Grid.GetTileAtCoordinates(StartQCoordinate, StartRCoordinate);
+        var startTile = Grid.GetTileAtCoordinates(Grid.MainSpawn);
         if (startTile != null)
         {
             (Instantiate(CharacterObject, startTile.transform.position, Quaternion.identity) as GameObject)
                 .tag = "PlayerCharacter";
-            location.q = StartQCoordinate;
-            location.r = StartRCoordinate;
+            location.q = Grid.MainSpawn.q;
+            location.r = Grid.MainSpawn.r;
         }
 
 	    anim = playerCharacter.GetComponent<Animator>();
@@ -56,7 +54,7 @@ public class PlayerCharacterManager : MonoBehaviour {
 
             if (dest != null)
             {
-                path = Grid.CalculateRoute(location, dest.coordinate);
+                path = Grid.CalculateRoute(location, dest.Coordinate);
 
                 if (path != null && path.Count > 0)
                 {
@@ -89,7 +87,9 @@ public class PlayerCharacterManager : MonoBehaviour {
             if (Vector3.Distance(playerCharacter.transform.position,
                     destinationPosition) < 0.05f)
             {
-                Grid.GetTileAtCoordinates(destination).GetComponent<HexTile>().highlighted = false;
+                var newLocationScript = Grid.GetTileAtCoordinates(destination).GetComponent<HexTile>();
+                newLocationScript.highlighted = false;
+                newLocationScript.DestroyContents();
                 location = destination;
                 startTime = Time.time;
 

@@ -3,18 +3,22 @@ using System.Collections;
 using System;
 using UnityEditor;
 
-[ExecuteInEditMode]
 public class HexTile : MonoBehaviour {
+    // Private members
+    private object contentInstance;
+
     // Public members
-    public TileRotation Rotation = TileRotation.ZeroDegrees;
     public TileType Type = TileType.Standard;
+    public TileRotation Rotation = TileRotation.ZeroDegrees;
+    public TileContents Contents = TileContents.Nothing;
+    public GameObject CratePrefab;
     public Texture StandardTexture;
     public Texture ImpassibleTexture;
     public Texture HighlightedTexture;
 
     [SerializeField]
     [HideInInspector]
-    public Coordinate coordinate;
+    public Coordinate Coordinate;
 
     [HideInInspector]
     public bool highlighted = false;
@@ -92,33 +96,34 @@ public class HexTile : MonoBehaviour {
         }
     }
 
+    public void SpawnContents()
+    {
+        switch (Contents)
+        {
+            case TileContents.Crate:
+                contentInstance = Instantiate(CratePrefab, transform.position, Quaternion.identity) as GameObject;
+                ((GameObject)contentInstance).transform.parent = null;
+                break;
+        }
+    }
+
+    public void DestroyContents()
+    {
+        if (contentInstance != null)
+            Destroy(((GameObject)contentInstance));
+    }
+
     // Use this for initialization
     void Start()
     {
         UpdateRotation();
-        UpdateMaterial();
-	}
+        SpawnContents();
+    }
 	
 	// Update is called once per frame
 	void Update()
     {
-        
-	}
-
-    void OnEnable()
-    {
-        EditorApplication.update += EditorUpdate;
-    }
-
-    void EditorUpdate()
-    {
-        UpdateRotation();
         UpdateMaterial();
-    }
-
-    void OnDisable()
-    {
-        EditorApplication.update -= EditorUpdate;
     }
 }
 
@@ -138,4 +143,12 @@ public enum TileType
 {
     Standard,
     Impassible
+}
+
+[Serializable]
+public enum TileContents
+{
+    Nothing,
+    MainSpawn,
+    Crate
 }

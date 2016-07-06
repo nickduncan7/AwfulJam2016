@@ -10,11 +10,30 @@ public class GridGeneratorScript : MonoBehaviour {
     public int Height = 8;
     public GameObject TilePrefab;
 
+    // Class properties
     private List<GameObject> tiles
     {
         get
         {
             return GameObject.FindGameObjectsWithTag("GameTile").ToList();
+        }
+    }
+
+    [SerializeField]
+    [HideInInspector]
+    private Coordinate _mainSpawn;
+    private bool _mainSpawnSet = false;
+    public Coordinate MainSpawn
+    {
+        get
+        {
+            if (!_mainSpawnSet)
+            {
+                _mainSpawn = tiles.First(x => x.GetComponent<HexTile>().Contents == TileContents.MainSpawn).GetComponent<HexTile>().Coordinate;
+                _mainSpawnSet = true;
+            }
+
+            return _mainSpawn;
         }
     }
 
@@ -24,47 +43,47 @@ public class GridGeneratorScript : MonoBehaviour {
 
         var above = GetTileAtCoordinates(target.q, target.r + 1);
         if (above != null && above.GetComponent<HexTile>().Passable)
-            neighbors.Add(above.GetComponent<HexTile>().coordinate);
+            neighbors.Add(above.GetComponent<HexTile>().Coordinate);
 
         var below = GetTileAtCoordinates(target.q, target.r - 1);
         if (below != null && below.GetComponent<HexTile>().Passable)
-            neighbors.Add(below.GetComponent<HexTile>().coordinate);
+            neighbors.Add(below.GetComponent<HexTile>().Coordinate);
 
         if (target.q % 2 == 0)
         {
             var leftAbove = GetTileAtCoordinates(target.q - 1, target.r);
             if (leftAbove != null && leftAbove.GetComponent<HexTile>().Passable)
-                neighbors.Add(leftAbove.GetComponent<HexTile>().coordinate);
+                neighbors.Add(leftAbove.GetComponent<HexTile>().Coordinate);
 
             var leftBelow = GetTileAtCoordinates(target.q - 1, target.r - 1);
             if (leftBelow != null && leftBelow.GetComponent<HexTile>().Passable)
-                neighbors.Add(leftBelow.GetComponent<HexTile>().coordinate);
+                neighbors.Add(leftBelow.GetComponent<HexTile>().Coordinate);
 
             var rightAbove = GetTileAtCoordinates(target.q + 1, target.r);
             if (rightAbove != null && rightAbove.GetComponent<HexTile>().Passable)
-                neighbors.Add(rightAbove.GetComponent<HexTile>().coordinate);
+                neighbors.Add(rightAbove.GetComponent<HexTile>().Coordinate);
 
             var rightBelow = GetTileAtCoordinates(target.q + 1, target.r - 1);
             if (rightBelow != null && rightBelow.GetComponent<HexTile>().Passable)
-                neighbors.Add(rightBelow.GetComponent<HexTile>().coordinate);
+                neighbors.Add(rightBelow.GetComponent<HexTile>().Coordinate);
         }
         else
         {
             var leftAbove = GetTileAtCoordinates(target.q - 1, target.r + 1);
             if (leftAbove != null && leftAbove.GetComponent<HexTile>().Passable)
-                neighbors.Add(leftAbove.GetComponent<HexTile>().coordinate);
+                neighbors.Add(leftAbove.GetComponent<HexTile>().Coordinate);
 
             var leftBelow = GetTileAtCoordinates(target.q - 1, target.r);
             if (leftBelow != null && leftBelow.GetComponent<HexTile>().Passable)
-                neighbors.Add(leftBelow.GetComponent<HexTile>().coordinate);
+                neighbors.Add(leftBelow.GetComponent<HexTile>().Coordinate);
 
             var rightAbove = GetTileAtCoordinates(target.q + 1, target.r + 1);
             if (rightAbove != null && rightAbove.GetComponent<HexTile>().Passable)
-                neighbors.Add(rightAbove.GetComponent<HexTile>().coordinate);
+                neighbors.Add(rightAbove.GetComponent<HexTile>().Coordinate);
 
             var rightBelow = GetTileAtCoordinates(target.q + 1, target.r);
             if (rightBelow != null && rightBelow.GetComponent<HexTile>().Passable)
-                neighbors.Add(rightBelow.GetComponent<HexTile>().coordinate);
+                neighbors.Add(rightBelow.GetComponent<HexTile>().Coordinate);
         }
 
         return neighbors;
@@ -141,8 +160,8 @@ public class GridGeneratorScript : MonoBehaviour {
                 position.z = distance * Mathf.Sqrt(3.0f) * (r + q / 2.0f);
 
                 var newTile = Instantiate(TilePrefab, position, Quaternion.identity) as GameObject;
-                newTile.GetComponent<HexTile>().coordinate.q = q;
-                newTile.GetComponent<HexTile>().coordinate.r = logicalRow++;
+                newTile.GetComponent<HexTile>().Coordinate.q = q;
+                newTile.GetComponent<HexTile>().Coordinate.r = logicalRow++;
                 newTile.transform.parent = this.transform;
                 newTile.tag = "GameTile";
             } 
@@ -161,7 +180,7 @@ public class GridGeneratorScript : MonoBehaviour {
         {
             HexTile tileScript = tile.GetComponent<HexTile>();
 
-            if (tileScript.coordinate.q == q && tileScript.coordinate.r == r)
+            if (tileScript.Coordinate.q == q && tileScript.Coordinate.r == r)
                 return tile;
         }
         return null;
