@@ -103,7 +103,7 @@ public class PlayerCharacterManager : MonoBehaviour {
             Grid.GetTileAtCoordinates(location).GetComponent<HexTile>().highlighted = false;
             path = highlightedPath;
 
-            if (path != null)
+            if (path != null && path.Count > 0)
             {
                 foreach (var node in path)
                 {
