@@ -11,7 +11,7 @@ public class HexTileInspector : Editor
         base.OnInspectorGUI();
         HexTile tile = target as HexTile;
 
-        var coordinates = string.Format("({0}, {1})", tile.Coordinate.q, tile.Coordinate.r);
+        var coordinates = string.Format("(Q: {0}, R: {1})", tile.Coordinate.q, tile.Coordinate.r);
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.PrefixLabel("Coordinates");
@@ -66,6 +66,7 @@ public class HexTileInspector : Editor
             tile.UpdateRotation();
             tile.UpdateMaterial();
             tile.SpawnFences();
+            tile.SpawnIndicator();
         }
     }
 

@@ -35,6 +35,26 @@ public class FenceManagerScript : MonoBehaviour {
         return false;
     }
 
+    public GameObject GetFenceBetween(Coordinate A, Coordinate B)
+    {
+        if (FenceExistsBetween(A, B))
+        {
+            foreach (var fence in fences)
+            {
+                var fenceScript = fence.GetComponent<FenceScript>();
+
+                if ((fenceScript.betweenA == A && fenceScript.betweenB == B)
+                    || (fenceScript.betweenA == B && fenceScript.betweenB == A))
+                {
+                    return fence;
+                }
+            }
+        }
+            
+
+        return null;
+    }
+
     public GameObject WireFencePrefab;
 
     public List<Coordinate> GetBetween(Coordinate origin, FenceLocation location)

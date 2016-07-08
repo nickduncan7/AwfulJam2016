@@ -16,6 +16,13 @@ public class GridGeneratorScript : MonoBehaviour {
     public Material HighlightedMaterial;
     public Material PathMaterial;
 
+    public GameObject MainSpawnIndicator;
+    public GameObject SpawnTwoIndicator;
+    public GameObject SpawnThreeIndicator;
+    public GameObject SpawnFourIndicator;
+    public GameObject SpawnFiveIndicator;
+    public GameObject CrateIndicator;
+
     [HideInInspector]
     public Coordinate badCoordinate = new Coordinate(-999, -999);
 
@@ -146,7 +153,7 @@ public class GridGeneratorScript : MonoBehaviour {
 
         foreach(var neighbor in neighbors)
         {
-            if (!fenceManager.FenceExistsBetween(target, neighbor.Value))
+            if (!fenceManager.FenceExistsBetween(neighbor.Value, target))
                 neighborList.Add(neighbor.Value);
         }
 
@@ -212,8 +219,67 @@ public class GridGeneratorScript : MonoBehaviour {
         var neighbor = neighbors.Where(n => n.Key == direction).ToList();
 
         if (neighbor.Count == 0 || neighbor.Count > 1)
-            return badCoordinate;
-        else
+        {
+            Coordinate coordinate = origin;
+
+            if (direction == FenceLocation.Upper)
+            {
+                coordinate.r += 1;
+            }
+            else if (direction == FenceLocation.Lower)
+            {
+                
+                coordinate.r -= 1;
+            }
+            else
+            {
+                if (origin.q%2 == 0)
+                {
+                    switch (direction)
+                    {
+                        default:
+                        case FenceLocation.UpperLeft:
+                            coordinate.q -= 1;
+                            break;
+                        case FenceLocation.LowerRight:
+                            coordinate.q += 1;
+                            coordinate.r -= 1;
+                            break;
+                        case FenceLocation.UpperRight:
+                            coordinate.q += 1;
+                            break;
+                        case FenceLocation.LowerLeft:
+                            coordinate.q -= 1;
+                            coordinate.r -= 1;
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (direction)
+                    {
+                        default:
+                        case FenceLocation.UpperLeft:
+                            coordinate.q -= 1;
+                            coordinate.r += 1;
+                            break;
+                        case FenceLocation.LowerRight:
+                            coordinate.q += 1;
+                            break;
+                        case FenceLocation.UpperRight:
+                            coordinate.q += 1;
+                            coordinate.r += 1;
+                            break;
+                        case FenceLocation.LowerLeft:
+                            coordinate.q -= 1;
+                            break;
+                    }
+                }
+            }
+
+            return coordinate;
+        }
+
         return neighbor[0].Value;
     }
 
