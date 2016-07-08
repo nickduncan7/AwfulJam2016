@@ -17,6 +17,9 @@ public class HexTile : MonoBehaviour {
     public Coordinate Coordinate;
 
     [HideInInspector]
+    public bool occupied = false;
+
+    [HideInInspector]
     public bool highlighted = false;
 
     [HideInInspector]
@@ -46,7 +49,7 @@ public class HexTile : MonoBehaviour {
     {
         get
         {
-            return (Weight != -1);
+            return (Weight != -1 && !occupied);
         }
     }
 

@@ -7,8 +7,8 @@ using UnityEngine.UI;
 
 public class PlayerCharacterScript : MonoBehaviour
 {
-    private Vector3 labelPosition;
-    private Quaternion labelRotation;
+    private Color notActiveColor = new Color(0.9f, 0.9f, 0.9f);
+    private Color activeColor = new Color(1f, 1f, 1f);
 
     [HideInInspector]
     public Coordinate currentLocation;
@@ -19,6 +19,30 @@ public class PlayerCharacterScript : MonoBehaviour
     public string FullName
     {
         get { return "Grandpa " + Name; }
+    }
+
+    private bool _active;
+    public bool Active
+    {
+        set
+        {
+            _active = value;
+
+            if (!_active)
+            {
+                NameCanvas.transform.FindChild("NamePlate").GetComponent<Text>().color = notActiveColor;
+                NameCanvas.transform.FindChild("NamePlate").GetComponent<Shadow>().enabled = false;
+            }
+            else
+            {
+                NameCanvas.transform.FindChild("NamePlate").GetComponent<Text>().color = activeColor;
+                NameCanvas.transform.FindChild("NamePlate").GetComponent<Shadow>().enabled = true;
+            }
+        }
+        get
+        {
+            return _active;
+        }
     }
 
 	// Use this for initialization
@@ -41,13 +65,14 @@ public class PlayerCharacterScript : MonoBehaviour
         substanceMaterial.SetProceduralBoolean("Coat", coat);
         if (coat)
         {
-            substanceMaterial.SetProceduralEnum("CoatType", Random.Range(0, 5));
+            substanceMaterial.SetProceduralEnum("Coattype", Random.Range(0, 2));
             substanceMaterial.SetProceduralEnum("CoatColor", Random.Range(2, 5));
         }
 
         UnityEngine.Random.seed = Random.Range(0, 10000).GetHashCode();
 
         substanceMaterial.RebuildTextures();
+
     }
 
     void LateUpdate()

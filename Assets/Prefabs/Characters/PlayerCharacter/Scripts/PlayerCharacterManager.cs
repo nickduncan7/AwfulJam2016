@@ -41,6 +41,9 @@ public class PlayerCharacterManager : MonoBehaviour {
 
     public GameObject GetNextGrandpa()
     {
+        Grid.GetTileAtCoordinates(location).GetComponent<HexTile>().highlighted = false;
+        currentGrandpa.GetComponent<PlayerCharacterScript>().Active = false;
+
         if (currentGrandpaIndex >= grandpas.Count - 1)
             currentGrandpaIndex = 0;
         else
@@ -48,6 +51,10 @@ public class PlayerCharacterManager : MonoBehaviour {
 
         anim = currentGrandpa.GetComponent<Animator>();
         moving = false;
+
+        setupMove();
+
+        currentGrandpa.GetComponent<PlayerCharacterScript>().Active = true;
 
         return currentGrandpa;
     }
@@ -103,11 +110,15 @@ public class PlayerCharacterManager : MonoBehaviour {
             var playerObject = Instantiate(CharacterObjectPrefab, startTile.transform.position, Quaternion.Euler(0,180,0)) as GameObject;
             playerObject.tag = "PlayerCharacter";
             playerObject.GetComponent<PlayerCharacterScript>().currentLocation = Grid.MainSpawn;
+            
 
             var nameCanvas = Instantiate(NameCanvasPrefab, startTile.transform.position + (2f * Vector3.up), Quaternion.identity) as GameObject;
             playerObject.GetComponent<PlayerCharacterScript>().NameCanvas = nameCanvas;
             playerObject.GetComponent<PlayerCharacterScript>().NameCanvas.transform.SetParent(playerObject.transform);
+            playerObject.GetComponent<PlayerCharacterScript>().Active = true;
 
+            Grid.GetTileAtCoordinates(Grid.MainSpawn).GetComponent<HexTile>().occupied = true;
+            
             grandpas.Add(playerObject);
         }
 
@@ -122,6 +133,9 @@ public class PlayerCharacterManager : MonoBehaviour {
             var nameCanvas = Instantiate(NameCanvasPrefab, secondTile.transform.position + (2f * Vector3.up), Quaternion.identity) as GameObject;
             playerObject.GetComponent<PlayerCharacterScript>().NameCanvas = nameCanvas;
             playerObject.GetComponent<PlayerCharacterScript>().NameCanvas.transform.SetParent(playerObject.transform);
+            playerObject.GetComponent<PlayerCharacterScript>().Active = false;
+
+            Grid.GetTileAtCoordinates(Grid.SpawnTwo).GetComponent<HexTile>().occupied = true;
 
             grandpas.Add(playerObject);
         }
@@ -137,6 +151,9 @@ public class PlayerCharacterManager : MonoBehaviour {
             var nameCanvas = Instantiate(NameCanvasPrefab, thirdTile.transform.position + (2f * Vector3.up), Quaternion.identity) as GameObject;
             playerObject.GetComponent<PlayerCharacterScript>().NameCanvas = nameCanvas;
             playerObject.GetComponent<PlayerCharacterScript>().NameCanvas.transform.SetParent(playerObject.transform);
+            playerObject.GetComponent<PlayerCharacterScript>().Active = false;
+
+            Grid.GetTileAtCoordinates(Grid.SpawnThree).GetComponent<HexTile>().occupied = true;
 
             grandpas.Add(playerObject);
         }
@@ -152,6 +169,9 @@ public class PlayerCharacterManager : MonoBehaviour {
             var nameCanvas = Instantiate(NameCanvasPrefab, fourthTile.transform.position + (2f * Vector3.up), Quaternion.identity) as GameObject;
             playerObject.GetComponent<PlayerCharacterScript>().NameCanvas = nameCanvas;
             playerObject.GetComponent<PlayerCharacterScript>().NameCanvas.transform.SetParent(playerObject.transform);
+            playerObject.GetComponent<PlayerCharacterScript>().Active = false;
+
+            Grid.GetTileAtCoordinates(Grid.SpawnFour).GetComponent<HexTile>().occupied = true;
 
             grandpas.Add(playerObject);
         }
@@ -167,6 +187,9 @@ public class PlayerCharacterManager : MonoBehaviour {
             var nameCanvas = Instantiate(NameCanvasPrefab, fifthTile.transform.position + (2f * Vector3.up), Quaternion.identity) as GameObject;
             playerObject.GetComponent<PlayerCharacterScript>().NameCanvas = nameCanvas;
             playerObject.GetComponent<PlayerCharacterScript>().NameCanvas.transform.SetParent(playerObject.transform);
+            playerObject.GetComponent<PlayerCharacterScript>().Active = false;
+
+            Grid.GetTileAtCoordinates(Grid.SpawnFive).GetComponent<HexTile>().occupied = true;
 
             grandpas.Add(playerObject);
         }
@@ -221,6 +244,9 @@ public class PlayerCharacterManager : MonoBehaviour {
 	        currentTime = 0f;
 	    }
 
+        if (!moving && Input.GetKeyDown(KeyCode.Space))
+            GetNextGrandpa();
+
         if (!moving && Input.GetMouseButtonDown(1))
         {
             Grid.GetTileAtCoordinates(location).GetComponent<HexTile>().highlighted = false;
@@ -260,9 +286,17 @@ public class PlayerCharacterManager : MonoBehaviour {
 	            destinationPosition) < 0.05f)
 	        {
 	            var newLocationScript = Grid.GetTileAtCoordinates(destination).GetComponent<HexTile>();
-	            newLocationScript.pathHighlighted = false;
+                var oldLocationScript = Grid.GetTileAtCoordinates(location).GetComponent<HexTile>();
+                newLocationScript.pathHighlighted = false;
 	            newLocationScript.DestroyContents();
+
+                oldLocationScript.occupied = false;
+
+                // Completed journey to tile
                 currentGrandpa.GetComponent<PlayerCharacterScript>().currentLocation = destination;
+
+                // Mark occupied
+                newLocationScript.occupied = true;
 
                 startTime = Time.time;
 
@@ -275,7 +309,6 @@ public class PlayerCharacterManager : MonoBehaviour {
                 {
                     anim.SetBool("Walking", false);
                     GetNextGrandpa();
-                    setupMove();
 	            }
 	        }
 	    }
