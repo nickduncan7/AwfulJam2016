@@ -17,6 +17,36 @@ public class HexTileInspector : Editor
         EditorGUILayout.PrefixLabel("Coordinates");
         EditorGUILayout.LabelField(coordinates);
         EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PrefixLabel("Upper Left Fence");
+        tile.UpperLeftFence = (FenceType)EditorGUILayout.EnumPopup(tile.UpperLeftFence);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PrefixLabel("Upper Fence");
+        tile.UpperFence = (FenceType)EditorGUILayout.EnumPopup(tile.UpperFence);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PrefixLabel("Upper Right Fence");
+        tile.UpperRightFence = (FenceType)EditorGUILayout.EnumPopup(tile.UpperRightFence);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PrefixLabel("Lower Left Fence");
+        tile.LowerLeftFence = (FenceType)EditorGUILayout.EnumPopup(tile.LowerLeftFence);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PrefixLabel("Lower Fence");
+        tile.LowerFence = (FenceType)EditorGUILayout.EnumPopup(tile.LowerFence);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PrefixLabel("Lower Right Fence");
+        tile.LowerRightFence = (FenceType)EditorGUILayout.EnumPopup(tile.LowerRightFence);
+        EditorGUILayout.EndHorizontal();
     }
 
     Tool LastTool = Tool.None;
@@ -35,6 +65,7 @@ public class HexTileInspector : Editor
         {
             tile.UpdateRotation();
             tile.UpdateMaterial();
+            tile.SpawnFences();
         }
     }
 

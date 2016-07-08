@@ -16,6 +16,9 @@ public class GridGeneratorScript : MonoBehaviour {
     public Material HighlightedMaterial;
     public Material PathMaterial;
 
+    [HideInInspector]
+    public Coordinate badCoordinate = new Coordinate(-999, -999);
+
     // Class properties
     private List<GameObject> tiles
     {
@@ -23,6 +26,11 @@ public class GridGeneratorScript : MonoBehaviour {
         {
             return GameObject.FindGameObjectsWithTag("GameTile").ToList();
         }
+    }
+
+    private FenceManagerScript fenceManager
+    {
+        get { return GameObject.Find("FenceManager").GetComponent<FenceManagerScript>(); }
     }
 
     #region Spawn Tile Properties
@@ -133,54 +141,80 @@ public class GridGeneratorScript : MonoBehaviour {
 
     public List<Coordinate> GetNeighbors(Coordinate target)
     {
-        var neighbors = new List<Coordinate>();
+        var neighbors = GetNeighborsDirections(target);
+        var neighborList = new List<Coordinate>();
 
-        var above = GetTileAtCoordinates(target.q, target.r + 1);
-        if (above != null && above.GetComponent<HexTile>().Passable)
-            neighbors.Add(above.GetComponent<HexTile>().Coordinate);
+        foreach(var neighbor in neighbors)
+        {
+            if (!fenceManager.FenceExistsBetween(target, neighbor.Value))
+                neighborList.Add(neighbor.Value);
+        }
 
-        var below = GetTileAtCoordinates(target.q, target.r - 1);
-        if (below != null && below.GetComponent<HexTile>().Passable)
-            neighbors.Add(below.GetComponent<HexTile>().Coordinate);
+        return neighborList;
+    }
+
+    public List<KeyValuePair<FenceLocation, Coordinate>> GetNeighborsDirections(Coordinate target)
+    {
+        var neighbors = new List<KeyValuePair<FenceLocation, Coordinate>>();
+
+        var upper = GetTileAtCoordinates(target.q, target.r + 1);
+        if (upper != null && upper.GetComponent<HexTile>().Passable)
+            neighbors.Add(new KeyValuePair<FenceLocation, Coordinate>(FenceLocation.Upper, upper.GetComponent<HexTile>().Coordinate));
+
+        var lower = GetTileAtCoordinates(target.q, target.r - 1);
+        if (lower != null && lower.GetComponent<HexTile>().Passable)
+            neighbors.Add(new KeyValuePair<FenceLocation, Coordinate>(FenceLocation.Lower, lower.GetComponent<HexTile>().Coordinate));
 
         if (target.q % 2 == 0)
         {
-            var leftAbove = GetTileAtCoordinates(target.q - 1, target.r);
-            if (leftAbove != null && leftAbove.GetComponent<HexTile>().Passable)
-                neighbors.Add(leftAbove.GetComponent<HexTile>().Coordinate);
+            var leftUpper = GetTileAtCoordinates(target.q - 1, target.r);
+            if (leftUpper != null && leftUpper.GetComponent<HexTile>().Passable)
+                neighbors.Add(new KeyValuePair<FenceLocation, Coordinate>(FenceLocation.UpperLeft, leftUpper.GetComponent<HexTile>().Coordinate));
 
-            var leftBelow = GetTileAtCoordinates(target.q - 1, target.r - 1);
-            if (leftBelow != null && leftBelow.GetComponent<HexTile>().Passable)
-                neighbors.Add(leftBelow.GetComponent<HexTile>().Coordinate);
+            var leftLower = GetTileAtCoordinates(target.q - 1, target.r - 1);
+            if (leftLower != null && leftLower.GetComponent<HexTile>().Passable)
+                neighbors.Add(new KeyValuePair<FenceLocation, Coordinate>(FenceLocation.LowerLeft, leftLower.GetComponent<HexTile>().Coordinate));
 
-            var rightAbove = GetTileAtCoordinates(target.q + 1, target.r);
-            if (rightAbove != null && rightAbove.GetComponent<HexTile>().Passable)
-                neighbors.Add(rightAbove.GetComponent<HexTile>().Coordinate);
+            var rightUpper = GetTileAtCoordinates(target.q + 1, target.r);
+            if (rightUpper != null && rightUpper.GetComponent<HexTile>().Passable)
+                neighbors.Add(new KeyValuePair<FenceLocation, Coordinate>(FenceLocation.UpperRight, rightUpper.GetComponent<HexTile>().Coordinate));
 
-            var rightBelow = GetTileAtCoordinates(target.q + 1, target.r - 1);
-            if (rightBelow != null && rightBelow.GetComponent<HexTile>().Passable)
-                neighbors.Add(rightBelow.GetComponent<HexTile>().Coordinate);
+            var rightLower = GetTileAtCoordinates(target.q + 1, target.r - 1);
+            if (rightLower != null && rightLower.GetComponent<HexTile>().Passable)
+                neighbors.Add(new KeyValuePair<FenceLocation, Coordinate>(FenceLocation.LowerRight, rightLower.GetComponent<HexTile>().Coordinate));
         }
         else
         {
-            var leftAbove = GetTileAtCoordinates(target.q - 1, target.r + 1);
-            if (leftAbove != null && leftAbove.GetComponent<HexTile>().Passable)
-                neighbors.Add(leftAbove.GetComponent<HexTile>().Coordinate);
+            var leftUpper = GetTileAtCoordinates(target.q - 1, target.r + 1);
+            if (leftUpper != null && leftUpper.GetComponent<HexTile>().Passable)
+                neighbors.Add(new KeyValuePair<FenceLocation, Coordinate>(FenceLocation.UpperLeft, leftUpper.GetComponent<HexTile>().Coordinate));
 
-            var leftBelow = GetTileAtCoordinates(target.q - 1, target.r);
-            if (leftBelow != null && leftBelow.GetComponent<HexTile>().Passable)
-                neighbors.Add(leftBelow.GetComponent<HexTile>().Coordinate);
+            var leftLower = GetTileAtCoordinates(target.q - 1, target.r);
+            if (leftLower != null && leftLower.GetComponent<HexTile>().Passable)
+                neighbors.Add(new KeyValuePair<FenceLocation, Coordinate>(FenceLocation.LowerLeft, leftLower.GetComponent<HexTile>().Coordinate));
 
-            var rightAbove = GetTileAtCoordinates(target.q + 1, target.r + 1);
-            if (rightAbove != null && rightAbove.GetComponent<HexTile>().Passable)
-                neighbors.Add(rightAbove.GetComponent<HexTile>().Coordinate);
+            var rightUpper = GetTileAtCoordinates(target.q + 1, target.r + 1);
+            if (rightUpper != null && rightUpper.GetComponent<HexTile>().Passable)
+                neighbors.Add(new KeyValuePair<FenceLocation, Coordinate>(FenceLocation.UpperRight, rightUpper.GetComponent<HexTile>().Coordinate));
 
-            var rightBelow = GetTileAtCoordinates(target.q + 1, target.r);
-            if (rightBelow != null && rightBelow.GetComponent<HexTile>().Passable)
-                neighbors.Add(rightBelow.GetComponent<HexTile>().Coordinate);
+            var rightLower = GetTileAtCoordinates(target.q + 1, target.r);
+            if (rightLower != null && rightLower.GetComponent<HexTile>().Passable)
+                neighbors.Add(new KeyValuePair<FenceLocation, Coordinate>(FenceLocation.LowerRight, rightLower.GetComponent<HexTile>().Coordinate));
         }
 
         return neighbors;
+    }
+
+    public Coordinate GetNeighborInDirection(Coordinate origin, FenceLocation direction)
+    {
+        var neighbors = GetNeighborsDirections(origin);
+
+        var neighbor = neighbors.Where(n => n.Key == direction).ToList();
+
+        if (neighbor.Count == 0 || neighbor.Count > 1)
+            return badCoordinate;
+        else
+        return neighbor[0].Value;
     }
 
     public List<Coordinate> CalculateRoute(Coordinate start, Coordinate end)

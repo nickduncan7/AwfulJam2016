@@ -2,6 +2,8 @@
 using System.Collections;
 using System;
 using UnityEditor;
+using System.Collections.Generic;
+using System.Linq;
 
 public class HexTile : MonoBehaviour {
     // Private members
@@ -11,6 +13,162 @@ public class HexTile : MonoBehaviour {
     public TileType Type = TileType.Standard;
     public TileRotation Rotation = TileRotation.ZeroDegrees;
     public TileContents Contents = TileContents.Nothing;
+
+    [HideInInspector]
+    public FenceType _upperLeftFence;
+    public FenceType UpperLeftFence
+    {
+        get
+        {
+            return _upperLeftFence;
+        }
+        set
+        {
+            if (value == FenceType.None && _upperLeftFence != value)
+            {
+                DestroyImmediate(fenceManager.fences.First(fence => fenceManager.FenceExistsBetween(Coordinate, fence.GetComponent<FenceScript>().betweenB)));
+            }
+            else
+            {
+                var neighbor = gridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.UpperLeft);
+
+                if (neighbor != gridGenerator.badCoordinate)
+                    gridGenerator.GetTileAtCoordinates(neighbor).GetComponent<HexTile>()._lowerRightFence = value;
+
+                _upperLeftFence = value;
+            }
+        }
+    }
+
+    [HideInInspector]
+    public FenceType _upperFence;
+    public FenceType UpperFence
+    {
+        get
+        {
+            return _upperFence;
+        }
+        set
+        {
+            if (value == FenceType.None && _upperFence != value)
+            {
+                DestroyImmediate(fenceManager.fences.First(fence => fenceManager.FenceExistsBetween(Coordinate, fence.GetComponent<FenceScript>().betweenB)));
+            }
+            else
+            {
+                var neighbor = gridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.Upper);
+
+                if (neighbor != gridGenerator.badCoordinate)
+                    gridGenerator.GetTileAtCoordinates(neighbor).GetComponent<HexTile>()._lowerFence = value;
+
+                _upperFence = value;
+            }
+        }
+    }
+
+    [HideInInspector]
+    public FenceType _upperRightFence;
+    public FenceType UpperRightFence
+    {
+        get
+        {
+            return _upperRightFence;
+        }
+        set
+        {
+            if (value == FenceType.None && _upperRightFence != value)
+            {
+                DestroyImmediate(fenceManager.fences.First(fence => fenceManager.FenceExistsBetween(Coordinate, fence.GetComponent<FenceScript>().betweenB)));
+            }
+            else
+            {
+                var neighbor = gridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.UpperRight);
+
+                if (neighbor != gridGenerator.badCoordinate)
+                    gridGenerator.GetTileAtCoordinates(neighbor).GetComponent<HexTile>().LowerLeftFence = value;
+
+                _upperRightFence = value;
+            }
+        }
+    }
+
+    [HideInInspector]
+    public FenceType _lowerLeftFence;
+    public FenceType LowerLeftFence
+    {
+        get
+        {
+            return _lowerLeftFence;
+        }
+        set
+        {
+            if (value == FenceType.None && _lowerLeftFence != value)
+            {
+                DestroyImmediate(fenceManager.fences.First(fence => fenceManager.FenceExistsBetween(Coordinate, fence.GetComponent<FenceScript>().betweenB)));
+            }
+            else
+            {
+                var neighbor = gridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.LowerLeft);
+
+                if (neighbor != gridGenerator.badCoordinate)
+                    gridGenerator.GetTileAtCoordinates(neighbor).GetComponent<HexTile>()._upperRightFence = value;
+
+                _lowerLeftFence = value;
+            }
+        }
+    }
+
+    [HideInInspector]
+    public FenceType _lowerFence;
+    public FenceType LowerFence
+    {
+        get
+        {
+            return _lowerFence;
+        }
+        set
+        {
+            if (value == FenceType.None && _lowerFence != value)
+            {
+                DestroyImmediate(fenceManager.fences.First(fence => fenceManager.FenceExistsBetween(Coordinate, fence.GetComponent<FenceScript>().betweenB)));
+            }
+            else
+            {
+                var neighbor = gridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.Lower);
+
+                if (neighbor != gridGenerator.badCoordinate)
+                    gridGenerator.GetTileAtCoordinates(neighbor).GetComponent<HexTile>()._upperFence = value;
+
+                _lowerFence = value;
+            }
+        }
+    }
+
+    [HideInInspector]
+    public FenceType _lowerRightFence;
+    public FenceType LowerRightFence
+    {
+        get
+        {
+            return _lowerRightFence;
+        }
+        set
+        {
+            if (value == FenceType.None && _lowerRightFence != value)
+            {
+                DestroyImmediate(fenceManager.fences.First(fence => fenceManager.FenceExistsBetween(Coordinate, fence.GetComponent<FenceScript>().betweenB)));
+            }
+            else
+            {
+                var neighbor = gridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.LowerRight);
+
+                if (neighbor != gridGenerator.badCoordinate)
+                    gridGenerator.GetTileAtCoordinates(neighbor).GetComponent<HexTile>()._upperLeftFence = value;
+
+                _lowerRightFence = value;
+            }
+        }
+    }
 
     [SerializeField]
     [HideInInspector]
@@ -28,6 +186,11 @@ public class HexTile : MonoBehaviour {
     private GridGeneratorScript gridGenerator
     {
         get { return transform.parent.GetComponent<GridGeneratorScript>(); }
+    }
+
+    private FenceManagerScript fenceManager
+    {
+        get { return GameObject.Find("FenceManager").GetComponent<FenceManagerScript>(); }
     }
 
     public int Weight
@@ -110,6 +273,29 @@ public class HexTile : MonoBehaviour {
         meshRenderer.materials = materials;
     }
 
+    public void SpawnFences()
+    {
+        foreach(FenceLocation fenceLocation in Enum.GetValues(typeof(FenceLocation)))
+        {
+            FenceType fenceType = FenceType.None;
+            if (fenceLocation == FenceLocation.UpperLeft)
+                fenceType = UpperLeftFence;
+            else if (fenceLocation == FenceLocation.Upper)
+                fenceType = UpperFence;
+            else if (fenceLocation == FenceLocation.UpperRight)
+                fenceType = UpperRightFence;
+            else if (fenceLocation == FenceLocation.LowerLeft)
+                fenceType = LowerLeftFence;
+            else if (fenceLocation == FenceLocation.Lower)
+                fenceType = LowerFence;
+            else if (fenceLocation == FenceLocation.LowerRight)
+                fenceType = LowerRightFence;
+
+            if (!fenceManager.FenceExistsBetween(Coordinate, gridGenerator.GetNeighborInDirection(Coordinate, fenceLocation)))
+                fenceManager.SpawnFence(fenceType, fenceLocation, gameObject);
+        }
+    }
+
     public void SpawnContents()
     {
         switch (Contents)
@@ -132,6 +318,7 @@ public class HexTile : MonoBehaviour {
     {
         UpdateRotation();
         SpawnContents();
+        SpawnFences();
     }
 	
 	// Update is called once per frame
@@ -169,4 +356,11 @@ public enum TileContents
     SpawnFour,
     SpawnFive,
     Crate
+}
+
+[Serializable]
+public enum FenceType
+{
+    None,
+    BarbedWire
 }
