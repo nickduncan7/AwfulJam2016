@@ -25,6 +25,8 @@ public class GridGeneratorScript : MonoBehaviour {
         }
     }
 
+    #region Spawn Tile Properties
+
     [SerializeField]
     [HideInInspector]
     private Coordinate _mainSpawn;
@@ -42,6 +44,92 @@ public class GridGeneratorScript : MonoBehaviour {
             return _mainSpawn;
         }
     }
+
+    [SerializeField]
+    [HideInInspector]
+    private Coordinate _spawnTwo;
+    private bool _spawnTwoSet = false;
+    public Coordinate SpawnTwo
+    {
+        get
+        {
+            if (tiles.All(x => x.GetComponent<HexTile>().Contents != TileContents.SpawnTwo))
+                return new Coordinate(-1, -1);
+
+            if (!_spawnTwoSet)
+            {
+                _spawnTwo = tiles.First(x => x.GetComponent<HexTile>().Contents == TileContents.SpawnTwo).GetComponent<HexTile>().Coordinate;
+                _spawnTwoSet = true;
+            }
+
+            return _spawnTwo;
+        }
+    }
+
+    [SerializeField]
+    [HideInInspector]
+    private Coordinate _spawnThree;
+    private bool _spawnThreeSet = false;
+    public Coordinate SpawnThree
+    {
+        get
+        {
+            if (tiles.All(x => x.GetComponent<HexTile>().Contents != TileContents.SpawnThree))
+                return new Coordinate(-1, -1);
+
+            if (!_spawnThreeSet)
+            {
+                _spawnThree = tiles.First(x => x.GetComponent<HexTile>().Contents == TileContents.SpawnThree).GetComponent<HexTile>().Coordinate;
+                _spawnThreeSet = true;
+            }
+
+            return _spawnThree;
+        }
+    }
+
+    [SerializeField]
+    [HideInInspector]
+    private Coordinate _spawnFour;
+    private bool _spawnFourSet = false;
+    public Coordinate SpawnFour
+    {
+        get
+        {
+            if (tiles.All(x => x.GetComponent<HexTile>().Contents != TileContents.SpawnFour))
+                return new Coordinate(-1, -1);
+
+            if (!_spawnFourSet)
+            {
+                _spawnFour = tiles.First(x => x.GetComponent<HexTile>().Contents == TileContents.SpawnFour).GetComponent<HexTile>().Coordinate;
+                _spawnFourSet = true;
+            }
+
+            return _spawnFour;
+        }
+    }
+
+    [SerializeField]
+    [HideInInspector]
+    private Coordinate _spawnFive;
+    private bool _spawnFiveSet = false;
+    public Coordinate SpawnFive
+    {
+        get
+        {
+            if (tiles.All(x => x.GetComponent<HexTile>().Contents != TileContents.SpawnFive))
+                return new Coordinate(-1, -1);
+
+            if (!_spawnFiveSet)
+            {
+                _spawnFive = tiles.First(x => x.GetComponent<HexTile>().Contents == TileContents.SpawnFive).GetComponent<HexTile>().Coordinate;
+                _spawnFiveSet = true;
+            }
+
+            return _spawnFive;
+        }
+    }
+
+    #endregion
 
     public List<Coordinate> GetNeighbors(Coordinate target)
     {

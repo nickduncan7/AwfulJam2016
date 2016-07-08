@@ -1,18 +1,21 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Text;
 using System.Collections.Generic;
+using System.Linq;
 
 public class PlayerCharacterManager : MonoBehaviour {
     // Private members
+    private List<string> grandpaNames;
     private bool moving;
-    private Coordinate location;
     private float startTime;
     private List<Coordinate> previousHighlightedPath;
     private List<Coordinate> highlightedPath;
     private List<Coordinate> path;
     private Coordinate destination;
     private Animator anim;
+    private List<GameObject> grandpas; 
 
     // Private members for ray polling
     private float pollInterval = 0.1f;
@@ -24,31 +27,151 @@ public class PlayerCharacterManager : MonoBehaviour {
     public GridGeneratorScript Grid;
     public GameObject NameCanvasPrefab;
 
-    private GameObject playerCharacter
+    private int currentGrandpaIndex = 0;
+
+    public GameObject currentGrandpa
     {
-        get
-        {
-            return GameObject.FindGameObjectWithTag("PlayerCharacter");
-        }
+        get { return grandpas[currentGrandpaIndex]; }
+    }
+
+    public Coordinate location
+    {
+        get { return currentGrandpa.GetComponent<PlayerCharacterScript>().currentLocation; }
+    }
+
+    public GameObject GetNextGrandpa()
+    {
+        if (currentGrandpaIndex >= grandpas.Count - 1)
+            currentGrandpaIndex = 0;
+        else
+            currentGrandpaIndex++;
+
+        anim = currentGrandpa.GetComponent<Animator>();
+        moving = false;
+
+        return currentGrandpa;
+    }
+
+    private void setupMove()
+    {
+        anim = currentGrandpa.GetComponent<Animator>();
+        moving = false;
+    }
+
+    public string GetGrandpaName()
+    {
+        var grandpaName = grandpaNames[0];
+        grandpaNames.Remove(grandpaName);
+        return grandpaName;
     }
 
 	// Use this for initialization
 	void Start()
     {
+        grandpaNames = new List<string>
+        {
+            "Ernest",
+            "Albert",
+            "Charles",
+            "Henry",
+            "Norman",
+            "Wallace",
+            "Richard",
+            "Ralph",
+            "Percy",
+            "Alfred",
+            "Harold",
+            "Milton",
+            "Mortimer",
+            "Murray",
+            "Stan",
+            "Walter",
+            "Ben",
+            "Edward",
+            "Herb",
+            "Donald"
+        };
+
+        grandpaNames = grandpaNames.OrderBy(x => Guid.NewGuid()).ToList();
+
+        grandpas = new List<GameObject>();
+
+        // First Grandpa
         var startTile = Grid.GetTileAtCoordinates(Grid.MainSpawn);
         if (startTile != null)
         {
-            var firstPlayerObject = Instantiate(CharacterObjectPrefab, startTile.transform.position, Quaternion.identity) as GameObject;
-            firstPlayerObject.tag = "PlayerCharacter";
-            location.q = Grid.MainSpawn.q;
-            location.r = Grid.MainSpawn.r;
+            var playerObject = Instantiate(CharacterObjectPrefab, startTile.transform.position, Quaternion.Euler(0,180,0)) as GameObject;
+            playerObject.tag = "PlayerCharacter";
+            playerObject.GetComponent<PlayerCharacterScript>().currentLocation = Grid.MainSpawn;
 
-            firstPlayerObject.GetComponent<PlayerCharacterScript>().NameCanvas =
-                Instantiate(NameCanvasPrefab, startTile.transform.position, Quaternion.identity) as GameObject;
+            var nameCanvas = Instantiate(NameCanvasPrefab, startTile.transform.position + (2f * Vector3.up), Quaternion.identity) as GameObject;
+            playerObject.GetComponent<PlayerCharacterScript>().NameCanvas = nameCanvas;
+            playerObject.GetComponent<PlayerCharacterScript>().NameCanvas.transform.SetParent(playerObject.transform);
+
+            grandpas.Add(playerObject);
         }
 
-	    anim = playerCharacter.GetComponent<Animator>();
-        moving = false;
+        // Second Grandpa
+        var secondTile = Grid.GetTileAtCoordinates(Grid.SpawnTwo);
+        if (secondTile != null)
+        {
+            var playerObject = Instantiate(CharacterObjectPrefab, secondTile.transform.position, Quaternion.Euler(0, 180, 0)) as GameObject;
+            playerObject.tag = "PlayerCharacter";
+            playerObject.GetComponent<PlayerCharacterScript>().currentLocation = Grid.SpawnTwo;
+
+            var nameCanvas = Instantiate(NameCanvasPrefab, secondTile.transform.position + (2f * Vector3.up), Quaternion.identity) as GameObject;
+            playerObject.GetComponent<PlayerCharacterScript>().NameCanvas = nameCanvas;
+            playerObject.GetComponent<PlayerCharacterScript>().NameCanvas.transform.SetParent(playerObject.transform);
+
+            grandpas.Add(playerObject);
+        }
+
+        // Third Grandpa
+        var thirdTile = Grid.GetTileAtCoordinates(Grid.SpawnThree);
+        if (thirdTile != null)
+        {
+            var playerObject = Instantiate(CharacterObjectPrefab, thirdTile.transform.position, Quaternion.Euler(0, 180, 0)) as GameObject;
+            playerObject.tag = "PlayerCharacter";
+            playerObject.GetComponent<PlayerCharacterScript>().currentLocation = Grid.SpawnThree;
+
+            var nameCanvas = Instantiate(NameCanvasPrefab, thirdTile.transform.position + (2f * Vector3.up), Quaternion.identity) as GameObject;
+            playerObject.GetComponent<PlayerCharacterScript>().NameCanvas = nameCanvas;
+            playerObject.GetComponent<PlayerCharacterScript>().NameCanvas.transform.SetParent(playerObject.transform);
+
+            grandpas.Add(playerObject);
+        }
+
+        // Fourth Grandpa
+        var fourthTile = Grid.GetTileAtCoordinates(Grid.SpawnFour);
+        if (fourthTile != null)
+        {
+            var playerObject = Instantiate(CharacterObjectPrefab, fourthTile.transform.position, Quaternion.Euler(0, 180, 0)) as GameObject;
+            playerObject.tag = "PlayerCharacter";
+            playerObject.GetComponent<PlayerCharacterScript>().currentLocation = Grid.SpawnFour;
+
+            var nameCanvas = Instantiate(NameCanvasPrefab, fourthTile.transform.position + (2f * Vector3.up), Quaternion.identity) as GameObject;
+            playerObject.GetComponent<PlayerCharacterScript>().NameCanvas = nameCanvas;
+            playerObject.GetComponent<PlayerCharacterScript>().NameCanvas.transform.SetParent(playerObject.transform);
+
+            grandpas.Add(playerObject);
+        }
+
+        // Fifth Grandpa
+        var fifthTile = Grid.GetTileAtCoordinates(Grid.SpawnFive);
+        if (fifthTile != null)
+        {
+            var playerObject = Instantiate(CharacterObjectPrefab, fifthTile.transform.position, Quaternion.Euler(0, 180, 0)) as GameObject;
+            playerObject.tag = "PlayerCharacter";
+            playerObject.GetComponent<PlayerCharacterScript>().currentLocation = Grid.SpawnFive;
+
+            var nameCanvas = Instantiate(NameCanvasPrefab, fifthTile.transform.position + (2f * Vector3.up), Quaternion.identity) as GameObject;
+            playerObject.GetComponent<PlayerCharacterScript>().NameCanvas = nameCanvas;
+            playerObject.GetComponent<PlayerCharacterScript>().NameCanvas.transform.SetParent(playerObject.transform);
+
+            grandpas.Add(playerObject);
+        }
+
+        setupMove();
     }
 	
 	// Update is called once per frame
@@ -128,19 +251,20 @@ public class PlayerCharacterManager : MonoBehaviour {
 
 	        if (destinationPosition != currentPosition)
 	        {
-	            playerCharacter.transform.position = Vector3.Lerp(currentPosition, destinationPosition, fracJourney);
-	            playerCharacter.transform.rotation = Quaternion.Lerp(playerCharacter.transform.rotation,
+                currentGrandpa.transform.position = Vector3.Lerp(currentPosition, destinationPosition, fracJourney);
+                currentGrandpa.transform.rotation = Quaternion.Lerp(currentGrandpa.transform.rotation,
 	                Quaternion.LookRotation(destinationPosition - currentPosition), Time.deltaTime*10f);
 	        }
 
-	        if (Vector3.Distance(playerCharacter.transform.position,
+	        if (Vector3.Distance(currentGrandpa.transform.position,
 	            destinationPosition) < 0.05f)
 	        {
 	            var newLocationScript = Grid.GetTileAtCoordinates(destination).GetComponent<HexTile>();
 	            newLocationScript.pathHighlighted = false;
 	            newLocationScript.DestroyContents();
-	            location = destination;
-	            startTime = Time.time;
+                currentGrandpa.GetComponent<PlayerCharacterScript>().currentLocation = destination;
+
+                startTime = Time.time;
 
 	            if (path.Count != 0)
 	            {
@@ -148,9 +272,10 @@ public class PlayerCharacterManager : MonoBehaviour {
 	                path.Remove(destination);
 	            }
 	            else
-	            {
-	                moving = false;
-	                anim.SetBool("Walking", false);
+                {
+                    anim.SetBool("Walking", false);
+                    GetNextGrandpa();
+                    setupMove();
 	            }
 	        }
 	    }

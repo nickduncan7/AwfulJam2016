@@ -161,5 +161,9 @@ public enum TileContents
 {
     Nothing,
     MainSpawn,
+    SpawnTwo,
+    SpawnThree,
+    SpawnFour,
+    SpawnFive,
     Crate
 }
