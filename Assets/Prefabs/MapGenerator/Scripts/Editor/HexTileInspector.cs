@@ -47,6 +47,9 @@ public class HexTileInspector : Editor
         EditorGUILayout.PrefixLabel("Lower Right Fence");
         tile.LowerRightFence = (FenceType)EditorGUILayout.EnumPopup(tile.LowerRightFence);
         EditorGUILayout.EndHorizontal();
+
+        if (GUILayout.Button("Clear All Fences"))
+            tile.ClearFences();
     }
 
     Tool LastTool = Tool.None;

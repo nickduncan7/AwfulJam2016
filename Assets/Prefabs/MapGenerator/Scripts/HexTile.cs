@@ -294,13 +294,30 @@ public class HexTile : MonoBehaviour {
         }
     }
 
+    public void ClearFences()
+    {
+        foreach (FenceLocation fenceLocation in Enum.GetValues(typeof(FenceLocation)))
+        {
+            if (fenceLocation == FenceLocation.UpperLeft)
+                UpperLeftFence = FenceType.None;
+            else if (fenceLocation == FenceLocation.Upper)
+                UpperFence = FenceType.None;
+            else if (fenceLocation == FenceLocation.UpperRight)
+                UpperRightFence = FenceType.None;
+            else if (fenceLocation == FenceLocation.LowerLeft)
+                LowerLeftFence = FenceType.None;
+            else if (fenceLocation == FenceLocation.Lower)
+                LowerFence = FenceType.None;
+            else if (fenceLocation == FenceLocation.LowerRight)
+                LowerRightFence = FenceType.None;
+        }
+    }
+
     public void SpawnIndicator()
     {
+        if (indicator != null) DestroyImmediate(indicator);
         switch (Contents)
         {
-            case TileContents.Nothing:
-                if (indicator != null) DestroyImmediate(indicator);
-                break;
             case TileContents.MainSpawn:
                 if (indicator == null) indicator = Instantiate(gridGenerator.MainSpawnIndicator, transform.position + Vector3.up * 0.1f, Quaternion.Euler(90,0,0)) as GameObject;
                 break;
