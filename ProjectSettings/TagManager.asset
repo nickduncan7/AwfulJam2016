@@ -6,7 +6,7 @@ TagManager:
   tags:
   - GameTile
   - PlayerCharacter
-  - Fence
+  - Wall
   layers:
   - Default
   - TransparentFX

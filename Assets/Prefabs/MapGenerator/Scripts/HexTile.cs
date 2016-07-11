@@ -18,153 +18,153 @@ public class HexTile : MonoBehaviour {
     public TileContents Contents = TileContents.Nothing;
 
     [HideInInspector]
-    public FenceType _upperLeftFence;
-    public FenceType UpperLeftFence
+    public WallType _upperLeftWall;
+    public WallType UpperLeftWall
     {
         get
         {
-            return _upperLeftFence;
+            return _upperLeftWall;
         }
         set
         {
-            var neighbor = GameObjects.GridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.UpperLeft);
+            var neighbor = GameObjects.GridGenerator.GetNeighborInDirection(Coordinate, WallLocation.UpperLeft);
 
-            if (value == FenceType.None && _upperLeftFence != value)
+            if (value == WallType.None || _upperLeftWall != value)
             {
-                DestroyImmediate(GameObjects.FenceManager.GetFenceBetween(Coordinate, neighbor));
+                DestroyImmediate(GameObjects.WallManager.GetWallBetween(Coordinate, neighbor));
             }
 
-            _upperLeftFence = value;
+            _upperLeftWall = value;
 
             var neighborTile = GameObjects.GridGenerator.GetTileAtCoordinates(neighbor);
             if (neighborTile != null)
-                neighborTile.GetComponent<HexTile>()._lowerRightFence = value;
+                neighborTile.GetComponent<HexTile>()._lowerRightWall = value;
         }
     }
 
     [HideInInspector]
-    public FenceType _upperFence;
-    public FenceType UpperFence
+    public WallType _upperWall;
+    public WallType UpperWall
     {
         get
         {
-            return _upperFence;
+            return _upperWall;
         }
         set
         {
-            var neighbor = GameObjects.GridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.Upper);
+            var neighbor = GameObjects.GridGenerator.GetNeighborInDirection(Coordinate, WallLocation.Upper);
 
-            if (value == FenceType.None && _upperFence != value)
+            if (value == WallType.None || _upperWall != value)
             {
-                DestroyImmediate(GameObjects.FenceManager.GetFenceBetween(Coordinate, neighbor));
+                DestroyImmediate(GameObjects.WallManager.GetWallBetween(Coordinate, neighbor));
             }
 
-            _upperFence = value;
+            _upperWall = value;
             
             var neighborTile = GameObjects.GridGenerator.GetTileAtCoordinates(neighbor);
             if (neighborTile != null)
-                neighborTile.GetComponent<HexTile>()._lowerFence = value;
+                neighborTile.GetComponent<HexTile>()._lowerWall = value;
         }
     }
 
     [HideInInspector]
-    public FenceType _upperRightFence;
-    public FenceType UpperRightFence
+    public WallType _upperRightWall;
+    public WallType UpperRightWall
     {
         get
         {
-            return _upperRightFence;
+            return _upperRightWall;
         }
         set
         {
-            var neighbor = GameObjects.GridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.UpperRight);
+            var neighbor = GameObjects.GridGenerator.GetNeighborInDirection(Coordinate, WallLocation.UpperRight);
 
-            if (value == FenceType.None && _upperRightFence != value)
+            if (value == WallType.None || _upperRightWall != value)
             {
-                DestroyImmediate(GameObjects.FenceManager.GetFenceBetween(Coordinate, neighbor));
+                DestroyImmediate(GameObjects.WallManager.GetWallBetween(Coordinate, neighbor));
             }
 
-            _upperRightFence = value;
+            _upperRightWall = value;
 
             var neighborTile = GameObjects.GridGenerator.GetTileAtCoordinates(neighbor);
             if (neighborTile != null)
-                neighborTile.GetComponent<HexTile>()._lowerLeftFence = value;
+                neighborTile.GetComponent<HexTile>()._lowerLeftWall = value;
         }
     }
 
     [HideInInspector]
-    public FenceType _lowerLeftFence;
-    public FenceType LowerLeftFence
+    public WallType _lowerLeftWall;
+    public WallType LowerLeftWall
     {
         get
         {
-            return _lowerLeftFence;
+            return _lowerLeftWall;
         }
         set
         {
-            var neighbor = GameObjects.GridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.LowerLeft);
+            var neighbor = GameObjects.GridGenerator.GetNeighborInDirection(Coordinate, WallLocation.LowerLeft);
 
-            if (value == FenceType.None && _lowerLeftFence != value)
+            if (value == WallType.None || _lowerLeftWall != value)
             {
-                DestroyImmediate(GameObjects.FenceManager.GetFenceBetween(Coordinate, neighbor));
+                DestroyImmediate(GameObjects.WallManager.GetWallBetween(Coordinate, neighbor));
             }
 
-            _lowerLeftFence = value;
+            _lowerLeftWall = value;
             
             var neighborTile = GameObjects.GridGenerator.GetTileAtCoordinates(neighbor);
             if (neighborTile != null)
-                neighborTile.GetComponent<HexTile>()._upperRightFence = value;
+                neighborTile.GetComponent<HexTile>()._upperRightWall = value;
         }
     }
 
     [HideInInspector]
-    public FenceType _lowerFence;
-    public FenceType LowerFence
+    public WallType _lowerWall;
+    public WallType LowerWall
     {
         get
         {
-            return _lowerFence;
+            return _lowerWall;
         }
         set
         {
-            var neighbor = GameObjects.GridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.Lower);
+            var neighbor = GameObjects.GridGenerator.GetNeighborInDirection(Coordinate, WallLocation.Lower);
 
-            if (value == FenceType.None && _lowerFence != value)
+            if (value == WallType.None || _lowerWall != value)
             {
-                DestroyImmediate(GameObjects.FenceManager.GetFenceBetween(Coordinate, neighbor));
+                DestroyImmediate(GameObjects.WallManager.GetWallBetween(Coordinate, neighbor));
             }
 
-            _lowerFence = value;
+            _lowerWall = value;
 
             var neighborTile = GameObjects.GridGenerator.GetTileAtCoordinates(neighbor);
             if (neighborTile != null)
-                neighborTile.GetComponent<HexTile>()._upperFence = value;
+                neighborTile.GetComponent<HexTile>()._upperWall = value;
 
         }
     }
 
     [HideInInspector]
-    public FenceType _lowerRightFence;
-    public FenceType LowerRightFence
+    public WallType _lowerRightWall;
+    public WallType LowerRightWall
     {
         get
         {
-            return _lowerRightFence;
+            return _lowerRightWall;
         }
         set
         {
-            var neighbor = GameObjects.GridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.LowerRight);
+            var neighbor = GameObjects.GridGenerator.GetNeighborInDirection(Coordinate, WallLocation.LowerRight);
 
-            if (value == FenceType.None && _lowerRightFence != value)
+            if (value == WallType.None || _lowerRightWall != value)
             {
-                DestroyImmediate(GameObjects.FenceManager.GetFenceBetween(Coordinate, neighbor));
+                DestroyImmediate(GameObjects.WallManager.GetWallBetween(Coordinate, neighbor));
             }
 
-            _lowerRightFence = value;
+            _lowerRightWall = value;
        
             var neighborTile = GameObjects.GridGenerator.GetTileAtCoordinates(neighbor);
             if (neighborTile != null)
-                neighborTile.GetComponent<HexTile>()._upperLeftFence = value;
+                neighborTile.GetComponent<HexTile>()._upperLeftWall = value;
         }
     }
 
@@ -261,45 +261,45 @@ public class HexTile : MonoBehaviour {
         meshRenderer.materials = materials;
     }
 
-    public void SpawnFences()
+    public void SpawnWalls()
     {
-        foreach(FenceLocation fenceLocation in Enum.GetValues(typeof(FenceLocation)))
+        foreach(WallLocation wallLocation in Enum.GetValues(typeof(WallLocation)))
         {
-            FenceType fenceType = FenceType.None;
-            if (fenceLocation == FenceLocation.UpperLeft)
-                fenceType = UpperLeftFence;
-            else if (fenceLocation == FenceLocation.Upper)
-                fenceType = UpperFence;
-            else if (fenceLocation == FenceLocation.UpperRight)
-                fenceType = UpperRightFence;
-            else if (fenceLocation == FenceLocation.LowerLeft)
-                fenceType = LowerLeftFence;
-            else if (fenceLocation == FenceLocation.Lower)
-                fenceType = LowerFence;
-            else if (fenceLocation == FenceLocation.LowerRight)
-                fenceType = LowerRightFence;
+            WallType wallType = WallType.None;
+            if (wallLocation == WallLocation.UpperLeft)
+                wallType = UpperLeftWall;
+            else if (wallLocation == WallLocation.Upper)
+                wallType = UpperWall;
+            else if (wallLocation == WallLocation.UpperRight)
+                wallType = UpperRightWall;
+            else if (wallLocation == WallLocation.LowerLeft)
+                wallType = LowerLeftWall;
+            else if (wallLocation == WallLocation.Lower)
+                wallType = LowerWall;
+            else if (wallLocation == WallLocation.LowerRight)
+                wallType = LowerRightWall;
 
-            if (!GameObjects.FenceManager.FenceExistsBetween(Coordinate, GameObjects.GridGenerator.GetNeighborInDirection(Coordinate, fenceLocation)))
-                GameObjects.FenceManager.SpawnFence(fenceType, fenceLocation, gameObject);
+            if (!GameObjects.WallManager.WallExistsBetween(Coordinate, GameObjects.GridGenerator.GetNeighborInDirection(Coordinate, wallLocation)))
+                GameObjects.WallManager.SpawnWall(wallType, wallLocation, gameObject);
         }
     }
 
-    public void ClearFences()
+    public void ClearWalls()
     {
-        foreach (FenceLocation fenceLocation in Enum.GetValues(typeof(FenceLocation)))
+        foreach (WallLocation wallLocation in Enum.GetValues(typeof(WallLocation)))
         {
-            if (fenceLocation == FenceLocation.UpperLeft)
-                UpperLeftFence = FenceType.None;
-            else if (fenceLocation == FenceLocation.Upper)
-                UpperFence = FenceType.None;
-            else if (fenceLocation == FenceLocation.UpperRight)
-                UpperRightFence = FenceType.None;
-            else if (fenceLocation == FenceLocation.LowerLeft)
-                LowerLeftFence = FenceType.None;
-            else if (fenceLocation == FenceLocation.Lower)
-                LowerFence = FenceType.None;
-            else if (fenceLocation == FenceLocation.LowerRight)
-                LowerRightFence = FenceType.None;
+            if (wallLocation == WallLocation.UpperLeft)
+                UpperLeftWall = WallType.None;
+            else if (wallLocation == WallLocation.Upper)
+                UpperWall = WallType.None;
+            else if (wallLocation == WallLocation.UpperRight)
+                UpperRightWall = WallType.None;
+            else if (wallLocation == WallLocation.LowerLeft)
+                LowerLeftWall = WallType.None;
+            else if (wallLocation == WallLocation.Lower)
+                LowerWall = WallType.None;
+            else if (wallLocation == WallLocation.LowerRight)
+                LowerRightWall = WallType.None;
         }
     }
 
@@ -353,7 +353,7 @@ public class HexTile : MonoBehaviour {
     {
         UpdateRotation();
         SpawnContents();
-        SpawnFences();
+        SpawnWalls();
     }
 	
 	// Update is called once per frame
@@ -394,8 +394,9 @@ public enum TileContents
 }
 
 [Serializable]
-public enum FenceType
+public enum WallType
 {
     None,
-    BarbedWire
+    BarbedWire,
+    DEVSolidWall
 }

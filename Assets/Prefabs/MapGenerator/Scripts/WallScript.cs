@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FenceScript : MonoBehaviour {
+public class WallScript : MonoBehaviour {
 
     [SerializeField]
     public Coordinate betweenA;

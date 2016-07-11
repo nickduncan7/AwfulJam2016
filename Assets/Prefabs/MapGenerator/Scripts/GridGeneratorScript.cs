@@ -148,66 +148,66 @@ public class GridGeneratorScript : MonoBehaviour {
 
         foreach(var neighbor in neighbors)
         {
-            if (!GameObjects.FenceManager.FenceExistsBetween(neighbor.Value, target))
+            if (!GameObjects.WallManager.WallExistsBetween(neighbor.Value, target))
                 neighborList.Add(neighbor.Value);
         }
 
         return neighborList;
     }
 
-    public List<KeyValuePair<FenceLocation, Coordinate>> GetNeighborsDirections(Coordinate target)
+    public List<KeyValuePair<WallLocation, Coordinate>> GetNeighborsDirections(Coordinate target)
     {
-        var neighbors = new List<KeyValuePair<FenceLocation, Coordinate>>();
+        var neighbors = new List<KeyValuePair<WallLocation, Coordinate>>();
 
         var upper = GetTileAtCoordinates(target.q, target.r + 1);
         if (upper != null && upper.GetComponent<HexTile>().Passable)
-            neighbors.Add(new KeyValuePair<FenceLocation, Coordinate>(FenceLocation.Upper, upper.GetComponent<HexTile>().Coordinate));
+            neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.Upper, upper.GetComponent<HexTile>().Coordinate));
 
         var lower = GetTileAtCoordinates(target.q, target.r - 1);
         if (lower != null && lower.GetComponent<HexTile>().Passable)
-            neighbors.Add(new KeyValuePair<FenceLocation, Coordinate>(FenceLocation.Lower, lower.GetComponent<HexTile>().Coordinate));
+            neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.Lower, lower.GetComponent<HexTile>().Coordinate));
 
         if (target.q % 2 == 0)
         {
             var leftUpper = GetTileAtCoordinates(target.q - 1, target.r);
             if (leftUpper != null && leftUpper.GetComponent<HexTile>().Passable)
-                neighbors.Add(new KeyValuePair<FenceLocation, Coordinate>(FenceLocation.UpperLeft, leftUpper.GetComponent<HexTile>().Coordinate));
+                neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperLeft, leftUpper.GetComponent<HexTile>().Coordinate));
 
             var leftLower = GetTileAtCoordinates(target.q - 1, target.r - 1);
             if (leftLower != null && leftLower.GetComponent<HexTile>().Passable)
-                neighbors.Add(new KeyValuePair<FenceLocation, Coordinate>(FenceLocation.LowerLeft, leftLower.GetComponent<HexTile>().Coordinate));
+                neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerLeft, leftLower.GetComponent<HexTile>().Coordinate));
 
             var rightUpper = GetTileAtCoordinates(target.q + 1, target.r);
             if (rightUpper != null && rightUpper.GetComponent<HexTile>().Passable)
-                neighbors.Add(new KeyValuePair<FenceLocation, Coordinate>(FenceLocation.UpperRight, rightUpper.GetComponent<HexTile>().Coordinate));
+                neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperRight, rightUpper.GetComponent<HexTile>().Coordinate));
 
             var rightLower = GetTileAtCoordinates(target.q + 1, target.r - 1);
             if (rightLower != null && rightLower.GetComponent<HexTile>().Passable)
-                neighbors.Add(new KeyValuePair<FenceLocation, Coordinate>(FenceLocation.LowerRight, rightLower.GetComponent<HexTile>().Coordinate));
+                neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerRight, rightLower.GetComponent<HexTile>().Coordinate));
         }
         else
         {
             var leftUpper = GetTileAtCoordinates(target.q - 1, target.r + 1);
             if (leftUpper != null && leftUpper.GetComponent<HexTile>().Passable)
-                neighbors.Add(new KeyValuePair<FenceLocation, Coordinate>(FenceLocation.UpperLeft, leftUpper.GetComponent<HexTile>().Coordinate));
+                neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperLeft, leftUpper.GetComponent<HexTile>().Coordinate));
 
             var leftLower = GetTileAtCoordinates(target.q - 1, target.r);
             if (leftLower != null && leftLower.GetComponent<HexTile>().Passable)
-                neighbors.Add(new KeyValuePair<FenceLocation, Coordinate>(FenceLocation.LowerLeft, leftLower.GetComponent<HexTile>().Coordinate));
+                neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerLeft, leftLower.GetComponent<HexTile>().Coordinate));
 
             var rightUpper = GetTileAtCoordinates(target.q + 1, target.r + 1);
             if (rightUpper != null && rightUpper.GetComponent<HexTile>().Passable)
-                neighbors.Add(new KeyValuePair<FenceLocation, Coordinate>(FenceLocation.UpperRight, rightUpper.GetComponent<HexTile>().Coordinate));
+                neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperRight, rightUpper.GetComponent<HexTile>().Coordinate));
 
             var rightLower = GetTileAtCoordinates(target.q + 1, target.r);
             if (rightLower != null && rightLower.GetComponent<HexTile>().Passable)
-                neighbors.Add(new KeyValuePair<FenceLocation, Coordinate>(FenceLocation.LowerRight, rightLower.GetComponent<HexTile>().Coordinate));
+                neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerRight, rightLower.GetComponent<HexTile>().Coordinate));
         }
 
         return neighbors;
     }
 
-    public Coordinate GetNeighborInDirection(Coordinate origin, FenceLocation direction)
+    public Coordinate GetNeighborInDirection(Coordinate origin, WallLocation direction)
     {
         var neighbors = GetNeighborsDirections(origin);
 
@@ -217,11 +217,11 @@ public class GridGeneratorScript : MonoBehaviour {
         {
             Coordinate coordinate = origin;
 
-            if (direction == FenceLocation.Upper)
+            if (direction == WallLocation.Upper)
             {
                 coordinate.r += 1;
             }
-            else if (direction == FenceLocation.Lower)
+            else if (direction == WallLocation.Lower)
             {
                 
                 coordinate.r -= 1;
@@ -233,17 +233,17 @@ public class GridGeneratorScript : MonoBehaviour {
                     switch (direction)
                     {
                         default:
-                        case FenceLocation.UpperLeft:
+                        case WallLocation.UpperLeft:
                             coordinate.q -= 1;
                             break;
-                        case FenceLocation.LowerRight:
+                        case WallLocation.LowerRight:
                             coordinate.q += 1;
                             coordinate.r -= 1;
                             break;
-                        case FenceLocation.UpperRight:
+                        case WallLocation.UpperRight:
                             coordinate.q += 1;
                             break;
-                        case FenceLocation.LowerLeft:
+                        case WallLocation.LowerLeft:
                             coordinate.q -= 1;
                             coordinate.r -= 1;
                             break;
@@ -254,18 +254,18 @@ public class GridGeneratorScript : MonoBehaviour {
                     switch (direction)
                     {
                         default:
-                        case FenceLocation.UpperLeft:
+                        case WallLocation.UpperLeft:
                             coordinate.q -= 1;
                             coordinate.r += 1;
                             break;
-                        case FenceLocation.LowerRight:
+                        case WallLocation.LowerRight:
                             coordinate.q += 1;
                             break;
-                        case FenceLocation.UpperRight:
+                        case WallLocation.UpperRight:
                             coordinate.q += 1;
                             coordinate.r += 1;
                             break;
-                        case FenceLocation.LowerLeft:
+                        case WallLocation.LowerLeft:
                             coordinate.q -= 1;
                             break;
                     }

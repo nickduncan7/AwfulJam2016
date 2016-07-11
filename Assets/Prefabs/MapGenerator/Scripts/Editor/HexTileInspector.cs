@@ -19,37 +19,37 @@ public class HexTileInspector : Editor
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.PrefixLabel("Upper Left Fence");
-        tile.UpperLeftFence = (FenceType)EditorGUILayout.EnumPopup(tile.UpperLeftFence);
+        EditorGUILayout.PrefixLabel("Upper Left Wall");
+        tile.UpperLeftWall = (WallType)EditorGUILayout.EnumPopup(tile.UpperLeftWall);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.PrefixLabel("Upper Fence");
-        tile.UpperFence = (FenceType)EditorGUILayout.EnumPopup(tile.UpperFence);
+        EditorGUILayout.PrefixLabel("Upper Wall");
+        tile.UpperWall = (WallType)EditorGUILayout.EnumPopup(tile.UpperWall);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.PrefixLabel("Upper Right Fence");
-        tile.UpperRightFence = (FenceType)EditorGUILayout.EnumPopup(tile.UpperRightFence);
+        EditorGUILayout.PrefixLabel("Upper Right Wall");
+        tile.UpperRightWall = (WallType)EditorGUILayout.EnumPopup(tile.UpperRightWall);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.PrefixLabel("Lower Left Fence");
-        tile.LowerLeftFence = (FenceType)EditorGUILayout.EnumPopup(tile.LowerLeftFence);
+        EditorGUILayout.PrefixLabel("Lower Left Wall");
+        tile.LowerLeftWall = (WallType)EditorGUILayout.EnumPopup(tile.LowerLeftWall);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.PrefixLabel("Lower Fence");
-        tile.LowerFence = (FenceType)EditorGUILayout.EnumPopup(tile.LowerFence);
+        EditorGUILayout.PrefixLabel("Lower Wall");
+        tile.LowerWall = (WallType)EditorGUILayout.EnumPopup(tile.LowerWall);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.PrefixLabel("Lower Right Fence");
-        tile.LowerRightFence = (FenceType)EditorGUILayout.EnumPopup(tile.LowerRightFence);
+        EditorGUILayout.PrefixLabel("Lower Right Wall");
+        tile.LowerRightWall = (WallType)EditorGUILayout.EnumPopup(tile.LowerRightWall);
         EditorGUILayout.EndHorizontal();
 
-        if (GUILayout.Button("Clear All Fences"))
-            tile.ClearFences();
+        if (GUILayout.Button("Clear All Walls"))
+            tile.ClearWalls();
     }
 
     Tool LastTool = Tool.None;
@@ -68,7 +68,7 @@ public class HexTileInspector : Editor
         {
             tile.UpdateRotation();
             tile.UpdateMaterial();
-            tile.SpawnFences();
+            tile.SpawnWalls();
             tile.SpawnIndicator();
         }
     }

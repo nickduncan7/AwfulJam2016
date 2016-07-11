@@ -105,13 +105,13 @@ public class TimeManagerScript : MonoBehaviour {
             {
                 sunlight.color = Color.Lerp(sunriseColor, sunlightColor, percentComplete);
                 sunlight.intensity = Mathf.Lerp(0.0f, 0.8f, percentComplete);
-                moonlight.intensity = Mathf.Lerp(0.5f, 0.0f, percentComplete);  
+                moonlight.intensity = Mathf.Lerp(0.6f, 0.0f, percentComplete);  
             }
             else if (transitionToNight)
             {
                 sunlight.color = Color.Lerp(sunlightColor, sunriseColor, percentComplete);
                 sunlight.intensity = Mathf.Lerp(0.8f, 0.0f, percentComplete);
-                moonlight.intensity = Mathf.Lerp(0.0f, 0.5f, percentComplete);
+                moonlight.intensity = Mathf.Lerp(0.0f, 0.6f, percentComplete);
             }
 
             if (percentComplete == 1f)

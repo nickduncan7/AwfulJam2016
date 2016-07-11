@@ -7,9 +7,9 @@ public static class GameObjects
         get { return GameObject.Find("/GridGenerator").GetComponent<GridGeneratorScript>(); }
     }
 
-    public static FenceManagerScript FenceManager
+    public static WallManagerScript WallManager
     {
-        get { return GameObject.Find("/FenceManager").GetComponent<FenceManagerScript>(); }
+        get { return GameObject.Find("/WallManager").GetComponent<WallManagerScript>(); }
     }
 
     public static TimeManagerScript TimeManager
