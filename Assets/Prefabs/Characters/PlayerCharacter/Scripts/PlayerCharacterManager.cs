@@ -4,6 +4,7 @@ using System.Collections;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UI;
 
 public class PlayerCharacterManager : MonoBehaviour {
     // Private members
@@ -28,10 +29,16 @@ public class PlayerCharacterManager : MonoBehaviour {
     public GameObject NameCanvasPrefab;
 
     private int currentGrandpaIndex = 0;
+    private int previousUnitIndex = 0;
 
     public GameObject currentGrandpa
     {
         get { return grandpas[currentGrandpaIndex]; }
+    }
+
+    public GameObject previousUnit
+    {
+        get { return grandpas[previousUnitIndex]; }
     }
 
     public Coordinate location
@@ -43,6 +50,8 @@ public class PlayerCharacterManager : MonoBehaviour {
     {
         Grid.GetTileAtCoordinates(location).GetComponent<HexTile>().highlighted = false;
         currentGrandpa.GetComponent<PlayerCharacterScript>().Active = false;
+
+        previousUnitIndex = currentGrandpaIndex;
 
         if (currentGrandpaIndex >= grandpas.Count - 1)
             currentGrandpaIndex = 0;
@@ -56,7 +65,18 @@ public class PlayerCharacterManager : MonoBehaviour {
 
         currentGrandpa.GetComponent<PlayerCharacterScript>().Active = true;
 
+        updateNameBadges();
+
+        GameObjects.TimeManager.AdvanceHour();
+
         return currentGrandpa;
+    }
+
+    private void updateNameBadges()
+    {
+        var hud = GameObject.Find("Standard HUD");
+        hud.transform.FindChild("CurrentBadge").FindChild("Name").GetComponent<Text>().text = currentGrandpa.GetComponent<PlayerCharacterScript>().Name;
+        hud.transform.FindChild("NextBadge").FindChild("Name").GetComponent<Text>().text = previousUnit.GetComponent<PlayerCharacterScript>().Name;
     }
 
     private void setupMove()
@@ -72,8 +92,8 @@ public class PlayerCharacterManager : MonoBehaviour {
         return grandpaName;
     }
 
-	// Use this for initialization
-	void Start()
+    // Use this for initialization
+    void Start()
     {
         grandpaNames = new List<string>
         {
@@ -195,6 +215,7 @@ public class PlayerCharacterManager : MonoBehaviour {
         }
 
         setupMove();
+        updateNameBadges();
     }
 	
 	// Update is called once per frame
@@ -204,7 +225,7 @@ public class PlayerCharacterManager : MonoBehaviour {
 
 	    if (currentTime >= pollInterval)
 	    {
-	        if (!moving)
+	        if (!moving && !GameObjects.TimeManager.transitioning)
 	        {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -244,10 +265,10 @@ public class PlayerCharacterManager : MonoBehaviour {
 	        currentTime = 0f;
 	    }
 
-        if (!moving && Input.GetKeyDown(KeyCode.Space))
+        if (!moving && !GameObjects.TimeManager.transitioning && Input.GetKeyDown(KeyCode.Space))
             GetNextGrandpa();
 
-        if (!moving && Input.GetMouseButtonDown(1))
+        if (!moving && !GameObjects.TimeManager.transitioning && Input.GetMouseButtonDown(1))
         {
             Grid.GetTileAtCoordinates(location).GetComponent<HexTile>().highlighted = false;
             path = highlightedPath;

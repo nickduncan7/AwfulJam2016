@@ -27,16 +27,16 @@ public class HexTile : MonoBehaviour {
         }
         set
         {
-            var neighbor = gridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.UpperLeft);
+            var neighbor = GameObjects.GridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.UpperLeft);
 
             if (value == FenceType.None && _upperLeftFence != value)
             {
-                DestroyImmediate(fenceManager.GetFenceBetween(Coordinate, neighbor));
+                DestroyImmediate(GameObjects.FenceManager.GetFenceBetween(Coordinate, neighbor));
             }
 
             _upperLeftFence = value;
 
-            var neighborTile = gridGenerator.GetTileAtCoordinates(neighbor);
+            var neighborTile = GameObjects.GridGenerator.GetTileAtCoordinates(neighbor);
             if (neighborTile != null)
                 neighborTile.GetComponent<HexTile>()._lowerRightFence = value;
         }
@@ -52,16 +52,16 @@ public class HexTile : MonoBehaviour {
         }
         set
         {
-            var neighbor = gridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.Upper);
+            var neighbor = GameObjects.GridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.Upper);
 
             if (value == FenceType.None && _upperFence != value)
             {
-                DestroyImmediate(fenceManager.GetFenceBetween(Coordinate, neighbor));
+                DestroyImmediate(GameObjects.FenceManager.GetFenceBetween(Coordinate, neighbor));
             }
 
             _upperFence = value;
             
-            var neighborTile = gridGenerator.GetTileAtCoordinates(neighbor);
+            var neighborTile = GameObjects.GridGenerator.GetTileAtCoordinates(neighbor);
             if (neighborTile != null)
                 neighborTile.GetComponent<HexTile>()._lowerFence = value;
         }
@@ -77,16 +77,16 @@ public class HexTile : MonoBehaviour {
         }
         set
         {
-            var neighbor = gridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.UpperRight);
+            var neighbor = GameObjects.GridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.UpperRight);
 
             if (value == FenceType.None && _upperRightFence != value)
             {
-                DestroyImmediate(fenceManager.GetFenceBetween(Coordinate, neighbor));
+                DestroyImmediate(GameObjects.FenceManager.GetFenceBetween(Coordinate, neighbor));
             }
 
             _upperRightFence = value;
 
-            var neighborTile = gridGenerator.GetTileAtCoordinates(neighbor);
+            var neighborTile = GameObjects.GridGenerator.GetTileAtCoordinates(neighbor);
             if (neighborTile != null)
                 neighborTile.GetComponent<HexTile>()._lowerLeftFence = value;
         }
@@ -102,16 +102,16 @@ public class HexTile : MonoBehaviour {
         }
         set
         {
-            var neighbor = gridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.LowerLeft);
+            var neighbor = GameObjects.GridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.LowerLeft);
 
             if (value == FenceType.None && _lowerLeftFence != value)
             {
-                DestroyImmediate(fenceManager.GetFenceBetween(Coordinate, neighbor));
+                DestroyImmediate(GameObjects.FenceManager.GetFenceBetween(Coordinate, neighbor));
             }
 
             _lowerLeftFence = value;
             
-            var neighborTile = gridGenerator.GetTileAtCoordinates(neighbor);
+            var neighborTile = GameObjects.GridGenerator.GetTileAtCoordinates(neighbor);
             if (neighborTile != null)
                 neighborTile.GetComponent<HexTile>()._upperRightFence = value;
         }
@@ -127,16 +127,16 @@ public class HexTile : MonoBehaviour {
         }
         set
         {
-            var neighbor = gridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.Lower);
+            var neighbor = GameObjects.GridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.Lower);
 
             if (value == FenceType.None && _lowerFence != value)
             {
-                DestroyImmediate(fenceManager.GetFenceBetween(Coordinate, neighbor));
+                DestroyImmediate(GameObjects.FenceManager.GetFenceBetween(Coordinate, neighbor));
             }
 
             _lowerFence = value;
 
-            var neighborTile = gridGenerator.GetTileAtCoordinates(neighbor);
+            var neighborTile = GameObjects.GridGenerator.GetTileAtCoordinates(neighbor);
             if (neighborTile != null)
                 neighborTile.GetComponent<HexTile>()._upperFence = value;
 
@@ -153,16 +153,16 @@ public class HexTile : MonoBehaviour {
         }
         set
         {
-            var neighbor = gridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.LowerRight);
+            var neighbor = GameObjects.GridGenerator.GetNeighborInDirection(Coordinate, FenceLocation.LowerRight);
 
             if (value == FenceType.None && _lowerRightFence != value)
             {
-                DestroyImmediate(fenceManager.GetFenceBetween(Coordinate, neighbor));
+                DestroyImmediate(GameObjects.FenceManager.GetFenceBetween(Coordinate, neighbor));
             }
 
             _lowerRightFence = value;
        
-            var neighborTile = gridGenerator.GetTileAtCoordinates(neighbor);
+            var neighborTile = GameObjects.GridGenerator.GetTileAtCoordinates(neighbor);
             if (neighborTile != null)
                 neighborTile.GetComponent<HexTile>()._upperLeftFence = value;
         }
@@ -180,16 +180,6 @@ public class HexTile : MonoBehaviour {
 
     [HideInInspector]
     public bool pathHighlighted = false;
-
-    private GridGeneratorScript gridGenerator
-    {
-        get { return transform.parent.GetComponent<GridGeneratorScript>(); }
-    }
-
-    private FenceManagerScript fenceManager
-    {
-        get { return GameObject.Find("FenceManager").GetComponent<FenceManagerScript>(); }
-    }
 
     public int Weight
     {
@@ -246,11 +236,11 @@ public class HexTile : MonoBehaviour {
         var materials = meshRenderer.sharedMaterials;
         if (pathHighlighted)
         {
-            materials[1] = gridGenerator.PathMaterial;
+            materials[1] = GameObjects.GridGenerator.PathMaterial;
         }
         else if (highlighted)
         {
-            materials[1] = gridGenerator.HighlightedMaterial;
+            materials[1] = GameObjects.GridGenerator.HighlightedMaterial;
         }
         else
         {
@@ -259,10 +249,10 @@ public class HexTile : MonoBehaviour {
             {
                 default:
                 case TileType.Standard:
-                    materials[1] = gridGenerator.StandardMaterial;
+                    materials[1] = GameObjects.GridGenerator.StandardMaterial;
                     break;
                 case TileType.Impassible:
-                    materials[1] = gridGenerator.ImpassibleMaterial;
+                    materials[1] = GameObjects.GridGenerator.ImpassibleMaterial;
                     break;
 
             }
@@ -289,8 +279,8 @@ public class HexTile : MonoBehaviour {
             else if (fenceLocation == FenceLocation.LowerRight)
                 fenceType = LowerRightFence;
 
-            if (!fenceManager.FenceExistsBetween(Coordinate, gridGenerator.GetNeighborInDirection(Coordinate, fenceLocation)))
-                fenceManager.SpawnFence(fenceType, fenceLocation, gameObject);
+            if (!GameObjects.FenceManager.FenceExistsBetween(Coordinate, GameObjects.GridGenerator.GetNeighborInDirection(Coordinate, fenceLocation)))
+                GameObjects.FenceManager.SpawnFence(fenceType, fenceLocation, gameObject);
         }
     }
 
@@ -319,22 +309,22 @@ public class HexTile : MonoBehaviour {
         switch (Contents)
         {
             case TileContents.MainSpawn:
-                if (indicator == null) indicator = Instantiate(gridGenerator.MainSpawnIndicator, transform.position + Vector3.up * 0.1f, Quaternion.Euler(90,0,0)) as GameObject;
+                if (indicator == null) indicator = Instantiate(GameObjects.GridGenerator.MainSpawnIndicator, transform.position + Vector3.up * 0.1f, Quaternion.Euler(90,0,0)) as GameObject;
                 break;
             case TileContents.SpawnTwo:
-                if (indicator == null) indicator = Instantiate(gridGenerator.SpawnTwoIndicator, transform.position + Vector3.up * 0.1f, Quaternion.Euler(90, 0, 0)) as GameObject;
+                if (indicator == null) indicator = Instantiate(GameObjects.GridGenerator.SpawnTwoIndicator, transform.position + Vector3.up * 0.1f, Quaternion.Euler(90, 0, 0)) as GameObject;
                 break;
             case TileContents.SpawnThree:
-                if (indicator == null) indicator = Instantiate(gridGenerator.SpawnThreeIndicator, transform.position + Vector3.up * 0.1f, Quaternion.Euler(90, 0, 0)) as GameObject;
+                if (indicator == null) indicator = Instantiate(GameObjects.GridGenerator.SpawnThreeIndicator, transform.position + Vector3.up * 0.1f, Quaternion.Euler(90, 0, 0)) as GameObject;
                 break;
             case TileContents.SpawnFour:
-                if (indicator == null) indicator = Instantiate(gridGenerator.SpawnFourIndicator, transform.position + Vector3.up * 0.1f, Quaternion.Euler(90, 0, 0)) as GameObject;
+                if (indicator == null) indicator = Instantiate(GameObjects.GridGenerator.SpawnFourIndicator, transform.position + Vector3.up * 0.1f, Quaternion.Euler(90, 0, 0)) as GameObject;
                 break;
             case TileContents.SpawnFive:
-                if (indicator == null) indicator = Instantiate(gridGenerator.SpawnFiveIndicator, transform.position + Vector3.up * 0.1f, Quaternion.Euler(90, 0, 0)) as GameObject;
+                if (indicator == null) indicator = Instantiate(GameObjects.GridGenerator.SpawnFiveIndicator, transform.position + Vector3.up * 0.1f, Quaternion.Euler(90, 0, 0)) as GameObject;
                 break;
             case TileContents.Crate:
-                if (indicator == null) indicator = Instantiate(gridGenerator.CrateIndicator, transform.position + Vector3.up * 0.1f, Quaternion.Euler(90, 0, 0)) as GameObject;
+                if (indicator == null) indicator = Instantiate(GameObjects.GridGenerator.CrateIndicator, transform.position + Vector3.up * 0.1f, Quaternion.Euler(90, 0, 0)) as GameObject;
                 break;
         }
 
@@ -346,7 +336,7 @@ public class HexTile : MonoBehaviour {
         switch (Contents)
         {
             case TileContents.Crate:
-                contentInstance = Instantiate(gridGenerator.CratePrefab, transform.position, Quaternion.identity) as GameObject;
+                contentInstance = Instantiate(GameObjects.GridGenerator.CratePrefab, transform.position, Quaternion.identity) as GameObject;
                 ((GameObject)contentInstance).transform.parent = null;
                 break;
         }

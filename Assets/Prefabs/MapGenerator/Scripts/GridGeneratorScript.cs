@@ -35,11 +35,6 @@ public class GridGeneratorScript : MonoBehaviour {
         }
     }
 
-    private FenceManagerScript fenceManager
-    {
-        get { return GameObject.Find("FenceManager").GetComponent<FenceManagerScript>(); }
-    }
-
     #region Spawn Tile Properties
 
     [SerializeField]
@@ -153,7 +148,7 @@ public class GridGeneratorScript : MonoBehaviour {
 
         foreach(var neighbor in neighbors)
         {
-            if (!fenceManager.FenceExistsBetween(neighbor.Value, target))
+            if (!GameObjects.FenceManager.FenceExistsBetween(neighbor.Value, target))
                 neighborList.Add(neighbor.Value);
         }
 

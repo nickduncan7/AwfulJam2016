@@ -5,11 +5,6 @@ using System.Linq;
 
 public class FenceManagerScript : MonoBehaviour {
 
-    private GridGeneratorScript grid
-    {
-        get { return GameObject.Find("GridGenerator").GetComponent<GridGeneratorScript>(); }
-    }
-
     // Class properties
     public List<GameObject> fences
     {
@@ -67,22 +62,22 @@ public class FenceManagerScript : MonoBehaviour {
         {
             default:
             case FenceLocation.Upper:
-                other = grid.GetNeighborInDirection(origin, FenceLocation.Upper);
+                other = GameObjects.GridGenerator.GetNeighborInDirection(origin, FenceLocation.Upper);
                 break;
             case FenceLocation.Lower:
-                other = grid.GetNeighborInDirection(origin, FenceLocation.Lower);
+                other = GameObjects.GridGenerator.GetNeighborInDirection(origin, FenceLocation.Lower);
                 break;
             case FenceLocation.UpperLeft:
-                other = grid.GetNeighborInDirection(origin, FenceLocation.UpperLeft);
+                other = GameObjects.GridGenerator.GetNeighborInDirection(origin, FenceLocation.UpperLeft);
                 break;
             case FenceLocation.LowerRight:
-                other = grid.GetNeighborInDirection(origin, FenceLocation.LowerRight);
+                other = GameObjects.GridGenerator.GetNeighborInDirection(origin, FenceLocation.LowerRight);
                 break;
             case FenceLocation.UpperRight:
-                other = grid.GetNeighborInDirection(origin, FenceLocation.UpperRight);
+                other = GameObjects.GridGenerator.GetNeighborInDirection(origin, FenceLocation.UpperRight);
                 break;
             case FenceLocation.LowerLeft:
-                other = grid.GetNeighborInDirection(origin, FenceLocation.LowerLeft);
+                other = GameObjects.GridGenerator.GetNeighborInDirection(origin, FenceLocation.LowerLeft);
                 break;
         }
 
