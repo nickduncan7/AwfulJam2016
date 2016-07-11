@@ -10191,6 +10191,10 @@ Prefab:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 180
       objectReference: {fileID: 0}
+    - target: {fileID: 10895630, guid: 4a40d4f2d0dca5845b6bda0fbadb72c7, type: 2}
+      propertyPath: m_Shadows.m_Strength
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4a40d4f2d0dca5845b6bda0fbadb72c7, type: 2}
   m_IsPrefabParent: 0
@@ -16226,6 +16230,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff96434aaa598a84e9a829057dc7d9f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitioning: 0
   SolarObject: {fileID: 764653075}
   CurrentHour: 0
 --- !u!4 &1988949480

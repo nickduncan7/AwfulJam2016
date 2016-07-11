@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class TimeManagerScript : MonoBehaviour {
-    private Color sunlightColor = new Color(255 / 246, 255 / 243, 255 / 159);
+    private Color sunlightColor;
     private Color sunriseColor = new Color(255 / 255, 255 / 132, 0);
 
     private int dayLength = 14;
@@ -22,12 +22,11 @@ public class TimeManagerScript : MonoBehaviour {
 
     private bool isDay
     {
-        get { return CurrentHour >= dayStart && CurrentHour <= dayStart + dayLength; }
+        get { return CurrentHour >= dayStart && CurrentHour < dayStart + dayLength; }
     }
     
     public GameObject SolarObject;
 
-    [HideInInspector]
     public int CurrentHour;
     private int PreviousHour;
 
@@ -85,6 +84,8 @@ public class TimeManagerScript : MonoBehaviour {
         angle = -90f + angle;
 
         SolarObject.transform.rotation = Quaternion.Euler(0, 0, angle);
+
+        sunlightColor = SolarObject.transform.FindChild("Sunlight").GetComponent<Light>().color;
     }
 	
 	// Update is called once per frame
