@@ -16,12 +16,12 @@ public class WallManagerScript : MonoBehaviour {
 
     public bool WallExistsBetween(Coordinate A, Coordinate B)
     {
-        foreach (var Wall in Walls)
+        foreach (var wall in Walls)
         {
-            var WallScript = Wall.GetComponent<WallScript>();
+            var wallScript = wall.GetComponent<WallScript>();
 
-            if ((WallScript.betweenA == A && WallScript.betweenB == B)
-                || (WallScript.betweenA == B && WallScript.betweenB == A))
+            if ((wallScript.betweenA == A && wallScript.betweenB == B)
+                || (wallScript.betweenA == B && wallScript.betweenB == A))
             {
                 return true;
             }
