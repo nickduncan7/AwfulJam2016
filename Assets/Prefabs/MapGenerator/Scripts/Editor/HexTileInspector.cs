@@ -67,7 +67,7 @@ public class HexTileInspector : Editor
         if (tile != null)
         {
             tile.UpdateRotation();
-            tile.UpdateMaterial();
+            tile.UpdateMaterial(true);
             tile.SpawnWalls();
             tile.SpawnIndicator();
         }

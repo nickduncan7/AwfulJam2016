@@ -232,7 +232,7 @@ public class HexTile : MonoBehaviour {
         }
     }
 
-    public void UpdateMaterial()
+    public void UpdateMaterial(bool inEditor = false)
     {
         var meshRenderer = GetComponent<MeshRenderer>();
         var materials = meshRenderer.sharedMaterials;
@@ -260,17 +260,20 @@ public class HexTile : MonoBehaviour {
 
         meshRenderer.materials = materials;
 
-        if (pathHighlighted)
+        if (!inEditor)
         {
-            meshRenderer.materials[1].SetColor("_Color", pathHighlightColor);
-        }
-        else if (highlighted)
-        {
-            meshRenderer.materials[1].SetColor("_Color", highlightColor);
-        }
-        else
-        {
-            meshRenderer.materials[1].SetColor("_Color", defaultColor);
+            if (pathHighlighted)
+            {
+                meshRenderer.materials[1].SetColor("_Color", pathHighlightColor);
+            }
+            else if (highlighted)
+            {
+                meshRenderer.materials[1].SetColor("_Color", highlightColor);
+            }
+            else
+            {
+                meshRenderer.materials[1].SetColor("_Color", defaultColor);
+            }
         }
     }
 
@@ -367,12 +370,6 @@ public class HexTile : MonoBehaviour {
         UpdateRotation();
         SpawnContents();
         SpawnWalls();
-    }
-	
-	// Update is called once per frame
-	void Update()
-    {
-        UpdateMaterial();
     }
 }
 

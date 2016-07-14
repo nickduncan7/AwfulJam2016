@@ -238,7 +238,9 @@ public class PlayerCharacterManager : MonoBehaviour {
                     Grid.GetTileAtCoordinates(location).GetComponent<HexTile>().highlighted = false;
                     foreach (var node in previousHighlightedPath)
                     {
-                        Grid.GetTileAtCoordinates(node).GetComponent<HexTile>().highlighted = false;
+                        var tile = Grid.GetTileAtCoordinates(node).GetComponent<HexTile>();
+                        tile.highlighted = false;
+                        tile.UpdateMaterial();
                     }
                 }
 
@@ -255,8 +257,10 @@ public class PlayerCharacterManager : MonoBehaviour {
                             Grid.GetTileAtCoordinates(location).GetComponent<HexTile>().highlighted = true;
                             foreach (var node in highlightedPath)
 	                        {
-	                            Grid.GetTileAtCoordinates(node).GetComponent<HexTile>().highlighted = true;
-	                        }
+                                var tile = Grid.GetTileAtCoordinates(node).GetComponent<HexTile>();
+                                tile.highlighted = true;
+                                tile.UpdateMaterial();
+                            }
                         }
 	                }
 	            }
@@ -277,8 +281,10 @@ public class PlayerCharacterManager : MonoBehaviour {
             {
                 foreach (var node in path)
                 {
-                    Grid.GetTileAtCoordinates(node).GetComponent<HexTile>().highlighted = false;
-                    Grid.GetTileAtCoordinates(node).GetComponent<HexTile>().pathHighlighted = true;
+                    var tile = Grid.GetTileAtCoordinates(node).GetComponent<HexTile>();
+                    tile.highlighted = false;
+                    tile.pathHighlighted = true;
+                    tile.UpdateMaterial();
                 }
 
                 startTime = Time.time;
