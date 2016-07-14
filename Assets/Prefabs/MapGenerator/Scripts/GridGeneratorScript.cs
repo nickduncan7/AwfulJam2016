@@ -11,10 +11,11 @@ public class GridGeneratorScript : MonoBehaviour {
     public GameObject TilePrefab;
     public GameObject CratePrefab;
 
-    public Material StandardMaterial;
-    public Material ImpassibleMaterial;
-    public Material HighlightedMaterial;
-    public Material PathMaterial;
+    public Material GrassMaterial;
+    public Material DirtMaterial;
+    public Material StoneMaterial;
+    public Material ConcreteMaterial;
+    public Material WoodMaterial;
 
     public GameObject MainSpawnIndicator;
     public GameObject SpawnTwoIndicator;

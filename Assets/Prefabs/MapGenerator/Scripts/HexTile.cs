@@ -8,14 +8,19 @@ using System.Linq;
 public class HexTile : MonoBehaviour {
     // Private members
     private object contentInstance;
+    private readonly Color defaultColor = new Color(0.5f, 0.5f, 0.5f);
+    private readonly Color highlightColor = new Color(0.6f, 0.6f, 0.6f);
+    private readonly Color pathHighlightColor = new Color(0.7f, 0.7f, 0.7f);
 
     [HideInInspector]
     public GameObject indicator;
 
     // Public members
-    public TileType Type = TileType.Standard;
+    public TileType Type = TileType.Grass;
+    public bool Traversible = true;
     public TileRotation Rotation = TileRotation.ZeroDegrees;
     public TileContents Contents = TileContents.Nothing;
+    
 
     [HideInInspector]
     public WallType _upperLeftWall;
@@ -188,10 +193,7 @@ public class HexTile : MonoBehaviour {
             switch (Type)
             {
                 default:
-                case TileType.Standard:
                     return 1;
-                case TileType.Impassible:
-                    return -1;
             }
         }
     }
@@ -200,7 +202,7 @@ public class HexTile : MonoBehaviour {
     {
         get
         {
-            return (Weight != -1 && !occupied);
+            return (Traversible && !occupied);
         }
     }
 
@@ -234,31 +236,42 @@ public class HexTile : MonoBehaviour {
     {
         var meshRenderer = GetComponent<MeshRenderer>();
         var materials = meshRenderer.sharedMaterials;
-        if (pathHighlighted)
+        
+        switch (Type)
         {
-            materials[1] = GameObjects.GridGenerator.PathMaterial;
-        }
-        else if (highlighted)
-        {
-            materials[1] = GameObjects.GridGenerator.HighlightedMaterial;
-        }
-        else
-        {
-            
-            switch (Type)
-            {
-                default:
-                case TileType.Standard:
-                    materials[1] = GameObjects.GridGenerator.StandardMaterial;
-                    break;
-                case TileType.Impassible:
-                    materials[1] = GameObjects.GridGenerator.ImpassibleMaterial;
-                    break;
+            default:
+            case TileType.Grass:
+                materials[1] = GameObjects.GridGenerator.GrassMaterial;
+                break;
+            case TileType.Dirt:
+                materials[1] = GameObjects.GridGenerator.DirtMaterial;
+                break;
+            case TileType.Stone:
+                materials[1] = GameObjects.GridGenerator.StoneMaterial;
+                break;
+            case TileType.Concrete:
+                materials[1] = GameObjects.GridGenerator.ConcreteMaterial;
+                break;
+            case TileType.Wood:
+                materials[1] = GameObjects.GridGenerator.WoodMaterial;
+                break;
 
-            }
         }
 
         meshRenderer.materials = materials;
+
+        if (pathHighlighted)
+        {
+            meshRenderer.materials[1].SetColor("_Color", pathHighlightColor);
+        }
+        else if (highlighted)
+        {
+            meshRenderer.materials[1].SetColor("_Color", highlightColor);
+        }
+        else
+        {
+            meshRenderer.materials[1].SetColor("_Color", defaultColor);
+        }
     }
 
     public void SpawnWalls()
@@ -377,8 +390,11 @@ public enum TileRotation
 [Serializable]
 public enum TileType
 {
-    Standard,
-    Impassible
+    Grass,
+    Dirt,
+    Stone,
+    Concrete,
+    Wood
 }
 
 [Serializable]

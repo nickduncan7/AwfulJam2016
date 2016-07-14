@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 27e9d36c1ad19b9458af38a5e38c2db5
-timeCreated: 1468426253
+timeCreated: 1468511870
 licenseType: Free
 SubstanceImporter:
   serializedVersion: 5
@@ -23,7 +23,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: $randomseed
       value:
-        scalar[0]: 0
+        scalar[0]: 5970
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -51,21 +51,21 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: ShoeSize
       value:
-        scalar[0]: 2
+        scalar[0]: 3
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: ShoeColor
       value:
-        scalar[0]: 1
+        scalar[0]: 2
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: PantsColor
       value:
-        scalar[0]: 5
+        scalar[0]: 2
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -86,7 +86,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: ShirtColor
       value:
-        scalar[0]: 5
+        scalar[0]: 2
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -114,21 +114,21 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Coattype
       value:
-        scalar[0]: 1
+        scalar[0]: 2
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: CoatColor
       value:
-        scalar[0]: 3
+        scalar[0]: 2
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Hair
       value:
-        scalar[0]: 2
+        scalar[0]: 3
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -149,7 +149,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: FacialHairStyle
       value:
-        scalar[0]: 1
+        scalar[0]: 3
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0

@@ -77,12 +77,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 628b470c7fce120419d1c8f57e227b2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  indicator: {fileID: 0}
   Type: 0
+  Traversible: 1
   Rotation: 0
   Contents: 0
+  _upperLeftWall: 0
+  _upperWall: 0
+  _upperRightWall: 0
+  _lowerLeftWall: 0
+  _lowerWall: 0
+  _lowerRightWall: 0
   Coordinate:
     q: 0
     r: 0
+  occupied: 0
   highlighted: 0
   pathHighlighted: 0
 --- !u!135 &13578082
