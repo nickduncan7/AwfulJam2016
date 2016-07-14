@@ -315,7 +315,8 @@ public class PlayerCharacterManager : MonoBehaviour {
 	            var newLocationScript = Grid.GetTileAtCoordinates(destination).GetComponent<HexTile>();
                 var oldLocationScript = Grid.GetTileAtCoordinates(location).GetComponent<HexTile>();
                 newLocationScript.pathHighlighted = false;
-	            newLocationScript.DestroyContents();
+                newLocationScript.UpdateMaterial();
+                newLocationScript.DestroyContents();
 
                 oldLocationScript.occupied = false;
 
