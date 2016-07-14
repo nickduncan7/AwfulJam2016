@@ -193,7 +193,7 @@ GameObject:
   - 114: {fileID: 11406280}
   m_Layer: 0
   m_Name: EnemyCharacter
-  m_TagString: Untagged
+  m_TagString: Unit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -807,8 +807,12 @@ MonoBehaviour:
   currentLocation:
     q: 0
     r: 0
-  NameCanvas: {fileID: 0}
   Name: 
+  Initiative: 0
+  AttackStat: 0
+  DefenseStat: 0
+  MovementStat: 0
+  NameCanvas: {fileID: 0}
 --- !u!137 &13740626
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

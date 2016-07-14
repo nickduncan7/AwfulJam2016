@@ -349,10 +349,11 @@ public class HexTile : MonoBehaviour {
 
     public void SpawnContents()
     {
+        if (contentInstance != null) return;
         switch (Contents)
         {
             case TileContents.Crate:
-                contentInstance = Instantiate(GameObjects.GridGenerator.CratePrefab, transform.position, Quaternion.identity) as GameObject;
+                contentInstance = Instantiate(GameObjects.GridGenerator.CratePrefab, transform.position, Quaternion.identity);
                 ((GameObject)contentInstance).transform.parent = null;
                 break;
         }
@@ -361,7 +362,7 @@ public class HexTile : MonoBehaviour {
     public void DestroyContents()
     {
         if (contentInstance != null)
-            Destroy(((GameObject)contentInstance));
+            Destroy(((GameObject) contentInstance));
     }
 
     // Use this for initialization

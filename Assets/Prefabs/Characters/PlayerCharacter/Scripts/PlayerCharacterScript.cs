@@ -5,16 +5,13 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine.UI;
 
-public class PlayerCharacterScript : MonoBehaviour
+public class PlayerCharacterScript : ICharacterScript
 {
     private Color notActiveColor = new Color(0.9f, 0.9f, 0.9f);
     private Color activeColor = new Color(1f, 1f, 1f);
 
-    [HideInInspector]
-    public Coordinate currentLocation;
-
     public GameObject NameCanvas;
-    [HideInInspector] public string Name;
+    
 
     public string FullName
     {
@@ -46,9 +43,14 @@ public class PlayerCharacterScript : MonoBehaviour
     }
 
 	// Use this for initialization
-    void Start()
+    void Awake()
     {
-        Name = GameObject.Find("/PlayerManager").GetComponent<PlayerCharacterManager>().GetGrandpaName();
+        Name = GameObjects.GameManager.GetGrandpaName();
+
+        var nameCanvas = Instantiate(GameObjects.GameManager.NameCanvasPrefab, transform.position + (2f * Vector3.up), Quaternion.identity) as GameObject;
+        NameCanvas = nameCanvas;
+        NameCanvas.transform.SetParent(transform);
+
         NameCanvas.transform.FindChild("NamePlate").GetComponent<Text>().text = FullName;
 
         var substanceMaterial =
@@ -73,6 +75,7 @@ public class PlayerCharacterScript : MonoBehaviour
 
         substanceMaterial.RebuildTextures();
 
+        Active = false;
     }
 
     void LateUpdate()

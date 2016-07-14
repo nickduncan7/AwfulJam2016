@@ -6,17 +6,22 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.UI;
 
-public class PlayerCharacterManager : MonoBehaviour {
+public class GameManagerScript : MonoBehaviour {
     // Private members
     private List<string> grandpaNames;
-    private bool moving;
+    private bool playerMoving;
     private float startTime;
     private List<Coordinate> previousHighlightedPath;
     private List<Coordinate> highlightedPath;
     private List<Coordinate> path;
     private Coordinate destination;
     private Animator anim;
-    private List<GameObject> grandpas; 
+    private List<GameObject> units;
+
+    private List<GameObject> allUnits
+    {
+        get { return GameObject.FindGameObjectsWithTag("Unit").ToList(); }
+    }
 
     // Private members for ray polling
     private float pollInterval = 0.1f;
@@ -28,61 +33,83 @@ public class PlayerCharacterManager : MonoBehaviour {
     public GridGeneratorScript Grid;
     public GameObject NameCanvasPrefab;
 
-    private int currentGrandpaIndex = 0;
-    private int previousUnitIndex = 0;
 
-    public GameObject currentGrandpa
-    {
-        get { return grandpas[currentGrandpaIndex]; }
-    }
+    public GameObject currentUnit;
 
-    public GameObject previousUnit
-    {
-        get { return grandpas[previousUnitIndex]; }
-    }
 
     public Coordinate location
     {
-        get { return currentGrandpa.GetComponent<PlayerCharacterScript>().currentLocation; }
+        get { return currentUnit.GetComponent<PlayerCharacterScript>().currentLocation; }
     }
 
-    public GameObject GetNextGrandpa()
+    public GameObject GetNextUnit()
     {
-        Grid.GetTileAtCoordinates(location).GetComponent<HexTile>().highlighted = false;
-        currentGrandpa.GetComponent<PlayerCharacterScript>().Active = false;
+        if (units.Any())
+        {
+            if (currentUnit != null)
+            {
 
-        previousUnitIndex = currentGrandpaIndex;
+                Grid.GetTileAtCoordinates(location).GetComponent<HexTile>().highlighted = false;
+                currentUnit.GetComponent<PlayerCharacterScript>().Active = false;
+            }
 
-        if (currentGrandpaIndex >= grandpas.Count - 1)
-            currentGrandpaIndex = 0;
+            currentUnit = units[0];
+            units.Remove(currentUnit);
+
+            SetupMove();
+
+            currentUnit.GetComponent<PlayerCharacterScript>().Active = true;
+
+            UpdateNameBadges();   
+
+        }
         else
-            currentGrandpaIndex++;
+        {
+            endTurn();
+        }
 
-        anim = currentGrandpa.GetComponent<Animator>();
-        moving = false;
+        return currentUnit;
+    }
 
-        setupMove();
+    private void UpdateNameBadges()
+    {
+        var hud = GameObject.Find("/Standard HUD");
+        var a = hud.transform.FindChild("CurrentBadge");
+        var b = a.FindChild("Name");
+        var c = b.GetComponent<Text>();
+        c.text = currentUnit.GetComponent<PlayerCharacterScript>().Name;
 
-        currentGrandpa.GetComponent<PlayerCharacterScript>().Active = true;
+        var d = hud.transform.FindChild("NextBadge");
+        var e = d.FindChild("Name");
+        var f = e.GetComponent<Text>();
+        f.text = units.Any() ? units[0].GetComponent<PlayerCharacterScript>().Name : "Nobody";
+    }
 
-        updateNameBadges();
+    private void SetupMove()
+    {
+        anim = currentUnit.GetComponent<Animator>();
+        playerMoving = false;
+    }
 
+    private void RollInitiative()
+    {
+        foreach (var unit in allUnits)
+        {
+            var unitScript = unit.GetComponent<ICharacterScript>();
+            unitScript.Initiative = Dice.Roll(20);
+        }
+
+        units = allUnits.OrderByDescending(x => x.GetComponent<ICharacterScript>().Initiative).ToList();
+
+        GetNextUnit();
+
+        UpdateNameBadges();
+    }
+
+    private void endTurn()
+    {
         GameObjects.TimeManager.AdvanceHour();
-
-        return currentGrandpa;
-    }
-
-    private void updateNameBadges()
-    {
-        var hud = GameObject.Find("Standard HUD");
-        hud.transform.FindChild("CurrentBadge").FindChild("Name").GetComponent<Text>().text = currentGrandpa.GetComponent<PlayerCharacterScript>().Name;
-        hud.transform.FindChild("NextBadge").FindChild("Name").GetComponent<Text>().text = previousUnit.GetComponent<PlayerCharacterScript>().Name;
-    }
-
-    private void setupMove()
-    {
-        anim = currentGrandpa.GetComponent<Animator>();
-        moving = false;
+        RollInitiative();
     }
 
     public string GetGrandpaName()
@@ -121,25 +148,16 @@ public class PlayerCharacterManager : MonoBehaviour {
 
         grandpaNames = grandpaNames.OrderBy(x => Guid.NewGuid()).ToList();
 
-        grandpas = new List<GameObject>();
+        units = new List<GameObject>();
 
         // First Grandpa
         var startTile = Grid.GetTileAtCoordinates(Grid.MainSpawn);
         if (startTile != null)
         {
             var playerObject = Instantiate(CharacterObjectPrefab, startTile.transform.position, Quaternion.Euler(0,180,0)) as GameObject;
-            playerObject.tag = "PlayerCharacter";
             playerObject.GetComponent<PlayerCharacterScript>().currentLocation = Grid.MainSpawn;
-            
-
-            var nameCanvas = Instantiate(NameCanvasPrefab, startTile.transform.position + (2f * Vector3.up), Quaternion.identity) as GameObject;
-            playerObject.GetComponent<PlayerCharacterScript>().NameCanvas = nameCanvas;
-            playerObject.GetComponent<PlayerCharacterScript>().NameCanvas.transform.SetParent(playerObject.transform);
-            playerObject.GetComponent<PlayerCharacterScript>().Active = true;
 
             Grid.GetTileAtCoordinates(Grid.MainSpawn).GetComponent<HexTile>().occupied = true;
-            
-            grandpas.Add(playerObject);
         }
 
         // Second Grandpa
@@ -147,17 +165,9 @@ public class PlayerCharacterManager : MonoBehaviour {
         if (secondTile != null)
         {
             var playerObject = Instantiate(CharacterObjectPrefab, secondTile.transform.position, Quaternion.Euler(0, 180, 0)) as GameObject;
-            playerObject.tag = "PlayerCharacter";
             playerObject.GetComponent<PlayerCharacterScript>().currentLocation = Grid.SpawnTwo;
 
-            var nameCanvas = Instantiate(NameCanvasPrefab, secondTile.transform.position + (2f * Vector3.up), Quaternion.identity) as GameObject;
-            playerObject.GetComponent<PlayerCharacterScript>().NameCanvas = nameCanvas;
-            playerObject.GetComponent<PlayerCharacterScript>().NameCanvas.transform.SetParent(playerObject.transform);
-            playerObject.GetComponent<PlayerCharacterScript>().Active = false;
-
             Grid.GetTileAtCoordinates(Grid.SpawnTwo).GetComponent<HexTile>().occupied = true;
-
-            grandpas.Add(playerObject);
         }
 
         // Third Grandpa
@@ -165,17 +175,9 @@ public class PlayerCharacterManager : MonoBehaviour {
         if (thirdTile != null)
         {
             var playerObject = Instantiate(CharacterObjectPrefab, thirdTile.transform.position, Quaternion.Euler(0, 180, 0)) as GameObject;
-            playerObject.tag = "PlayerCharacter";
             playerObject.GetComponent<PlayerCharacterScript>().currentLocation = Grid.SpawnThree;
 
-            var nameCanvas = Instantiate(NameCanvasPrefab, thirdTile.transform.position + (2f * Vector3.up), Quaternion.identity) as GameObject;
-            playerObject.GetComponent<PlayerCharacterScript>().NameCanvas = nameCanvas;
-            playerObject.GetComponent<PlayerCharacterScript>().NameCanvas.transform.SetParent(playerObject.transform);
-            playerObject.GetComponent<PlayerCharacterScript>().Active = false;
-
             Grid.GetTileAtCoordinates(Grid.SpawnThree).GetComponent<HexTile>().occupied = true;
-
-            grandpas.Add(playerObject);
         }
 
         // Fourth Grandpa
@@ -183,17 +185,9 @@ public class PlayerCharacterManager : MonoBehaviour {
         if (fourthTile != null)
         {
             var playerObject = Instantiate(CharacterObjectPrefab, fourthTile.transform.position, Quaternion.Euler(0, 180, 0)) as GameObject;
-            playerObject.tag = "PlayerCharacter";
             playerObject.GetComponent<PlayerCharacterScript>().currentLocation = Grid.SpawnFour;
 
-            var nameCanvas = Instantiate(NameCanvasPrefab, fourthTile.transform.position + (2f * Vector3.up), Quaternion.identity) as GameObject;
-            playerObject.GetComponent<PlayerCharacterScript>().NameCanvas = nameCanvas;
-            playerObject.GetComponent<PlayerCharacterScript>().NameCanvas.transform.SetParent(playerObject.transform);
-            playerObject.GetComponent<PlayerCharacterScript>().Active = false;
-
             Grid.GetTileAtCoordinates(Grid.SpawnFour).GetComponent<HexTile>().occupied = true;
-
-            grandpas.Add(playerObject);
         }
 
         // Fifth Grandpa
@@ -201,31 +195,25 @@ public class PlayerCharacterManager : MonoBehaviour {
         if (fifthTile != null)
         {
             var playerObject = Instantiate(CharacterObjectPrefab, fifthTile.transform.position, Quaternion.Euler(0, 180, 0)) as GameObject;
-            playerObject.tag = "PlayerCharacter";
             playerObject.GetComponent<PlayerCharacterScript>().currentLocation = Grid.SpawnFive;
 
-            var nameCanvas = Instantiate(NameCanvasPrefab, fifthTile.transform.position + (2f * Vector3.up), Quaternion.identity) as GameObject;
-            playerObject.GetComponent<PlayerCharacterScript>().NameCanvas = nameCanvas;
-            playerObject.GetComponent<PlayerCharacterScript>().NameCanvas.transform.SetParent(playerObject.transform);
-            playerObject.GetComponent<PlayerCharacterScript>().Active = false;
-
             Grid.GetTileAtCoordinates(Grid.SpawnFive).GetComponent<HexTile>().occupied = true;
-
-            grandpas.Add(playerObject);
         }
-
-        setupMove();
-        updateNameBadges();
+       
+        RollInitiative();
+        SetupMove();
     }
-	
-	// Update is called once per frame
-	void Update()
+
+    // Update is called once per frame
+    void Update()
 	{
 	    currentTime += Time.deltaTime;
 
-	    if (currentTime >= pollInterval)
+        var locationTile = Grid.GetTileAtCoordinates(location).GetComponent<HexTile>();
+
+        if (currentTime >= pollInterval)
 	    {
-	        if (!moving && !GameObjects.TimeManager.transitioning)
+	        if (!playerMoving && !GameObjects.TimeManager.transitioning)
 	        {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -235,7 +223,9 @@ public class PlayerCharacterManager : MonoBehaviour {
 
                 if (previousHighlightedPath != null && previousHighlightedPath.Count > 0)
                 {
-                    Grid.GetTileAtCoordinates(location).GetComponent<HexTile>().highlighted = false;
+                    locationTile.highlighted = false;
+                    locationTile.UpdateMaterial();
+
                     foreach (var node in previousHighlightedPath)
                     {
                         var tile = Grid.GetTileAtCoordinates(node).GetComponent<HexTile>();
@@ -254,7 +244,8 @@ public class PlayerCharacterManager : MonoBehaviour {
 
 	                    if (highlightedPath != null && highlightedPath.Count > 0)
 	                    {
-                            Grid.GetTileAtCoordinates(location).GetComponent<HexTile>().highlighted = true;
+                            locationTile.highlighted = true;
+                            locationTile.UpdateMaterial();
                             foreach (var node in highlightedPath)
 	                        {
                                 var tile = Grid.GetTileAtCoordinates(node).GetComponent<HexTile>();
@@ -269,12 +260,13 @@ public class PlayerCharacterManager : MonoBehaviour {
 	        currentTime = 0f;
 	    }
 
-        if (!moving && !GameObjects.TimeManager.transitioning && Input.GetKeyDown(KeyCode.Space))
-            GetNextGrandpa();
+        if (!playerMoving && !GameObjects.TimeManager.transitioning && Input.GetKeyDown(KeyCode.Space))
+            GetNextUnit();
 
-        if (!moving && !GameObjects.TimeManager.transitioning && Input.GetMouseButtonDown(1))
+        if (!playerMoving && !GameObjects.TimeManager.transitioning && Input.GetMouseButtonDown(1))
         {
-            Grid.GetTileAtCoordinates(location).GetComponent<HexTile>().highlighted = false;
+            locationTile.highlighted = false;
+            locationTile.UpdateMaterial();
             path = highlightedPath;
 
             if (path != null && path.Count > 0)
@@ -289,11 +281,11 @@ public class PlayerCharacterManager : MonoBehaviour {
 
                 startTime = Time.time;
                 destination = path[0];
-                moving = true;
+                playerMoving = true;
             }
         }
 
-	    if (moving)
+	    if (playerMoving)
 	    {
 	        anim.SetBool("Walking", true);
 	        var destinationPosition = Grid.GetTileAtCoordinates(destination).transform.position;
@@ -304,12 +296,12 @@ public class PlayerCharacterManager : MonoBehaviour {
 
 	        if (destinationPosition != currentPosition)
 	        {
-                currentGrandpa.transform.position = Vector3.Lerp(currentPosition, destinationPosition, fracJourney);
-                currentGrandpa.transform.rotation = Quaternion.Lerp(currentGrandpa.transform.rotation,
+                currentUnit.transform.position = Vector3.Lerp(currentPosition, destinationPosition, fracJourney);
+                currentUnit.transform.rotation = Quaternion.Lerp(currentUnit.transform.rotation,
 	                Quaternion.LookRotation(destinationPosition - currentPosition), Time.deltaTime*10f);
 	        }
 
-	        if (Vector3.Distance(currentGrandpa.transform.position,
+	        if (Vector3.Distance(currentUnit.transform.position,
 	            destinationPosition) < 0.05f)
 	        {
 	            var newLocationScript = Grid.GetTileAtCoordinates(destination).GetComponent<HexTile>();
@@ -321,7 +313,7 @@ public class PlayerCharacterManager : MonoBehaviour {
                 oldLocationScript.occupied = false;
 
                 // Completed journey to tile
-                currentGrandpa.GetComponent<PlayerCharacterScript>().currentLocation = destination;
+                currentUnit.GetComponent<PlayerCharacterScript>().currentLocation = destination;
 
                 // Mark occupied
                 newLocationScript.occupied = true;
@@ -336,7 +328,7 @@ public class PlayerCharacterManager : MonoBehaviour {
 	            else
                 {
                     anim.SetBool("Walking", false);
-                    GetNextGrandpa();
+                    GetNextUnit();
 	            }
 	        }
 	    }

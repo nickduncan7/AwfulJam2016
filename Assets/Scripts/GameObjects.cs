@@ -17,9 +17,9 @@ public static class GameObjects
         get { return GameObject.Find("/TimeManager").GetComponent<TimeManagerScript>(); }
     }
 
-    public static PlayerCharacterManager PlayerCharacterManager
+    public static GameManagerScript GameManager
     {
-        get { return GameObject.Find("/PlayerManager").GetComponent<PlayerCharacterManager>(); }
+        get { return GameObject.Find("/GameManager").GetComponent<GameManagerScript>(); }
     }
 }
 
