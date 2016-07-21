@@ -10,6 +10,8 @@ public class GridGeneratorScript : MonoBehaviour {
     public int Height = 8;
     public GameObject TilePrefab;
     public GameObject CratePrefab;
+    public GameObject GuardPrefab;
+    public GameObject EliteGuardPrefab;
 
     public Material GrassMaterial;
     public Material DirtMaterial;
@@ -23,6 +25,7 @@ public class GridGeneratorScript : MonoBehaviour {
     public GameObject SpawnFourIndicator;
     public GameObject SpawnFiveIndicator;
     public GameObject CrateIndicator;
+    public GameObject GuardIndicator;
 
     [HideInInspector]
     public Coordinate badCoordinate = new Coordinate(-999, -999);

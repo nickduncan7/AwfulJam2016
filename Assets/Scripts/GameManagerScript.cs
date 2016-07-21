@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class GameManagerScript : MonoBehaviour {
     // Private members
     private List<string> grandpaNames;
+    private List<string> guardNames;
     private bool playerMoving;
     private float startTime;
     private List<Coordinate> previousHighlightedPath;
@@ -39,7 +40,7 @@ public class GameManagerScript : MonoBehaviour {
 
     public Coordinate location
     {
-        get { return currentUnit.GetComponent<PlayerCharacterScript>().currentLocation; }
+        get { return currentUnit.GetComponent<ICharacterScript>().currentLocation; }
     }
 
     public GameObject GetNextUnit()
@@ -50,7 +51,7 @@ public class GameManagerScript : MonoBehaviour {
             {
 
                 Grid.GetTileAtCoordinates(location).GetComponent<HexTile>().highlighted = false;
-                currentUnit.GetComponent<PlayerCharacterScript>().Active = false;
+                currentUnit.GetComponent<ICharacterScript>().Active = false;
             }
 
             currentUnit = units[0];
@@ -58,7 +59,7 @@ public class GameManagerScript : MonoBehaviour {
 
             SetupMove();
 
-            currentUnit.GetComponent<PlayerCharacterScript>().Active = true;
+            currentUnit.GetComponent<ICharacterScript>().Active = true;
 
             UpdateNameBadges();   
 
@@ -77,12 +78,12 @@ public class GameManagerScript : MonoBehaviour {
         var a = hud.transform.FindChild("CurrentBadge");
         var b = a.FindChild("Name");
         var c = b.GetComponent<Text>();
-        c.text = currentUnit.GetComponent<PlayerCharacterScript>().Name;
+        c.text = currentUnit.GetComponent<ICharacterScript>().Name;
 
         var d = hud.transform.FindChild("NextBadge");
         var e = d.FindChild("Name");
         var f = e.GetComponent<Text>();
-        f.text = units.Any() ? units[0].GetComponent<PlayerCharacterScript>().Name : "Nobody";
+        f.text = units.Any() ? units[0].GetComponent<ICharacterScript>().Name : "Nobody";
     }
 
     private void SetupMove()
@@ -119,6 +120,13 @@ public class GameManagerScript : MonoBehaviour {
         return grandpaName;
     }
 
+    public string GetGuardName()
+    {
+        var guardName = guardNames[0];
+        guardNames.Remove(guardName);
+        return guardName;
+    }
+
     // Use this for initialization
     void Start()
     {
@@ -147,6 +155,28 @@ public class GameManagerScript : MonoBehaviour {
         };
 
         grandpaNames = grandpaNames.OrderBy(x => Guid.NewGuid()).ToList();
+
+        guardNames = new List<string>
+        {
+            "Wolfgang",
+            "Uwe",
+            "Gunther",
+            "Dieter",
+            "Hans",
+            "Klaus",
+            "Peter",
+            "Max",
+            "Johann",
+            "Tobias",
+            "Adolf",
+            "Lucas",
+            "Alex",
+            "Philipp",
+            "Frank",
+            "Paul"
+        };
+
+        guardNames = guardNames.OrderBy(x => Guid.NewGuid()).ToList();
 
         units = new List<GameObject>();
 
@@ -199,138 +229,150 @@ public class GameManagerScript : MonoBehaviour {
 
             Grid.GetTileAtCoordinates(Grid.SpawnFive).GetComponent<HexTile>().occupied = true;
         }
-       
-        RollInitiative();
-        SetupMove();
+
+        StartCoroutine(SetupDelay());
     }
 
+    private IEnumerator SetupDelay()
+    {
+        yield return new WaitForSeconds(1);
+        RollInitiative();
+        SetupMove();
+        ready = true;
+    }
+
+
+    private bool ready = false;
     // Update is called once per frame
     void Update()
 	{
-	    currentTime += Time.deltaTime;
+        if (ready)
+        {
+            currentTime += Time.deltaTime;
 
-        var locationTile = Grid.GetTileAtCoordinates(location).GetComponent<HexTile>();
+            var locationTile = Grid.GetTileAtCoordinates(location).GetComponent<HexTile>();
 
-        if (currentTime >= pollInterval)
-	    {
-	        if (!playerMoving && !GameObjects.TimeManager.transitioning)
-	        {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                Physics.Raycast(ray, out hit);
-
-                previousHighlightedPath = highlightedPath;
-
-                if (previousHighlightedPath != null && previousHighlightedPath.Count > 0)
+            if (currentTime >= pollInterval)
+            {
+                if (!playerMoving && !GameObjects.TimeManager.transitioning)
                 {
-                    locationTile.highlighted = false;
-                    locationTile.UpdateMaterial();
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit hit;
+                    Physics.Raycast(ray, out hit);
 
-                    foreach (var node in previousHighlightedPath)
+                    previousHighlightedPath = highlightedPath;
+
+                    if (previousHighlightedPath != null && previousHighlightedPath.Count > 0)
                     {
-                        var tile = Grid.GetTileAtCoordinates(node).GetComponent<HexTile>();
-                        tile.highlighted = false;
-                        tile.UpdateMaterial();
+                        locationTile.highlighted = false;
+                        locationTile.UpdateMaterial();
+
+                        foreach (var node in previousHighlightedPath)
+                        {
+                            var tile = Grid.GetTileAtCoordinates(node).GetComponent<HexTile>();
+                            tile.highlighted = false;
+                            tile.UpdateMaterial();
+                        }
+                    }
+
+                    if (hit.transform != null)
+                    {
+                        var dest = hit.transform.GetComponent<HexTile>();
+
+                        if (dest != null)
+                        {
+                            highlightedPath = Grid.CalculateRoute(location, dest.Coordinate);
+
+                            if (highlightedPath != null && highlightedPath.Count > 0)
+                            {
+                                locationTile.highlighted = true;
+                                locationTile.UpdateMaterial();
+                                foreach (var node in highlightedPath)
+                                {
+                                    var tile = Grid.GetTileAtCoordinates(node).GetComponent<HexTile>();
+                                    tile.highlighted = true;
+                                    tile.UpdateMaterial();
+                                }
+                            }
+                        }
                     }
                 }
 
-                if (hit.transform != null)
-	            {
-	                var dest = hit.transform.GetComponent<HexTile>();
+                currentTime = 0f;
+            }
 
-	                if (dest != null)
-	                {
-	                    highlightedPath = Grid.CalculateRoute(location, dest.Coordinate);
+            if (!playerMoving && !GameObjects.TimeManager.transitioning && Input.GetKeyDown(KeyCode.Space))
+                GetNextUnit();
 
-	                    if (highlightedPath != null && highlightedPath.Count > 0)
-	                    {
-                            locationTile.highlighted = true;
-                            locationTile.UpdateMaterial();
-                            foreach (var node in highlightedPath)
-	                        {
-                                var tile = Grid.GetTileAtCoordinates(node).GetComponent<HexTile>();
-                                tile.highlighted = true;
-                                tile.UpdateMaterial();
-                            }
-                        }
-	                }
-	            }
-	        }
-
-	        currentTime = 0f;
-	    }
-
-        if (!playerMoving && !GameObjects.TimeManager.transitioning && Input.GetKeyDown(KeyCode.Space))
-            GetNextUnit();
-
-        if (!playerMoving && !GameObjects.TimeManager.transitioning && Input.GetMouseButtonDown(1))
-        {
-            locationTile.highlighted = false;
-            locationTile.UpdateMaterial();
-            path = highlightedPath;
-
-            if (path != null && path.Count > 0)
+            if (!playerMoving && !GameObjects.TimeManager.transitioning && Input.GetMouseButtonDown(1))
             {
-                foreach (var node in path)
+                locationTile.highlighted = false;
+                locationTile.UpdateMaterial();
+                path = highlightedPath;
+
+                if (path != null && path.Count > 0)
                 {
-                    var tile = Grid.GetTileAtCoordinates(node).GetComponent<HexTile>();
-                    tile.highlighted = false;
-                    tile.pathHighlighted = true;
-                    tile.UpdateMaterial();
+                    foreach (var node in path)
+                    {
+                        var tile = Grid.GetTileAtCoordinates(node).GetComponent<HexTile>();
+                        tile.highlighted = false;
+                        tile.pathHighlighted = true;
+                        tile.UpdateMaterial();
+                    }
+
+                    startTime = Time.time;
+                    destination = path[0];
+                    playerMoving = true;
+                }
+            }
+
+            if (playerMoving)
+            {
+                anim.SetBool("Walking", true);
+                var destinationPosition = Grid.GetTileAtCoordinates(destination).transform.position;
+                var currentPosition = Grid.GetTileAtCoordinates(location).transform.position;
+                var journeyLength = Vector3.Distance(currentPosition, destinationPosition);
+                var distCovered = (Time.time - startTime)*MoveSpeed;
+                var fracJourney = Mathf.Clamp(distCovered/journeyLength, 0f, 1f);
+
+                if (destinationPosition != currentPosition)
+                {
+                    currentUnit.transform.position = Vector3.Lerp(currentPosition, destinationPosition, fracJourney);
+                    currentUnit.transform.rotation = Quaternion.Lerp(currentUnit.transform.rotation,
+                        Quaternion.LookRotation(destinationPosition - currentPosition), Time.deltaTime*10f);
                 }
 
-                startTime = Time.time;
-                destination = path[0];
-                playerMoving = true;
+                if (Vector3.Distance(currentUnit.transform.position,
+                    destinationPosition) < 0.05f)
+                {
+                    var newLocationScript = Grid.GetTileAtCoordinates(destination).GetComponent<HexTile>();
+                    var oldLocationScript = Grid.GetTileAtCoordinates(location).GetComponent<HexTile>();
+                    newLocationScript.pathHighlighted = false;
+                    newLocationScript.UpdateMaterial();
+                    newLocationScript.DestroyContents();
+
+                    oldLocationScript.occupied = false;
+
+                    // Completed journey to tile
+                    currentUnit.GetComponent<ICharacterScript>().currentLocation = destination;
+
+                    // Mark occupied
+                    newLocationScript.occupied = true;
+
+                    startTime = Time.time;
+
+                    if (path.Count != 0)
+                    {
+                        destination = path[0];
+                        path.Remove(destination);
+                    }
+                    else
+                    {
+                        anim.SetBool("Walking", false);
+                        GetNextUnit();
+                    }
+                }
             }
         }
-
-	    if (playerMoving)
-	    {
-	        anim.SetBool("Walking", true);
-	        var destinationPosition = Grid.GetTileAtCoordinates(destination).transform.position;
-	        var currentPosition = Grid.GetTileAtCoordinates(location).transform.position;
-	        var journeyLength = Vector3.Distance(currentPosition, destinationPosition);
-	        var distCovered = (Time.time - startTime)*MoveSpeed;
-	        var fracJourney = Mathf.Clamp(distCovered/journeyLength, 0f, 1f);
-
-	        if (destinationPosition != currentPosition)
-	        {
-                currentUnit.transform.position = Vector3.Lerp(currentPosition, destinationPosition, fracJourney);
-                currentUnit.transform.rotation = Quaternion.Lerp(currentUnit.transform.rotation,
-	                Quaternion.LookRotation(destinationPosition - currentPosition), Time.deltaTime*10f);
-	        }
-
-	        if (Vector3.Distance(currentUnit.transform.position,
-	            destinationPosition) < 0.05f)
-	        {
-	            var newLocationScript = Grid.GetTileAtCoordinates(destination).GetComponent<HexTile>();
-                var oldLocationScript = Grid.GetTileAtCoordinates(location).GetComponent<HexTile>();
-                newLocationScript.pathHighlighted = false;
-                newLocationScript.UpdateMaterial();
-                newLocationScript.DestroyContents();
-
-                oldLocationScript.occupied = false;
-
-                // Completed journey to tile
-                currentUnit.GetComponent<PlayerCharacterScript>().currentLocation = destination;
-
-                // Mark occupied
-                newLocationScript.occupied = true;
-
-                startTime = Time.time;
-
-	            if (path.Count != 0)
-	            {
-	                destination = path[0];
-	                path.Remove(destination);
-	            }
-	            else
-                {
-                    anim.SetBool("Walking", false);
-                    GetNextUnit();
-	            }
-	        }
-	    }
 	}
 }

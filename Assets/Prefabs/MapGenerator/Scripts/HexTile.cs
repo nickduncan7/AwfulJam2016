@@ -322,29 +322,42 @@ public class HexTile : MonoBehaviour {
     public void SpawnIndicator()
     {
         if (indicator != null) DestroyImmediate(indicator);
+
+        GameObject objectToInstantiate = null;
+
+        // Set the object to instantiate
         switch (Contents)
         {
             case TileContents.MainSpawn:
-                if (indicator == null) indicator = Instantiate(GameObjects.GridGenerator.MainSpawnIndicator, transform.position + Vector3.up * 0.1f, Quaternion.Euler(90,0,0)) as GameObject;
+                objectToInstantiate = GameObjects.GridGenerator.MainSpawnIndicator;
                 break;
             case TileContents.SpawnTwo:
-                if (indicator == null) indicator = Instantiate(GameObjects.GridGenerator.SpawnTwoIndicator, transform.position + Vector3.up * 0.1f, Quaternion.Euler(90, 0, 0)) as GameObject;
+                objectToInstantiate = GameObjects.GridGenerator.SpawnTwoIndicator;
                 break;
             case TileContents.SpawnThree:
-                if (indicator == null) indicator = Instantiate(GameObjects.GridGenerator.SpawnThreeIndicator, transform.position + Vector3.up * 0.1f, Quaternion.Euler(90, 0, 0)) as GameObject;
+                objectToInstantiate = GameObjects.GridGenerator.SpawnThreeIndicator;
                 break;
             case TileContents.SpawnFour:
-                if (indicator == null) indicator = Instantiate(GameObjects.GridGenerator.SpawnFourIndicator, transform.position + Vector3.up * 0.1f, Quaternion.Euler(90, 0, 0)) as GameObject;
+                objectToInstantiate = GameObjects.GridGenerator.SpawnFourIndicator;
                 break;
             case TileContents.SpawnFive:
-                if (indicator == null) indicator = Instantiate(GameObjects.GridGenerator.SpawnFiveIndicator, transform.position + Vector3.up * 0.1f, Quaternion.Euler(90, 0, 0)) as GameObject;
+                objectToInstantiate = GameObjects.GridGenerator.SpawnFiveIndicator;
                 break;
             case TileContents.Crate:
-                if (indicator == null) indicator = Instantiate(GameObjects.GridGenerator.CrateIndicator, transform.position + Vector3.up * 0.1f, Quaternion.Euler(90, 0, 0)) as GameObject;
+                objectToInstantiate = GameObjects.GridGenerator.CrateIndicator;
+                break;
+            case TileContents.Guard:
+                objectToInstantiate = GameObjects.GridGenerator.GuardIndicator;
                 break;
         }
 
-        if (indicator != null) indicator.transform.SetParent(transform);
+        // Finally, spawn the indicator
+        if (objectToInstantiate != null)
+        {
+            if (indicator == null)
+                indicator = Instantiate(objectToInstantiate, transform.position + Vector3.up*0.1f, Quaternion.Euler(90, 0, 0)) as GameObject;
+            if (indicator != null) indicator.transform.SetParent(transform);
+        }
     }
 
     public void SpawnContents()
@@ -355,6 +368,12 @@ public class HexTile : MonoBehaviour {
             case TileContents.Crate:
                 contentInstance = Instantiate(GameObjects.GridGenerator.CratePrefab, transform.position, Quaternion.identity);
                 ((GameObject)contentInstance).transform.parent = null;
+                break;
+            case TileContents.Guard:
+                var guardInstance = Instantiate(GameObjects.GridGenerator.GuardPrefab, transform.position, Quaternion.identity) as GameObject;
+                guardInstance.transform.parent = null;
+                occupied = true;
+                guardInstance.GetComponent<GuardScript>().currentLocation = Coordinate;
                 break;
         }
     }
@@ -404,7 +423,8 @@ public enum TileContents
     SpawnThree,
     SpawnFour,
     SpawnFive,
-    Crate
+    Crate,
+    Guard
 }
 
 [Serializable]
