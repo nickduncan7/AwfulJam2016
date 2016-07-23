@@ -15,9 +15,12 @@ public class ICharacterScript : MonoBehaviour {
     public string Name;
 
     public int Initiative;
-    public int AttackStat;
-    public int DefenseStat;
-    public int MovementStat;
+    public int AttackStat = 10;
+    public int DefenseStat = 20;
+    public int Health = 100;
+    public int MovementStat = 100;
+
+    public bool IsPlayer = false;
 
     private bool _active;
     public bool Active

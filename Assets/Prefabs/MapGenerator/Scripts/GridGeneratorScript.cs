@@ -31,7 +31,7 @@ public class GridGeneratorScript : MonoBehaviour {
     public Coordinate badCoordinate = new Coordinate(-999, -999);
 
     // Class properties
-    private List<GameObject> tiles
+    public List<GameObject> tiles
     {
         get
         {

@@ -12,6 +12,8 @@ public class GuardScript : ICharacterScript
         get { return "Guard " + Name; }
     }
 
+    public GameObject target;
+
     // Use this for initialization
     void Awake()
     {

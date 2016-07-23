@@ -17,6 +17,8 @@ public class PlayerCharacterScript : ICharacterScript
     {
         UnitReady();
 
+        IsPlayer = true;
+
         Name = GameObjects.GameManager.GetGrandpaName();
         NameCanvas.transform.FindChild("NamePlate").GetComponent<Text>().text = FullName;
 
