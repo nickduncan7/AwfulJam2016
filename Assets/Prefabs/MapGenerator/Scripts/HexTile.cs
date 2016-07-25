@@ -5,6 +5,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
 
+[Serializable]
 public class HexTile : MonoBehaviour {
     // Private members
     private object contentInstance;
@@ -17,9 +18,24 @@ public class HexTile : MonoBehaviour {
 
     // Public members
     public TileType Type = TileType.Grass;
+
     public bool Traversible = true;
     public TileRotation Rotation = TileRotation.ZeroDegrees;
-    public TileContents Contents = TileContents.Nothing;
+    private TileContents _contents = TileContents.Nothing;
+
+    public TileContents Contents
+    {
+        get
+        {
+            return _contents;
+        }
+        set
+        {
+            _contents = value;
+            SpawnIndicator();
+        }
+    }
+   
     
 
     [HideInInspector]
@@ -44,6 +60,8 @@ public class HexTile : MonoBehaviour {
             var neighborTile = GameObjects.GridGenerator.GetTileAtCoordinates(neighbor);
             if (neighborTile != null)
                 neighborTile.GetComponent<HexTile>()._lowerRightWall = value;
+
+            SpawnWalls();
         }
     }
 
@@ -69,6 +87,8 @@ public class HexTile : MonoBehaviour {
             var neighborTile = GameObjects.GridGenerator.GetTileAtCoordinates(neighbor);
             if (neighborTile != null)
                 neighborTile.GetComponent<HexTile>()._lowerWall = value;
+
+            SpawnWalls();
         }
     }
 
@@ -94,6 +114,8 @@ public class HexTile : MonoBehaviour {
             var neighborTile = GameObjects.GridGenerator.GetTileAtCoordinates(neighbor);
             if (neighborTile != null)
                 neighborTile.GetComponent<HexTile>()._lowerLeftWall = value;
+
+            SpawnWalls();
         }
     }
 
@@ -119,6 +141,8 @@ public class HexTile : MonoBehaviour {
             var neighborTile = GameObjects.GridGenerator.GetTileAtCoordinates(neighbor);
             if (neighborTile != null)
                 neighborTile.GetComponent<HexTile>()._upperRightWall = value;
+
+            SpawnWalls();
         }
     }
 
@@ -145,6 +169,7 @@ public class HexTile : MonoBehaviour {
             if (neighborTile != null)
                 neighborTile.GetComponent<HexTile>()._upperWall = value;
 
+            SpawnWalls();
         }
     }
 
@@ -170,6 +195,8 @@ public class HexTile : MonoBehaviour {
             var neighborTile = GameObjects.GridGenerator.GetTileAtCoordinates(neighbor);
             if (neighborTile != null)
                 neighborTile.GetComponent<HexTile>()._upperLeftWall = value;
+
+            SpawnWalls();
         }
     }
 
@@ -387,9 +414,8 @@ public class HexTile : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        UpdateRotation();
+        //UpdateRotation();
         SpawnContents();
-        SpawnWalls();
     }
 }
 
