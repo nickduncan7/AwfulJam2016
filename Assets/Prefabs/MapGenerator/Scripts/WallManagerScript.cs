@@ -51,7 +51,8 @@ public class WallManagerScript : MonoBehaviour {
     }
 
     public GameObject WireFencePrefab;
-    public GameObject DEVSolidWallPrefab;
+    public GameObject WoodWallPrefab;
+    public GameObject BrickWallPrefab;
 
     public List<Coordinate> GetBetween(Coordinate origin, WallLocation location)
     {
@@ -97,8 +98,11 @@ public class WallManagerScript : MonoBehaviour {
             case WallType.BarbedWire:
                 WallObject = Instantiate(WireFencePrefab) as GameObject;
                 break;
-            case WallType.DEVSolidWall:
-                WallObject = Instantiate(DEVSolidWallPrefab) as GameObject;
+            case WallType.BrickWall:
+                WallObject = Instantiate(BrickWallPrefab) as GameObject;
+                break;
+            case WallType.WoodWall:
+                WallObject = Instantiate(WoodWallPrefab) as GameObject;
                 break;
         }
         

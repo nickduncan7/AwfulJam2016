@@ -16,5 +16,8 @@ public class GridGeneratorInspector : Editor
 
         if (GUILayout.Button("Clear Grid"))
             grid.ClearGrid();
+
+        if (GUILayout.Button("Reset Walls"))
+            grid.ResetWalls();
     }
 }

@@ -8,24 +8,9 @@ using UnityEditor;
 [CustomEditor(typeof(HexTile)), CanEditMultipleObjects]
 public class HexTileInspector : Editor
 {
-    private SerializedProperty typeSerializedProperty;
-
-    public void OnEnable()
-    {
-        typeSerializedProperty = serializedObject.FindProperty("Type");
-    }
-
-
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
-
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.PrefixLabel("Type");
-
-        EditorGUILayout.PropertyField(typeSerializedProperty);
-        
-        EditorGUILayout.EndHorizontal();
 
         string coordinates = String.Empty;
         if (targets.Length > 1)
@@ -78,6 +63,9 @@ public class HexTileInspector : Editor
 
         serializedObject.ApplyModifiedProperties();
         foreach (HexTile tileScript in serializedObject.targetObjects)
+        {
+            tileScript.SpawnIndicator();
             tileScript.UpdateMaterial(true);
+        }
     }
 }

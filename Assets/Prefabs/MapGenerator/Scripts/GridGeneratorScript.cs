@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 [System.Serializable]
 public class GridGeneratorScript : MonoBehaviour {
@@ -17,6 +18,14 @@ public class GridGeneratorScript : MonoBehaviour {
     public Material DirtMaterial;
     public Material StoneMaterial;
     public Material ConcreteMaterial;
+
+    public void ResetWalls()
+    {
+        GameObjects.WallManager.Walls.ForEach(DestroyImmediate);
+        tiles.ForEach(tile => tile.GetComponent<HexTile>().SpawnWalls());
+
+    }
+
     public Material WoodMaterial;
 
     public GameObject MainSpawnIndicator;

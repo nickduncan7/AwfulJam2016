@@ -21,22 +21,8 @@ public class HexTile : MonoBehaviour {
 
     public bool Traversible = true;
     public TileRotation Rotation = TileRotation.ZeroDegrees;
-    private TileContents _contents = TileContents.Nothing;
 
-    public TileContents Contents
-    {
-        get
-        {
-            return _contents;
-        }
-        set
-        {
-            _contents = value;
-            SpawnIndicator();
-        }
-    }
-   
-    
+    public TileContents Contents = TileContents.Nothing;
 
     [HideInInspector]
     public WallType _upperLeftWall;
@@ -348,7 +334,8 @@ public class HexTile : MonoBehaviour {
 
     public void SpawnIndicator()
     {
-        if (indicator != null) DestroyImmediate(indicator);
+        if (Contents == TileContents.Nothing) DestroyImmediate(indicator);
+        if (indicator != null) return;
 
         GameObject objectToInstantiate = null;
 
@@ -458,5 +445,6 @@ public enum WallType
 {
     None,
     BarbedWire,
-    DEVSolidWall
+    WoodWall,
+    BrickWall
 }
