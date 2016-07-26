@@ -402,4 +402,23 @@ public class GridGeneratorScript : MonoBehaviour {
 
         Debug.Log("Tiles cleared.");
     }
+
+    public void UpdateWalls()
+    {
+        tiles.ForEach(tile =>
+        {
+            var type = WallType.WoodWall;
+            var destinationType = WallType.BrickWall;
+
+            var tileScript = tile.GetComponent<HexTile>();
+            if (tileScript.UpperLeftWall == type) tileScript.UpperLeftWall = destinationType;
+            if (tileScript.UpperRightWall == type) tileScript.UpperRightWall = destinationType;
+            if (tileScript.UpperWall == type) tileScript.UpperWall = destinationType;
+            if (tileScript.LowerLeftWall == type) tileScript.LowerLeftWall = destinationType;
+            if (tileScript.LowerRightWall == type) tileScript.LowerRightWall = destinationType;
+            if (tileScript.LowerWall == type) tileScript.LowerWall = destinationType;
+        });
+
+        ResetWalls();
+    }
 }
