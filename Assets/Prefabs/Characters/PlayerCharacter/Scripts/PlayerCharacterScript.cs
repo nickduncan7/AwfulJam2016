@@ -17,6 +17,11 @@ public class PlayerCharacterScript : ICharacterScript
     {
         UnitReady();
 
+        AttackStat = 10;
+        DefenseStat = 20;
+        Health = 100;
+        MovementStat = 100;
+
         IsPlayer = true;
 
         Name = GameObjects.GameManager.GetGrandpaName();

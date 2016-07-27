@@ -60,3 +60,12 @@ public class ICharacterScript : MonoBehaviour {
         NameCanvas.transform.rotation = Camera.main.transform.rotation;
     }
 }
+
+
+[System.Serializable]
+public enum UnitType
+{
+    None,
+    Friendly,
+    Enemy
+}
