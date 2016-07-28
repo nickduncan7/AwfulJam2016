@@ -20,6 +20,8 @@ public class GuardScript : ICharacterScript
     {
         UnitReady();
 
+        Type = UnitType.Enemy;
+
         AttackStat = 20;
         DefenseStat = 20;
         Health = 100;
@@ -129,17 +131,6 @@ public class GuardScript : ICharacterScript
             }
         }
 
-        // Start with immediate neighbors
-
-
-    }
-
-    void Update()
-    {
-        if (target == null)
-        {
-            ScanForPlayers();
-        }
     }
 
     void LateUpdate()

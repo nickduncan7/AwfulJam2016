@@ -195,10 +195,16 @@ public class HexTile : MonoBehaviour {
     [HideInInspector]
     public Coordinate Coordinate;
 
+    [SerializeField]
+    [HideInInspector]
     public bool occupied = false;
 
+    [SerializeField]
+    [HideInInspector]
     public UnitType OccupierType = UnitType.None;
 
+    [SerializeField]
+    [HideInInspector]
     public GameObject Occupier;
 
     [HideInInspector]
@@ -265,30 +271,32 @@ public class HexTile : MonoBehaviour {
     public void UpdateMaterial(bool inEditor = false)
     {
         var meshRenderer = GetComponent<MeshRenderer>();
-        var materials = meshRenderer.sharedMaterials;
-        
+        Texture desiredTexture = null;
+
         switch (Type)
         {
             default:
             case TileType.Grass:
-                materials[1] = GameObjects.GridGenerator.GrassMaterial;
+                desiredTexture = GameObjects.GridGenerator.GrassTexture;
                 break;
             case TileType.Dirt:
-                materials[1] = GameObjects.GridGenerator.DirtMaterial;
+                desiredTexture = GameObjects.GridGenerator.DirtTexture;
                 break;
             case TileType.Stone:
-                materials[1] = GameObjects.GridGenerator.StoneMaterial;
+                desiredTexture = GameObjects.GridGenerator.StoneTexture;
                 break;
             case TileType.Concrete:
-                materials[1] = GameObjects.GridGenerator.ConcreteMaterial;
+                desiredTexture = GameObjects.GridGenerator.ConcreteTexture;
                 break;
             case TileType.Wood:
-                materials[1] = GameObjects.GridGenerator.WoodMaterial;
+                desiredTexture = GameObjects.GridGenerator.WoodTexture;
                 break;
-
         }
 
-        meshRenderer.materials = materials;
+        if (meshRenderer.materials[1].mainTexture != desiredTexture)
+        {
+            meshRenderer.materials[1].mainTexture = desiredTexture;
+        }
 
         if (!inEditor)
         {

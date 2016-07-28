@@ -17,6 +17,8 @@ public class PlayerCharacterScript : ICharacterScript
     {
         UnitReady();
 
+        Type = UnitType.Friendly;
+
         AttackStat = 10;
         DefenseStat = 20;
         Health = 100;

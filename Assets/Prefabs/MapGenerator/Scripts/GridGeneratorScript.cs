@@ -14,10 +14,11 @@ public class GridGeneratorScript : MonoBehaviour {
     public GameObject GuardPrefab;
     public GameObject EliteGuardPrefab;
 
-    public Material GrassMaterial;
-    public Material DirtMaterial;
-    public Material StoneMaterial;
-    public Material ConcreteMaterial;
+    public Texture GrassTexture;
+    public Texture DirtTexture;
+    public Texture StoneTexture;
+    public Texture ConcreteTexture;
+    public Texture WoodTexture;
 
     public void ResetWalls()
     {
@@ -26,7 +27,7 @@ public class GridGeneratorScript : MonoBehaviour {
 
     }
 
-    public Material WoodMaterial;
+    
 
     public GameObject MainSpawnIndicator;
     public GameObject SpawnTwoIndicator;
@@ -305,12 +306,14 @@ public class GridGeneratorScript : MonoBehaviour {
         {
             var current = searchGraph.Dequeue();
 
-            if (current.Equals(end))
+            if ((moves != -1 && costSoFar[current] > moves))
+                return null;
+            else if (current.Equals(end))
                 return BuildPath(cameFrom, current, start, moves);
 
             foreach (var next in GetNeighbors(current, traversibleOnly))
             {
-                double newCost = costSoFar[current] + 1;
+                double newCost = costSoFar[current] + GetTileAtCoordinates(current).GetComponent<HexTile>().Weight;
                 if (!costSoFar.ContainsKey(next)
                     || newCost < costSoFar[next])
                 {
@@ -339,29 +342,7 @@ public class GridGeneratorScript : MonoBehaviour {
         path.Reverse();
         path.Remove(start);
 
-        if (moves == -1)
-            return path;
-        else
-        {
-            var totalMoves = 0;
-
-            List<Coordinate> invalidCoordinates = new List<Coordinate>();
-
-            foreach (var coordinate in path)
-            {
-                var tileScript = GetTileAtCoordinates(coordinate).GetComponent<HexTile>();
-                totalMoves += tileScript.Weight;
-                if (totalMoves > moves)
-                    invalidCoordinates.Add(coordinate);
-            }
-
-            foreach (var invalidCoordinate in invalidCoordinates)
-            {
-                path.Remove(invalidCoordinate);
-            }
-
-            return path;
-        }
+        return path;
     }
 
     public void GenerateGrid()

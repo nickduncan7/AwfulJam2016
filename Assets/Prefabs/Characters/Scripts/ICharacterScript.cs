@@ -22,6 +22,8 @@ public class ICharacterScript : MonoBehaviour {
 
     public bool IsPlayer = false;
 
+    public UnitType Type;
+
     private bool _active;
     public bool Active
     {

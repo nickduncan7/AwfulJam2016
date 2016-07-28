@@ -26,7 +26,7 @@ public class GameManagerScript : MonoBehaviour {
     }
 
     // Private members for ray polling
-    private float pollInterval = 0.1f;
+    private float pollInterval = 0.2f;
     private float currentTime;
 
     // Public members
@@ -299,6 +299,9 @@ public class GameManagerScript : MonoBehaviour {
                 {
                     var dest = hit.transform.GetComponent<HexTile>();
 
+                    if (Coordinate.Distance(location, dest.Coordinate) >= 5)
+                        return;
+
                     if (dest != null)
                     {
                         newPath = Grid.CalculateRoute(location, dest.Coordinate, false, currentMoveAvailable);
@@ -390,6 +393,15 @@ public class GameManagerScript : MonoBehaviour {
                 newLocationScript.occupied = true;
                 newLocationScript.Occupier = currentUnit;
                 newLocationScript.OccupierType = UnitType.Friendly;
+
+                var enemies = GameObject.FindGameObjectsWithTag("Unit")
+                    .ToList()
+                    .Where(unit => unit.GetComponent<ICharacterScript>().Type == UnitType.Enemy);
+
+                foreach (var enemy in enemies)
+                {
+                    enemy.GetComponent<GuardScript>().ScanForPlayers();
+                }
 
                 startTime = Time.time;
 

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 
 public class TimeManagerScript : MonoBehaviour {
@@ -114,7 +115,7 @@ public class TimeManagerScript : MonoBehaviour {
                 moonlight.intensity = Mathf.Lerp(0.0f, 0.6f, percentComplete);
             }
 
-            if (percentComplete == 1f)
+            if (Math.Abs(percentComplete - 1f) < double.Epsilon)
             {
                 transitionToDay = false;
                 transitionToNight = false;
