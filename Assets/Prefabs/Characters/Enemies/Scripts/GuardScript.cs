@@ -13,11 +13,18 @@ public class GuardScript : ICharacterScript
     }
 
     public GameObject target;
+    public Coordinate DestinationCoordinate;
 
     // Use this for initialization
     void Awake()
     {
         UnitReady();
+
+        AttackStat = 20;
+        DefenseStat = 20;
+        Health = 100;
+        MovementStat = 150;
+
         Name = GameObjects.GameManager.GetGuardName();
         NameCanvas.transform.FindChild("NamePlate").GetComponent<Text>().text = FullName;
 
@@ -37,6 +44,102 @@ public class GuardScript : ICharacterScript
 
         substanceMaterial.RebuildTextures();
 
+    }
+
+    public WallLocation? GetRotation()
+    {
+        var angle = transform.eulerAngles.y;
+
+        // South
+        if (angle <= 185 && angle >= 175)
+        {
+            return WallLocation.Lower;
+        }
+
+        // Southeast
+        if (angle <= 125 && angle >= 115)
+        {
+            return WallLocation.LowerRight;
+        }
+
+        // Northeast
+        if (angle <= 65 && angle >= 55)
+        {
+            return WallLocation.UpperRight;
+        }
+
+        // North
+        if (angle <= 5 && angle >= 355)
+        {
+            return WallLocation.Upper;
+        }
+
+        // Northwest
+        if (angle <= 305 && angle >= 295)
+        {
+            return WallLocation.UpperLeft;
+        }
+
+        // Southwest
+        if (angle <= 245 && angle >= 235)
+        {
+            return WallLocation.LowerLeft;
+        }
+
+        return null;
+    }
+
+    public void ScanForPlayers()
+    {
+        var scannedCoordinates = GameObjects.GridGenerator.GetAllNeighbors(currentLocation, true);
+        var coordinatesToScan = GameObjects.GridGenerator.GetNeighbors(currentLocation, true);
+
+        var direction = GetRotation();
+        if (direction.HasValue)
+        {
+            var origin = currentLocation;
+            for (int i = 0; i < 3; i++)
+            {
+                var tileInDirection = GameObjects.GridGenerator.GetNeighborInDirection(origin, direction.Value);
+
+                var tempNeighbors = GameObjects.GridGenerator.GetNeighbors(tileInDirection, true);
+
+                // If coordinate is not already scanned, add to scan list
+                coordinatesToScan.AddRange(tempNeighbors.Where(neighbor => !scannedCoordinates.Contains(neighbor)));
+
+                // Add all neighbors
+                scannedCoordinates.AddRange(GameObjects.GridGenerator.GetAllNeighbors(tileInDirection, true));
+
+                origin = tileInDirection;
+            }
+
+            foreach (var coordinate in coordinatesToScan)
+            {
+                var tileScript = GameObjects.GridGenerator.GetTileAtCoordinates(coordinate).GetComponent<HexTile>();
+
+                if (tileScript.OccupierType == UnitType.Friendly)
+                {
+                    target = tileScript.Occupier;
+                    DestinationCoordinate = tileScript.Coordinate;
+                    Debug.Log("Book 'em, Danno.");
+                }
+
+                //tileScript.highlighted = true;
+                //tileScript.UpdateMaterial();
+            }
+        }
+
+        // Start with immediate neighbors
+
+
+    }
+
+    void Update()
+    {
+        if (target == null)
+        {
+            ScanForPlayers();
+        }
     }
 
     void LateUpdate()

@@ -10,14 +10,15 @@ public class GameManagerScript : MonoBehaviour {
     // Private members
     private List<string> grandpaNames;
     private List<string> guardNames;
-    private bool playerMoving;
+    private bool unitMoving;
     private float startTime;
-    private List<Coordinate> previousHighlightedPath;
     private List<Coordinate> highlightedPath;
     private List<Coordinate> path;
     private Coordinate destination;
     private Animator anim;
     private List<GameObject> units;
+    private int currentMoveCosts;
+    private int currentMoveAvailable;
 
     private List<GameObject> allUnits
     {
@@ -89,7 +90,9 @@ public class GameManagerScript : MonoBehaviour {
     private void SetupMove()
     {
         anim = currentUnit.GetComponent<Animator>();
-        playerMoving = false;
+        unitMoving = false;
+        currentMoveCosts = 0;
+        currentMoveAvailable = currentUnit.GetComponent<ICharacterScript>().MovementStat;
     }
 
     private void RollInitiative()
@@ -115,6 +118,35 @@ public class GameManagerScript : MonoBehaviour {
 
     public string GetGrandpaName()
     {
+        if (grandpaNames == null || grandpaNames.Count == 0)
+        {
+            grandpaNames = new List<string>
+            {
+                "Ernest",
+                "Albert",
+                "Charles",
+                "Henry",
+                "Norman",
+                "Wallace",
+                "Richard",
+                "Ralph",
+                "Percy",
+                "Alfred",
+                "Harold",
+                "Milton",
+                "Mortimer",
+                "Murray",
+                "Stan",
+                "Walter",
+                "Ben",
+                "Edward",
+                "Herb",
+                "Donald"
+            };
+
+            grandpaNames = grandpaNames.OrderBy(x => Guid.NewGuid()).ToList();
+        }
+
         var grandpaName = grandpaNames[0];
         grandpaNames.Remove(grandpaName);
         return grandpaName;
@@ -122,6 +154,31 @@ public class GameManagerScript : MonoBehaviour {
 
     public string GetGuardName()
     {
+        if (guardNames == null || guardNames.Count == 0)
+        {
+            guardNames = new List<string>
+            {
+                "Wolfgang",
+                "Uwe",
+                "Gunther",
+                "Dieter",
+                "Hans",
+                "Klaus",
+                "Peter",
+                "Max",
+                "Johann",
+                "Tobias",
+                "Adolf",
+                "Lucas",
+                "Alex",
+                "Philipp",
+                "Frank",
+                "Paul"
+            };
+
+            guardNames = guardNames.OrderBy(x => Guid.NewGuid()).ToList();
+        }
+
         var guardName = guardNames[0];
         guardNames.Remove(guardName);
         return guardName;
@@ -130,54 +187,6 @@ public class GameManagerScript : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        grandpaNames = new List<string>
-        {
-            "Ernest",
-            "Albert",
-            "Charles",
-            "Henry",
-            "Norman",
-            "Wallace",
-            "Richard",
-            "Ralph",
-            "Percy",
-            "Alfred",
-            "Harold",
-            "Milton",
-            "Mortimer",
-            "Murray",
-            "Stan",
-            "Walter",
-            "Ben",
-            "Edward",
-            "Herb",
-            "Donald"
-        };
-
-        grandpaNames = grandpaNames.OrderBy(x => Guid.NewGuid()).ToList();
-
-        guardNames = new List<string>
-        {
-            "Wolfgang",
-            "Uwe",
-            "Gunther",
-            "Dieter",
-            "Hans",
-            "Klaus",
-            "Peter",
-            "Max",
-            "Johann",
-            "Tobias",
-            "Adolf",
-            "Lucas",
-            "Alex",
-            "Philipp",
-            "Frank",
-            "Paul"
-        };
-
-        guardNames = guardNames.OrderBy(x => Guid.NewGuid()).ToList();
-
         units = new List<GameObject>();
 
         // First Grandpa
@@ -251,8 +260,7 @@ public class GameManagerScript : MonoBehaviour {
         {
             if (!currentUnit.GetComponent<ICharacterScript>().IsPlayer)
             {
-                Debug.Log("Unit is guard.");
-                GetNextUnit();
+                GuardMove();
             }
             else
             {
@@ -269,7 +277,7 @@ public class GameManagerScript : MonoBehaviour {
 
         if (currentTime >= pollInterval)
         {
-            if (!playerMoving && !GameObjects.TimeManager.transitioning)
+            if (!unitMoving && !GameObjects.TimeManager.transitioning)
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -293,7 +301,7 @@ public class GameManagerScript : MonoBehaviour {
 
                     if (dest != null)
                     {
-                        newPath = Grid.CalculateRoute(location, dest.Coordinate);
+                        newPath = Grid.CalculateRoute(location, dest.Coordinate, false, currentMoveAvailable);
 
                         if (newPath != highlightedPath)
                             highlightedPath = newPath;
@@ -302,6 +310,7 @@ public class GameManagerScript : MonoBehaviour {
                         {
                             locationTile.highlighted = true;
                             locationTile.UpdateMaterial();
+
                             foreach (var node in highlightedPath)
                             {
                                 var tile = Grid.GetTileAtCoordinates(node).GetComponent<HexTile>();
@@ -319,10 +328,10 @@ public class GameManagerScript : MonoBehaviour {
             currentTime = 0f;
         }
 
-        if (!playerMoving && !GameObjects.TimeManager.transitioning && Input.GetKeyDown(KeyCode.Space))
+        if (!unitMoving && !GameObjects.TimeManager.transitioning && Input.GetKeyDown(KeyCode.Space))
             GetNextUnit();
 
-        if (!playerMoving && !GameObjects.TimeManager.transitioning && Input.GetMouseButtonDown(1))
+        if (!unitMoving && !GameObjects.TimeManager.transitioning && Input.GetMouseButtonDown(1))
         {
             locationTile.highlighted = false;
             locationTile.UpdateMaterial();
@@ -340,11 +349,11 @@ public class GameManagerScript : MonoBehaviour {
 
                 startTime = Time.time;
                 destination = path[0];
-                playerMoving = true;
+                unitMoving = true;
             }
         }
 
-        if (playerMoving)
+        if (unitMoving)
         {
             anim.SetBool("Walking", true);
             var destinationPosition = Grid.GetTileAtCoordinates(destination).transform.position;
@@ -370,12 +379,17 @@ public class GameManagerScript : MonoBehaviour {
                 newLocationScript.DestroyContents();
 
                 oldLocationScript.occupied = false;
+                oldLocationScript.Occupier = null;
+                oldLocationScript.OccupierType = UnitType.None;
 
                 // Completed journey to tile
                 currentUnit.GetComponent<ICharacterScript>().currentLocation = destination;
+                currentMoveCosts += newLocationScript.Weight;
 
                 // Mark occupied
                 newLocationScript.occupied = true;
+                newLocationScript.Occupier = currentUnit;
+                newLocationScript.OccupierType = UnitType.Friendly;
 
                 startTime = Time.time;
 
@@ -387,6 +401,82 @@ public class GameManagerScript : MonoBehaviour {
                 else
                 {
                     anim.SetBool("Walking", false);
+                    unitMoving = false;
+
+                    currentMoveAvailable -= currentMoveCosts;
+                    
+                    if (currentMoveAvailable <= 0)
+                        GetNextUnit();
+
+                    currentMoveCosts = 0;
+                }
+            }
+        }
+    }
+
+    private void GuardMove()
+    {
+        var guardScript = currentUnit.GetComponent<GuardScript>();
+        if (!unitMoving)
+        {
+            if (guardScript.target == null)
+            {
+                Debug.Log("Unit is guard.");
+                GetNextUnit();
+            }
+            else
+            {
+                path = Grid.CalculateRoute(location, destination, true, currentUnit.GetComponent<GuardScript>().MovementStat);
+                destination = path[0];
+                unitMoving = true;
+            }
+        }
+        else
+        {
+            anim.SetBool("Walking", true);
+            var destinationPosition = Grid.GetTileAtCoordinates(destination).transform.position;
+            var currentPosition = Grid.GetTileAtCoordinates(location).transform.position;
+            var journeyLength = Vector3.Distance(currentPosition, destinationPosition);
+            var distCovered = (Time.time - startTime) * MoveSpeed;
+            var fracJourney = Mathf.Clamp(distCovered / journeyLength, 0f, 1f);
+
+            if (destinationPosition != currentPosition)
+            {
+                currentUnit.transform.position = Vector3.Lerp(currentPosition, destinationPosition, fracJourney);
+                currentUnit.transform.rotation = Quaternion.Lerp(currentUnit.transform.rotation,
+                    Quaternion.LookRotation(destinationPosition - currentPosition), Time.deltaTime * 10f);
+            }
+
+            if (Vector3.Distance(currentUnit.transform.position,
+                destinationPosition) < 0.05f)
+            {
+                var newLocationScript = Grid.GetTileAtCoordinates(destination).GetComponent<HexTile>();
+                var oldLocationScript = Grid.GetTileAtCoordinates(location).GetComponent<HexTile>();
+
+                oldLocationScript.occupied = false;
+                oldLocationScript.Occupier = null;
+                oldLocationScript.OccupierType = UnitType.None;
+
+                // Completed journey to tile
+                currentUnit.GetComponent<ICharacterScript>().currentLocation = destination;
+
+                // Mark occupied
+                newLocationScript.occupied = true;
+                newLocationScript.Occupier = currentUnit;
+                newLocationScript.OccupierType = UnitType.Enemy;
+
+                startTime = Time.time;
+
+                if (path.Count != 0)
+                {
+                    destination = path[0];
+                    path.Remove(destination);
+                }
+                else
+                {
+                    guardScript.target = null;
+                    anim.SetBool("Walking", false);
+                    unitMoving = false;
                     GetNextUnit();
                 }
             }

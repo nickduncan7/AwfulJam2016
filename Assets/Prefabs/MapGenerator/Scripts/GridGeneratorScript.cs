@@ -154,66 +154,66 @@ public class GridGeneratorScript : MonoBehaviour {
 
     #endregion
 
-    public List<Coordinate> GetNeighbors(Coordinate target)
+    public List<Coordinate> GetNeighbors(Coordinate target, bool traversibleOnly = false)
     {
-        var neighbors = GetNeighborsDirections(target);
-        var neighborList = new List<Coordinate>();
+        var neighbors = GetNeighborsDirections(target, traversibleOnly);
 
-        foreach(var neighbor in neighbors)
-        {
-            if (!GameObjects.WallManager.WallExistsBetween(neighbor.Value, target))
-                neighborList.Add(neighbor.Value);
-        }
-
-        return neighborList;
+        return (from neighbor in neighbors where !GameObjects.WallManager.WallExistsBetween(neighbor.Value, target) select neighbor.Value).ToList();
     }
 
-    public List<KeyValuePair<WallLocation, Coordinate>> GetNeighborsDirections(Coordinate target)
+    public List<Coordinate> GetAllNeighbors(Coordinate target, bool traversibleOnly = false)
+    {
+        var neighbors = GetNeighborsDirections(target, traversibleOnly);
+
+        return neighbors.Select(neighbor => neighbor.Value).ToList();
+    }
+
+    public List<KeyValuePair<WallLocation, Coordinate>> GetNeighborsDirections(Coordinate target, bool traversibleOnly = false)
     {
         var neighbors = new List<KeyValuePair<WallLocation, Coordinate>>();
 
         var upper = GetTileAtCoordinates(target.q, target.r + 1);
-        if (upper != null && upper.GetComponent<HexTile>().Passable)
+        if (upper != null && (upper.GetComponent<HexTile>().Passable || (upper.GetComponent<HexTile>().Traversible && traversibleOnly)))
             neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.Upper, upper.GetComponent<HexTile>().Coordinate));
 
         var lower = GetTileAtCoordinates(target.q, target.r - 1);
-        if (lower != null && lower.GetComponent<HexTile>().Passable)
+        if (lower != null && (lower.GetComponent<HexTile>().Passable || (lower.GetComponent<HexTile>().Traversible && traversibleOnly)))
             neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.Lower, lower.GetComponent<HexTile>().Coordinate));
 
         if (target.q % 2 == 0)
         {
             var leftUpper = GetTileAtCoordinates(target.q - 1, target.r);
-            if (leftUpper != null && leftUpper.GetComponent<HexTile>().Passable)
+            if (leftUpper != null && (leftUpper.GetComponent<HexTile>().Passable || (leftUpper.GetComponent<HexTile>().Traversible && traversibleOnly)))
                 neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperLeft, leftUpper.GetComponent<HexTile>().Coordinate));
 
             var leftLower = GetTileAtCoordinates(target.q - 1, target.r - 1);
-            if (leftLower != null && leftLower.GetComponent<HexTile>().Passable)
+            if (leftLower != null && (leftLower.GetComponent<HexTile>().Passable || (leftLower.GetComponent<HexTile>().Traversible && traversibleOnly)))
                 neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerLeft, leftLower.GetComponent<HexTile>().Coordinate));
 
             var rightUpper = GetTileAtCoordinates(target.q + 1, target.r);
-            if (rightUpper != null && rightUpper.GetComponent<HexTile>().Passable)
+            if (rightUpper != null && (rightUpper.GetComponent<HexTile>().Passable || (rightUpper.GetComponent<HexTile>().Traversible && traversibleOnly)))
                 neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperRight, rightUpper.GetComponent<HexTile>().Coordinate));
 
             var rightLower = GetTileAtCoordinates(target.q + 1, target.r - 1);
-            if (rightLower != null && rightLower.GetComponent<HexTile>().Passable)
+            if (rightLower != null && (rightLower.GetComponent<HexTile>().Passable || (rightLower.GetComponent<HexTile>().Traversible && traversibleOnly)))
                 neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerRight, rightLower.GetComponent<HexTile>().Coordinate));
         }
         else
         {
             var leftUpper = GetTileAtCoordinates(target.q - 1, target.r + 1);
-            if (leftUpper != null && leftUpper.GetComponent<HexTile>().Passable)
+            if (leftUpper != null && (leftUpper.GetComponent<HexTile>().Passable || (leftUpper.GetComponent<HexTile>().Traversible && traversibleOnly)))
                 neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperLeft, leftUpper.GetComponent<HexTile>().Coordinate));
 
             var leftLower = GetTileAtCoordinates(target.q - 1, target.r);
-            if (leftLower != null && leftLower.GetComponent<HexTile>().Passable)
+            if (leftLower != null && (leftLower.GetComponent<HexTile>().Passable  || (leftLower.GetComponent<HexTile>().Traversible && traversibleOnly)))
                 neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerLeft, leftLower.GetComponent<HexTile>().Coordinate));
 
             var rightUpper = GetTileAtCoordinates(target.q + 1, target.r + 1);
-            if (rightUpper != null && rightUpper.GetComponent<HexTile>().Passable)
+            if (rightUpper != null && (rightUpper.GetComponent<HexTile>().Passable || (rightUpper.GetComponent<HexTile>().Traversible && traversibleOnly)))
                 neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperRight, rightUpper.GetComponent<HexTile>().Coordinate));
 
             var rightLower = GetTileAtCoordinates(target.q + 1, target.r);
-            if (rightLower != null && rightLower.GetComponent<HexTile>().Passable)
+            if (rightLower != null && (rightLower.GetComponent<HexTile>().Passable || (rightLower.GetComponent<HexTile>().Traversible && traversibleOnly)))
                 neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerRight, rightLower.GetComponent<HexTile>().Coordinate));
         }
 
@@ -291,7 +291,7 @@ public class GridGeneratorScript : MonoBehaviour {
         return neighbor[0].Value;
     }
 
-    public List<Coordinate> CalculateRoute(Coordinate start, Coordinate end)
+    public List<Coordinate> CalculateRoute(Coordinate start, Coordinate end, bool traversibleOnly = false, int moves = -1)
     {
         var cameFrom = new Dictionary<Coordinate, Coordinate>();
         var costSoFar = new Dictionary<Coordinate, double>();
@@ -306,9 +306,9 @@ public class GridGeneratorScript : MonoBehaviour {
             var current = searchGraph.Dequeue();
 
             if (current.Equals(end))
-                return BuildPath(cameFrom, current, start);
+                return BuildPath(cameFrom, current, start, moves);
 
-            foreach (var next in GetNeighbors(current))
+            foreach (var next in GetNeighbors(current, traversibleOnly))
             {
                 double newCost = costSoFar[current] + 1;
                 if (!costSoFar.ContainsKey(next)
@@ -325,7 +325,7 @@ public class GridGeneratorScript : MonoBehaviour {
         return null;
     }
 
-    private List<Coordinate> BuildPath(Dictionary<Coordinate, Coordinate> cameFrom, Coordinate current, Coordinate start)
+    private List<Coordinate> BuildPath(Dictionary<Coordinate, Coordinate> cameFrom, Coordinate current, Coordinate start, int moves = -1)
     {
         var path = new List<Coordinate>();
         path.Add(current);
@@ -339,7 +339,29 @@ public class GridGeneratorScript : MonoBehaviour {
         path.Reverse();
         path.Remove(start);
 
-        return path;
+        if (moves == -1)
+            return path;
+        else
+        {
+            var totalMoves = 0;
+
+            List<Coordinate> invalidCoordinates = new List<Coordinate>();
+
+            foreach (var coordinate in path)
+            {
+                var tileScript = GetTileAtCoordinates(coordinate).GetComponent<HexTile>();
+                totalMoves += tileScript.Weight;
+                if (totalMoves > moves)
+                    invalidCoordinates.Add(coordinate);
+            }
+
+            foreach (var invalidCoordinate in invalidCoordinates)
+            {
+                path.Remove(invalidCoordinate);
+            }
+
+            return path;
+        }
     }
 
     public void GenerateGrid()

@@ -17,11 +17,16 @@ public class HexTile : MonoBehaviour {
     public GameObject indicator;
 
     // Public members
+    [SerializeField]
     public TileType Type = TileType.Grass;
 
+    [SerializeField]
     public bool Traversible = true;
+
+    [SerializeField]
     public TileRotation Rotation = TileRotation.ZeroDegrees;
 
+    [SerializeField]
     public TileContents Contents = TileContents.Nothing;
 
     [HideInInspector]
@@ -190,8 +195,11 @@ public class HexTile : MonoBehaviour {
     [HideInInspector]
     public Coordinate Coordinate;
 
-    [HideInInspector]
     public bool occupied = false;
+
+    public UnitType OccupierType = UnitType.None;
+
+    public GameObject Occupier;
 
     [HideInInspector]
     public bool highlighted = false;
@@ -206,7 +214,16 @@ public class HexTile : MonoBehaviour {
             switch (Type)
             {
                 default:
-                    return 1;
+                case TileType.Grass:
+                    return 25;
+                case TileType.Dirt:
+                    return 30;
+                case TileType.Stone:
+                    return 25;
+                case TileType.Concrete:
+                    return 20;
+                case TileType.Wood:
+                    return 20;
             }
         }
     }
@@ -384,9 +401,11 @@ public class HexTile : MonoBehaviour {
                 ((GameObject)contentInstance).transform.parent = null;
                 break;
             case TileContents.Guard:
-                var guardInstance = Instantiate(GameObjects.GridGenerator.GuardPrefab, transform.position, Quaternion.identity) as GameObject;
+                var guardInstance = Instantiate(GameObjects.GridGenerator.GuardPrefab, transform.position, Quaternion.Euler(0, 180, 0)) as GameObject;
                 guardInstance.transform.parent = null;
                 occupied = true;
+                Occupier = guardInstance;
+                OccupierType = UnitType.Enemy;
                 guardInstance.GetComponent<GuardScript>().currentLocation = Coordinate;
                 break;
         }
