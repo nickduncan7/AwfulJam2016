@@ -48,7 +48,7 @@ public class PlayerCharacterScript : ICharacterScript
             substanceMaterial.SetProceduralEnum("CoatColor", Random.Range(2, 5));
         }
 
-        Random.seed = Random.Range(0, 10000).GetHashCode();
+        Random.InitState(Random.Range(0, 10000).GetHashCode());
 
         substanceMaterial.RebuildTextures();
     }
