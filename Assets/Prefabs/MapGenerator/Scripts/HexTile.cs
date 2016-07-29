@@ -217,20 +217,21 @@ public class HexTile : MonoBehaviour {
     {
         get
         {
-            switch (Type)
-            {
-                default:
-                case TileType.Grass:
-                    return 25;
-                case TileType.Dirt:
-                    return 30;
-                case TileType.Stone:
-                    return 25;
-                case TileType.Concrete:
-                    return 20;
-                case TileType.Wood:
-                    return 20;
-            }
+            return 1;
+            //switch (Type)
+            //{
+            //    default:
+            //    case TileType.Grass:
+            //        return 25;
+            //    case TileType.Dirt:
+            //        return 30;
+            //    case TileType.Stone:
+            //        return 25;
+            //    case TileType.Concrete:
+            //        return 20;
+            //    case TileType.Wood:
+            //        return 20;
+            //}
         }
     }
 

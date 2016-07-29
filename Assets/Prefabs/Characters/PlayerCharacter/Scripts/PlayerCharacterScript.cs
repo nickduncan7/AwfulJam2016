@@ -22,7 +22,7 @@ public class PlayerCharacterScript : ICharacterScript
         AttackStat = 10;
         DefenseStat = 20;
         Health = 100;
-        MovementStat = 100;
+        MovementStat = 4;
 
         IsPlayer = true;
 

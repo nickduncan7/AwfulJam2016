@@ -292,11 +292,51 @@ public class GridGeneratorScript : MonoBehaviour {
         return neighbor[0].Value;
     }
 
+    public List<Coordinate> GetAccessibleTiles(Coordinate start, bool traversibleOnly = false, int moves = -1)
+    {
+        var visited = new HashSet<Coordinate> {start};
+        var fringes = new Dictionary<int, List<Coordinate>> {{0, new List<Coordinate> {start}}};
+
+        if (moves <= 0)
+            moves = 30;
+
+        for (var i = 1; i < moves; i++)
+        {
+            fringes.Add(i, new List<Coordinate>());
+            foreach (var coordinate in fringes[i - 1])
+            {
+                foreach (var neighbor in GetNeighbors(coordinate, traversibleOnly))
+                {
+                    if (!visited.Contains(neighbor))
+                    {
+                        visited.Add(neighbor);
+                        fringes[i].Add(neighbor);
+                    }
+                }
+            }
+        }
+
+        return visited.ToList();
+    }
+
     public List<Coordinate> CalculateRoute(Coordinate start, Coordinate end, bool traversibleOnly = false, int moves = -1)
     {
         var cameFrom = new Dictionary<Coordinate, Coordinate>();
         var costSoFar = new Dictionary<Coordinate, double>();
         var searchGraph = new PriorityQueue<Coordinate>();
+
+        var accessibleTiles = GetAccessibleTiles(start, traversibleOnly, moves);
+
+        //HexTile tileScript;
+        //foreach (var accessibleTile in accessibleTiles)
+        //{
+        //    tileScript = GetTileAtCoordinates(accessibleTile).GetComponent<HexTile>();
+        //    tileScript.highlighted = true;
+        //    tileScript.UpdateMaterial();
+        //}
+
+        //return null;
+
         searchGraph.Enqueue(start, 0);
 
         cameFrom[start] = start;
@@ -313,6 +353,9 @@ public class GridGeneratorScript : MonoBehaviour {
 
             foreach (var next in GetNeighbors(current, traversibleOnly))
             {
+                if (!accessibleTiles.Contains(next))
+                    continue;
+                
                 double newCost = costSoFar[current] + GetTileAtCoordinates(current).GetComponent<HexTile>().Weight;
                 if (!costSoFar.ContainsKey(next)
                     || newCost < costSoFar[next])

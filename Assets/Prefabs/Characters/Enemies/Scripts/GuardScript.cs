@@ -25,7 +25,7 @@ public class GuardScript : ICharacterScript
         AttackStat = 20;
         DefenseStat = 20;
         Health = 100;
-        MovementStat = 150;
+        MovementStat = 5;
 
         Name = GameObjects.GameManager.GetGuardName();
         NameCanvas.transform.FindChild("NamePlate").GetComponent<Text>().text = FullName;
