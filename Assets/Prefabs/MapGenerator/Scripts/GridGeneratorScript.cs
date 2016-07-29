@@ -49,6 +49,8 @@ public class GridGeneratorScript : MonoBehaviour {
         }
     }
 
+    public List<Coordinate> graph;
+
     #region Spawn Tile Properties
 
     [SerializeField]
@@ -173,49 +175,79 @@ public class GridGeneratorScript : MonoBehaviour {
     {
         var neighbors = new List<KeyValuePair<WallLocation, Coordinate>>();
 
-        var upper = GetTileAtCoordinates(target.q, target.r + 1);
-        if (upper != null && (upper.GetComponent<HexTile>().Passable || (upper.GetComponent<HexTile>().Traversible && traversibleOnly)))
-            neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.Upper, upper.GetComponent<HexTile>().Coordinate));
+        if (graph.Contains(new Coordinate(target.q, target.r + 1)))
+        {
+            var upper = GetTileAtCoordinates(target.q, target.r + 1);
+            if (upper != null && (upper.GetComponent<HexTile>().Passable || (upper.GetComponent<HexTile>().Traversible && traversibleOnly)))
+                neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.Upper, upper.GetComponent<HexTile>().Coordinate));
+        }
 
-        var lower = GetTileAtCoordinates(target.q, target.r - 1);
-        if (lower != null && (lower.GetComponent<HexTile>().Passable || (lower.GetComponent<HexTile>().Traversible && traversibleOnly)))
-            neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.Lower, lower.GetComponent<HexTile>().Coordinate));
+        if (graph.Contains(new Coordinate(target.q, target.r - 1)))
+        {
+            var lower = GetTileAtCoordinates(target.q, target.r - 1);
+            if (lower != null && (lower.GetComponent<HexTile>().Passable || (lower.GetComponent<HexTile>().Traversible && traversibleOnly)))
+                neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.Lower, lower.GetComponent<HexTile>().Coordinate));
+        }
 
         if (target.q % 2 == 0)
         {
-            var leftUpper = GetTileAtCoordinates(target.q - 1, target.r);
-            if (leftUpper != null && (leftUpper.GetComponent<HexTile>().Passable || (leftUpper.GetComponent<HexTile>().Traversible && traversibleOnly)))
-                neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperLeft, leftUpper.GetComponent<HexTile>().Coordinate));
+            if (graph.Contains(new Coordinate(target.q - 1, target.r)))
+            {
+                var leftUpper = GetTileAtCoordinates(target.q - 1, target.r);
+                if (leftUpper != null && (leftUpper.GetComponent<HexTile>().Passable || (leftUpper.GetComponent<HexTile>().Traversible && traversibleOnly)))
+                    neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperLeft, leftUpper.GetComponent<HexTile>().Coordinate));
+            }
 
-            var leftLower = GetTileAtCoordinates(target.q - 1, target.r - 1);
-            if (leftLower != null && (leftLower.GetComponent<HexTile>().Passable || (leftLower.GetComponent<HexTile>().Traversible && traversibleOnly)))
-                neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerLeft, leftLower.GetComponent<HexTile>().Coordinate));
+            if (graph.Contains(new Coordinate(target.q - 1, target.r - 1)))
+            {
+                var leftLower = GetTileAtCoordinates(target.q - 1, target.r - 1);
+                if (leftLower != null && (leftLower.GetComponent<HexTile>().Passable || (leftLower.GetComponent<HexTile>().Traversible && traversibleOnly)))
+                    neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerLeft, leftLower.GetComponent<HexTile>().Coordinate));
+            }
 
-            var rightUpper = GetTileAtCoordinates(target.q + 1, target.r);
-            if (rightUpper != null && (rightUpper.GetComponent<HexTile>().Passable || (rightUpper.GetComponent<HexTile>().Traversible && traversibleOnly)))
-                neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperRight, rightUpper.GetComponent<HexTile>().Coordinate));
+            if (graph.Contains(new Coordinate(target.q + 1, target.r)))
+            {
+                var rightUpper = GetTileAtCoordinates(target.q + 1, target.r);
+                if (rightUpper != null && (rightUpper.GetComponent<HexTile>().Passable || (rightUpper.GetComponent<HexTile>().Traversible && traversibleOnly)))
+                    neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperRight, rightUpper.GetComponent<HexTile>().Coordinate));
+            }
 
-            var rightLower = GetTileAtCoordinates(target.q + 1, target.r - 1);
-            if (rightLower != null && (rightLower.GetComponent<HexTile>().Passable || (rightLower.GetComponent<HexTile>().Traversible && traversibleOnly)))
-                neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerRight, rightLower.GetComponent<HexTile>().Coordinate));
+            if (graph.Contains(new Coordinate(target.q + 1, target.r - 1)))
+            {
+                var rightLower = GetTileAtCoordinates(target.q + 1, target.r - 1);
+                if (rightLower != null && (rightLower.GetComponent<HexTile>().Passable || (rightLower.GetComponent<HexTile>().Traversible && traversibleOnly)))
+                    neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerRight, rightLower.GetComponent<HexTile>().Coordinate));
+            }
         }
         else
         {
-            var leftUpper = GetTileAtCoordinates(target.q - 1, target.r + 1);
-            if (leftUpper != null && (leftUpper.GetComponent<HexTile>().Passable || (leftUpper.GetComponent<HexTile>().Traversible && traversibleOnly)))
-                neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperLeft, leftUpper.GetComponent<HexTile>().Coordinate));
+            if (graph.Contains(new Coordinate(target.q - 1, target.r + 1)))
+            {
+                var leftUpper = GetTileAtCoordinates(target.q - 1, target.r + 1);
+                if (leftUpper != null && (leftUpper.GetComponent<HexTile>().Passable || (leftUpper.GetComponent<HexTile>().Traversible && traversibleOnly)))
+                    neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperLeft, leftUpper.GetComponent<HexTile>().Coordinate));
+            }
 
-            var leftLower = GetTileAtCoordinates(target.q - 1, target.r);
-            if (leftLower != null && (leftLower.GetComponent<HexTile>().Passable  || (leftLower.GetComponent<HexTile>().Traversible && traversibleOnly)))
-                neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerLeft, leftLower.GetComponent<HexTile>().Coordinate));
+            if (graph.Contains(new Coordinate(target.q - 1, target.r)))
+            {
+                var leftLower = GetTileAtCoordinates(target.q - 1, target.r);
+                if (leftLower != null && (leftLower.GetComponent<HexTile>().Passable || (leftLower.GetComponent<HexTile>().Traversible && traversibleOnly)))
+                    neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerLeft, leftLower.GetComponent<HexTile>().Coordinate));
+            }
 
-            var rightUpper = GetTileAtCoordinates(target.q + 1, target.r + 1);
-            if (rightUpper != null && (rightUpper.GetComponent<HexTile>().Passable || (rightUpper.GetComponent<HexTile>().Traversible && traversibleOnly)))
-                neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperRight, rightUpper.GetComponent<HexTile>().Coordinate));
+            if (graph.Contains(new Coordinate(target.q + 1, target.r + 1)))
+            {
+                var rightUpper = GetTileAtCoordinates(target.q + 1, target.r + 1);
+                if (rightUpper != null && (rightUpper.GetComponent<HexTile>().Passable || (rightUpper.GetComponent<HexTile>().Traversible && traversibleOnly)))
+                    neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperRight, rightUpper.GetComponent<HexTile>().Coordinate));
+            }
 
-            var rightLower = GetTileAtCoordinates(target.q + 1, target.r);
-            if (rightLower != null && (rightLower.GetComponent<HexTile>().Passable || (rightLower.GetComponent<HexTile>().Traversible && traversibleOnly)))
-                neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerRight, rightLower.GetComponent<HexTile>().Coordinate));
+            if (graph.Contains(new Coordinate(target.q + 1, target.r)))
+            {
+                var rightLower = GetTileAtCoordinates(target.q + 1, target.r);
+                if (rightLower != null && (rightLower.GetComponent<HexTile>().Passable || (rightLower.GetComponent<HexTile>().Traversible && traversibleOnly)))
+                    neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerRight, rightLower.GetComponent<HexTile>().Coordinate));
+            }
         }
 
         return neighbors;
@@ -292,15 +324,17 @@ public class GridGeneratorScript : MonoBehaviour {
         return neighbor[0].Value;
     }
 
-    public List<Coordinate> GetAccessibleTiles(Coordinate start, bool traversibleOnly = false, int moves = -1)
+    public void GetAccessibleTiles(Coordinate start, bool traversibleOnly = false, int moves = -1)
     {
+        graph = tiles.Select(tile => tile.GetComponent<HexTile>().Coordinate).ToList();
+
         var visited = new HashSet<Coordinate> {start};
         var fringes = new Dictionary<int, List<Coordinate>> {{0, new List<Coordinate> {start}}};
 
         if (moves <= 0)
             moves = 30;
 
-        for (var i = 1; i < moves; i++)
+        for (var i = 1; i <= moves; i++)
         {
             fringes.Add(i, new List<Coordinate>());
             foreach (var coordinate in fringes[i - 1])
@@ -316,74 +350,46 @@ public class GridGeneratorScript : MonoBehaviour {
             }
         }
 
-        return visited.ToList();
+        graph = visited.ToList();
     }
 
     public List<Coordinate> CalculateRoute(Coordinate start, Coordinate end, bool traversibleOnly = false, int moves = -1)
     {
-        var cameFrom = new Dictionary<Coordinate, Coordinate>();
-        var costSoFar = new Dictionary<Coordinate, double>();
-        var searchGraph = new PriorityQueue<Coordinate>();
+        var frontier = new Queue<Coordinate>();
+        frontier.Enqueue(start);
+        var cameFrom = new Dictionary<Coordinate, Coordinate?>();
+        cameFrom[start] = null;
 
-        var accessibleTiles = GetAccessibleTiles(start, traversibleOnly, moves);
-
-        //HexTile tileScript;
-        //foreach (var accessibleTile in accessibleTiles)
-        //{
-        //    tileScript = GetTileAtCoordinates(accessibleTile).GetComponent<HexTile>();
-        //    tileScript.highlighted = true;
-        //    tileScript.UpdateMaterial();
-        //}
-
-        //return null;
-
-        searchGraph.Enqueue(start, 0);
-
-        cameFrom[start] = start;
-        costSoFar[start] = 0;
-
-        while (searchGraph.Count > 0)
+        Coordinate current;
+        while (frontier.Any())
         {
-            var current = searchGraph.Dequeue();
+            current = frontier.Dequeue();
 
-            if ((moves != -1 && costSoFar[current] > moves))
-                return null;
-            else if (current.Equals(end))
-                return BuildPath(cameFrom, current, start, moves);
+            if (current == end)
+                break;
 
-            foreach (var next in GetNeighbors(current, traversibleOnly))
+            foreach (var neighbor in GetNeighbors(current, traversibleOnly))
             {
-                if (!accessibleTiles.Contains(next))
-                    continue;
-                
-                double newCost = costSoFar[current] + GetTileAtCoordinates(current).GetComponent<HexTile>().Weight;
-                if (!costSoFar.ContainsKey(next)
-                    || newCost < costSoFar[next])
+                if (!cameFrom.ContainsKey(neighbor))
                 {
-                    costSoFar[next] = newCost;
-                    double priority = newCost + 1;
-                    searchGraph.Enqueue(next, priority);
-                    cameFrom[next] = current;
+                    frontier.Enqueue(neighbor);
+                    cameFrom[neighbor] = current;
                 }
             }
         }
 
-        return null;
-    }
-
-    private List<Coordinate> BuildPath(Dictionary<Coordinate, Coordinate> cameFrom, Coordinate current, Coordinate start, int moves = -1)
-    {
-        var path = new List<Coordinate>();
-        path.Add(current);
-
-        while (cameFrom.Keys.Contains(current) && current != start)
+        current = end;
+        var path = new List<Coordinate> { current };
+        while (current != start)
         {
-            current = cameFrom[current];
+            if (!cameFrom.ContainsKey(current))
+                break;
+
+            current = cameFrom[current].Value;
             path.Add(current);
         }
 
         path.Reverse();
-        path.Remove(start);
 
         return path;
     }

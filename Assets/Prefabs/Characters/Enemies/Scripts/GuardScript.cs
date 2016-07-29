@@ -42,7 +42,7 @@ public class GuardScript : ICharacterScript
         substanceMaterial.SetProceduralBoolean("Coat", true);
         substanceMaterial.SetProceduralEnum("SkinTone", 1);
 
-        Random.seed = Random.Range(0, 10000).GetHashCode();
+        Random.InitState(Random.Range(0, 10000).GetHashCode());
 
         substanceMaterial.RebuildTextures();
 

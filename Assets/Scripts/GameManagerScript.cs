@@ -90,9 +90,12 @@ public class GameManagerScript : MonoBehaviour {
     private void SetupMove()
     {
         anim = currentUnit.GetComponent<Animator>();
+        var unitScript = currentUnit.GetComponent<ICharacterScript>();
         unitMoving = false;
         currentMoveCosts = 0;
-        currentMoveAvailable = currentUnit.GetComponent<ICharacterScript>().MovementStat;
+        currentMoveAvailable = unitScript.MovementStat;
+
+        GameObjects.GridGenerator.GetAccessibleTiles(unitScript.currentLocation, unitScript.Type == UnitType.Enemy, unitScript.MovementStat);
     }
 
     private void RollInitiative()
@@ -299,29 +302,29 @@ public class GameManagerScript : MonoBehaviour {
                 {
                     var dest = hit.transform.GetComponent<HexTile>();
 
-                    if (Coordinate.Distance(location, dest.Coordinate) >= 5)
+                    if (dest == null)
                         return;
 
-                    if (dest != null)
+                    if (!GameObjects.GridGenerator.graph.Contains(dest.Coordinate))
+                        return;
+
+                    newPath = Grid.CalculateRoute(location, dest.Coordinate, false, currentMoveAvailable);
+
+                    if (newPath != highlightedPath)
+                        highlightedPath = newPath;
+
+                    if (highlightedPath != null && highlightedPath.Count > 0)
                     {
-                        newPath = Grid.CalculateRoute(location, dest.Coordinate, false, currentMoveAvailable);
+                        locationTile.highlighted = true;
+                        locationTile.UpdateMaterial();
 
-                        if (newPath != highlightedPath)
-                            highlightedPath = newPath;
-
-                        if (highlightedPath != null && highlightedPath.Count > 0)
+                        foreach (var node in highlightedPath)
                         {
-                            locationTile.highlighted = true;
-                            locationTile.UpdateMaterial();
-
-                            foreach (var node in highlightedPath)
+                            var tile = Grid.GetTileAtCoordinates(node).GetComponent<HexTile>();
+                            if (!tile.highlighted)
                             {
-                                var tile = Grid.GetTileAtCoordinates(node).GetComponent<HexTile>();
-                                if (!tile.highlighted)
-                                {
-                                    tile.highlighted = true;
-                                    tile.UpdateMaterial();
-                                }
+                                tile.highlighted = true;
+                                tile.UpdateMaterial();
                             }
                         }
                     }
@@ -398,9 +401,13 @@ public class GameManagerScript : MonoBehaviour {
                     .ToList()
                     .Where(unit => unit.GetComponent<ICharacterScript>().Type == UnitType.Enemy);
 
+                GuardScript enemyScript;
                 foreach (var enemy in enemies)
                 {
-                    enemy.GetComponent<GuardScript>().ScanForPlayers();
+                    enemyScript = enemy.GetComponent<GuardScript>();
+
+                    if (Coordinate.Distance(enemyScript.currentLocation, destination) <= 9)
+                        enemyScript.ScanForPlayers();
                 }
 
                 startTime = Time.time;
