@@ -18,7 +18,6 @@ public class GameManagerScript : MonoBehaviour {
     private Animator anim;
     private List<GameObject> units;
     private int currentMoveAvailable;
-    private int collectedCrates = 0;
     private GameObject temporaryHit;
 
     private List<GameObject> allUnits
@@ -35,7 +34,13 @@ public class GameManagerScript : MonoBehaviour {
     public float MoveSpeed = 4f;
     public GridGeneratorScript Grid;
     public GameObject NameCanvasPrefab;
+    public GameObject EnemyNameCanvasPrefab;
 
+    public Sprite FilledDocsImage;
+    public Sprite FilledGunImage;
+    public Sprite FilledLumberImage;
+    public Sprite FilledShovelImage;
+    public Sprite FilledPickaxeImage;
 
     public GameObject currentUnit;
 
@@ -120,7 +125,6 @@ public class GameManagerScript : MonoBehaviour {
     {
         var indicators = GameObject.Find("/Standard HUD").transform.FindChild("Indicators");
         var crateIndicator = indicators.FindChild("CrateIndicator");
-        crateIndicator.FindChild("Text").GetComponent<Text>().text = collectedCrates.ToString();
     }
 
     private void endTurn()
@@ -413,11 +417,26 @@ public class GameManagerScript : MonoBehaviour {
                 newLocationScript.pathHighlighted = false;
                 newLocationScript.UpdateMaterial();
 
+                var unitScript = currentUnit.GetComponent<PlayerCharacterScript>();
+
                 var destroyedTileContents = newLocationScript.DestroyContents();
-                if (destroyedTileContents == TileContents.Crate)
+                switch (destroyedTileContents)
                 {
-                    collectedCrates++;
-                    UpdateUI();
+                    case TileContents.Documents:
+                        unitScript.hasDocuments = true;
+                        break;
+                    case TileContents.Gun:
+                        unitScript.hasGun = true;
+                        break;
+                    case TileContents.Lumber:
+                        unitScript.hasLumber = true;
+                        break;
+                    case TileContents.Pickaxe:
+                        unitScript.hasPickaxe = true;
+                        break;
+                    case TileContents.Shovel:
+                        unitScript.hasShovel = true;
+                        break;
                 }
 
                 oldLocationScript.occupied = false;

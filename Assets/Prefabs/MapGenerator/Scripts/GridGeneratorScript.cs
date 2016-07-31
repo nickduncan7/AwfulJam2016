@@ -12,6 +12,11 @@ public class GridGeneratorScript : MonoBehaviour {
     public GameObject TilePrefab;
     public GameObject CratePrefab;
     public GameObject GuardPrefab;
+    public GameObject DocumentsPrefab;
+    public GameObject GunPrefab;
+    public GameObject ShovelPrefab;
+    public GameObject PickaxePrefab;
+    public GameObject LumberPrefab;
     public GameObject EliteGuardPrefab;
 
     public Texture GrassTexture;
@@ -36,6 +41,11 @@ public class GridGeneratorScript : MonoBehaviour {
     public GameObject SpawnFiveIndicator;
     public GameObject CrateIndicator;
     public GameObject GuardIndicator;
+    public GameObject DocIndicator;
+    public GameObject GunIndicator;
+    public GameObject LumberIndicator;
+    public GameObject PickaxeIndicator;
+    public GameObject ShovelIndicator;
 
     [HideInInspector]
     public Coordinate badCoordinate = new Coordinate(-999, -999);

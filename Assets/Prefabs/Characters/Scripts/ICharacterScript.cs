@@ -16,7 +16,7 @@ public class ICharacterScript : MonoBehaviour {
         get
         {
             if (_nameCanvas == null)
-                _nameCanvas = Instantiate(GameObjects.GameManager.NameCanvasPrefab, transform.position + (2f * Vector3.up), Quaternion.identity) as GameObject;
+                _nameCanvas = Instantiate(Type == UnitType.Friendly ? GameObjects.GameManager.NameCanvasPrefab : GameObjects.GameManager.EnemyNameCanvasPrefab, transform.position + (2f * Vector3.up), Quaternion.identity) as GameObject;
             return _nameCanvas;
         }
     }

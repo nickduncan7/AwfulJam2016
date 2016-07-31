@@ -26,6 +26,12 @@ public class HexTile : MonoBehaviour {
     public bool Traversible = true;
 
     [SerializeField]
+    public bool Safe = false;
+
+    [SerializeField]
+    public bool EscapeZone = false;
+
+    [SerializeField]
     public Rotation Rotation = Rotation.ZeroDegrees;
 
     [SerializeField]
@@ -397,6 +403,21 @@ public class HexTile : MonoBehaviour {
             case TileContents.Guard:
                 objectToInstantiate = GameObjects.GridGenerator.GuardIndicator;
                 break;
+            case TileContents.Documents:
+                objectToInstantiate = GameObjects.GridGenerator.DocIndicator;
+                break;
+            case TileContents.Gun:
+                objectToInstantiate = GameObjects.GridGenerator.GunIndicator;
+                break;
+            case TileContents.Lumber:
+                objectToInstantiate = GameObjects.GridGenerator.LumberIndicator;
+                break;
+            case TileContents.Pickaxe:
+                objectToInstantiate = GameObjects.GridGenerator.PickaxeIndicator;
+                break;
+            case TileContents.Shovel:
+                objectToInstantiate = GameObjects.GridGenerator.ShovelIndicator;
+                break;
         }
 
         // Finally, spawn the indicator
@@ -415,6 +436,26 @@ public class HexTile : MonoBehaviour {
         {
             case TileContents.Crate:
                 contentInstance = Instantiate(GameObjects.GridGenerator.CratePrefab, transform.position, Quaternion.identity);
+                ((GameObject)contentInstance).transform.parent = null;
+                break;
+            case TileContents.Documents:
+                contentInstance = Instantiate(GameObjects.GridGenerator.DocumentsPrefab, transform.position, Quaternion.identity);
+                ((GameObject)contentInstance).transform.parent = null;
+                break;
+            case TileContents.Gun:
+                contentInstance = Instantiate(GameObjects.GridGenerator.GunPrefab, transform.position, Quaternion.identity);
+                ((GameObject)contentInstance).transform.parent = null;
+                break;
+            case TileContents.Shovel:
+                contentInstance = Instantiate(GameObjects.GridGenerator.ShovelPrefab, transform.position, Quaternion.identity);
+                ((GameObject)contentInstance).transform.parent = null;
+                break;
+            case TileContents.Lumber:
+                contentInstance = Instantiate(GameObjects.GridGenerator.LumberPrefab, transform.position, Quaternion.identity);
+                ((GameObject)contentInstance).transform.parent = null;
+                break;
+            case TileContents.Pickaxe:
+                contentInstance = Instantiate(GameObjects.GridGenerator.PickaxePrefab, transform.position, Quaternion.identity);
                 ((GameObject)contentInstance).transform.parent = null;
                 break;
             case TileContents.Guard:
@@ -478,7 +519,12 @@ public enum TileContents
     SpawnFour,
     SpawnFive,
     Crate,
-    Guard
+    Guard,
+    Documents,
+    Gun,
+    Pickaxe,
+    Shovel,
+    Lumber
 }
 
 [Serializable]

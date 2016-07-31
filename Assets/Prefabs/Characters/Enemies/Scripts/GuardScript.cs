@@ -9,7 +9,11 @@ public class GuardScript : ICharacterScript
 {
     public new string FullName
     {
-        get { return base.FullName = "Guard " + Name; }
+        get
+        {
+            if (string.IsNullOrEmpty(base.FullName)) base.FullName = "Guard " + Name;
+            return base.FullName;
+        }
     }
 
     public GameObject target;
