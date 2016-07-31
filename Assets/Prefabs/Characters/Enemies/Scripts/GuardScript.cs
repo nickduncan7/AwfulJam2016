@@ -7,9 +7,9 @@ using UnityEngine.UI;
 
 public class GuardScript : ICharacterScript
 {
-    public string FullName
+    public new string FullName
     {
-        get { return "Guard " + Name; }
+        get { return base.FullName = "Guard " + Name; }
     }
 
     public GameObject target;

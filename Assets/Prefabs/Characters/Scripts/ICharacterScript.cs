@@ -7,6 +7,9 @@ public class ICharacterScript : MonoBehaviour {
     private Color notActiveColor = new Color(0.75f, 0.75f, 0.75f);
     private Color activeColor = new Color(1f, 1f, 1f);
 
+    [HideInInspector]
+    public string FullName;
+
     private GameObject _nameCanvas;
     public GameObject NameCanvas
     {
@@ -27,8 +30,8 @@ public class ICharacterScript : MonoBehaviour {
     public int AttackStat = 10;
     public int DefenseStat = 20;
     public int Health = 100;
-    public int MovementStat = 100;
-
+    public int MovementStat; 
+    
     public bool IsPlayer = false;
 
     public UnitType Type;

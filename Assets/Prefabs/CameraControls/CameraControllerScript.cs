@@ -7,7 +7,8 @@ public class CameraControllerScript : MonoBehaviour {
     float cameraEdge = 0.04f;
     
     // Member fields
-    private GameObject cameraInstance;
+    [HideInInspector]
+    public GameObject cameraInstance;
     private bool canMove = true;
 
     [SerializeField]

@@ -17,7 +17,6 @@ public class GameManagerScript : MonoBehaviour {
     private Coordinate destination;
     private Animator anim;
     private List<GameObject> units;
-    private int currentMoveCosts;
     private int currentMoveAvailable;
     private int collectedCrates = 0;
     private GameObject temporaryHit;
@@ -63,6 +62,7 @@ public class GameManagerScript : MonoBehaviour {
             SetupMove();
 
             currentUnit.GetComponent<ICharacterScript>().Active = true;
+            GameObjects.CameraController.cameraInstance.transform.position = currentUnit.transform.position;
 
             UpdateNameBadges();   
 
@@ -77,16 +77,18 @@ public class GameManagerScript : MonoBehaviour {
 
     private void UpdateNameBadges()
     {
+        var currentUnitScript = currentUnit.GetComponent<ICharacterScript>();
         var hud = GameObject.Find("/Standard HUD");
-        var a = hud.transform.FindChild("CurrentBadge");
-        var b = a.FindChild("Name");
-        var c = b.GetComponent<Text>();
-        c.text = currentUnit.GetComponent<ICharacterScript>().Name;
+        var currentUnitPanel = hud.transform.FindChild("CurrentUnit");
+        var currentUnitName = currentUnitPanel.FindChild("Name").GetComponent<Text>();
+        var currentUnitMoves = currentUnitPanel.FindChild("Moves").GetComponent<Text>();
+        currentUnitName.text = currentUnit.GetComponent<ICharacterScript>().FullName;
+        currentUnitMoves.text = String.Format("{0} out of {1} moves remaining", currentMoveAvailable, currentUnitScript.MovementStat);
 
-        var d = hud.transform.FindChild("NextBadge");
+        var d = hud.transform.FindChild("NextUnit");
         var e = d.FindChild("Name");
         var f = e.GetComponent<Text>();
-        f.text = units.Any() ? units[0].GetComponent<ICharacterScript>().Name : "Nobody";
+        f.text = units.Any() ? string.Format("{0} is next!", units[0].GetComponent<ICharacterScript>().FullName) : "Nobody is next.";
     }
 
     private void SetupMove()
@@ -94,7 +96,6 @@ public class GameManagerScript : MonoBehaviour {
         anim = currentUnit.GetComponent<Animator>();
         var unitScript = currentUnit.GetComponent<ICharacterScript>();
         unitMoving = false;
-        currentMoveCosts = 0;
         currentMoveAvailable = unitScript.MovementStat;
 
         GameObjects.GridGenerator.GetAccessibleTiles(unitScript.currentLocation, unitScript.Type == UnitType.Enemy, unitScript.MovementStat);
@@ -262,6 +263,16 @@ public class GameManagerScript : MonoBehaviour {
         ready = true;
     }
 
+    public void UpdateLocation(int weight)
+    {
+        if (currentUnit.GetComponent<ICharacterScript>().currentLocation != destination)
+        {
+            currentUnit.GetComponent<ICharacterScript>().currentLocation = destination;
+            currentMoveAvailable -= weight;
+            UpdateNameBadges();
+        }
+    }
+
 
     private bool ready = false;
     // Update is called once per frame
@@ -414,8 +425,7 @@ public class GameManagerScript : MonoBehaviour {
                 oldLocationScript.OccupierType = UnitType.None;
 
                 // Completed journey to tile
-                currentUnit.GetComponent<ICharacterScript>().currentLocation = destination;
-                currentMoveCosts += newLocationScript.Weight;
+                UpdateLocation(newLocationScript.Weight);
 
                 // Mark occupied
                 newLocationScript.occupied = true;
@@ -448,13 +458,9 @@ public class GameManagerScript : MonoBehaviour {
                 {
                     anim.SetBool("Walking", false);
                     unitMoving = false;
-
-                    currentMoveAvailable -= currentMoveCosts;
                     
                     if (currentMoveAvailable <= 0)
                         GetNextUnit();
-
-                    currentMoveCosts = 0;
                 }
             }
         }

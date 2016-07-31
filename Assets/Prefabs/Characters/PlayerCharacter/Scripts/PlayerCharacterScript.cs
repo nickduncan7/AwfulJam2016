@@ -7,9 +7,9 @@ using UnityEngine.UI;
 
 public class PlayerCharacterScript : ICharacterScript
 {
-    public string FullName
+    public new string FullName
     {
-        get { return "Grandpa " + Name; }
+        get { return base.FullName = "Grandpa " + Name; }
     }
 
 	// Use this for initialization
