@@ -24,7 +24,7 @@ public class HexTile : MonoBehaviour {
     public bool Traversible = true;
 
     [SerializeField]
-    public TileRotation Rotation = TileRotation.ZeroDegrees;
+    public Rotation Rotation = Rotation.ZeroDegrees;
 
     [SerializeField]
     public TileContents Contents = TileContents.Nothing;
@@ -248,22 +248,22 @@ public class HexTile : MonoBehaviour {
         switch (Rotation)
         {
             default:
-            case TileRotation.ZeroDegrees:
+            case Rotation.ZeroDegrees:
                 transform.rotation = Quaternion.Euler(-90, 0, 90);
                 break;
-            case TileRotation.SixtyDegrees:
+            case Rotation.SixtyDegrees:
                 transform.rotation = Quaternion.Euler(-90, 60, 90);
                 break;
-            case TileRotation.HundredTwentyDegrees:
+            case Rotation.HundredTwentyDegrees:
                 transform.rotation = Quaternion.Euler(-90, 120, 90);
                 break;
-            case TileRotation.OneEightyDegrees:
+            case Rotation.OneEightyDegrees:
                 transform.rotation = Quaternion.Euler(-90, 180, 90);
                 break;
-            case TileRotation.TwoFortyDegrees:
+            case Rotation.TwoFortyDegrees:
                 transform.rotation = Quaternion.Euler(-90, 240, 90);
                 break;
-            case TileRotation.ThreeHundredDegrees:
+            case Rotation.ThreeHundredDegrees:
                 transform.rotation = Quaternion.Euler(-90, 300, 90);
                 break;
         }
@@ -294,9 +294,9 @@ public class HexTile : MonoBehaviour {
                 break;
         }
 
-        if (meshRenderer.materials[1].mainTexture != desiredTexture)
+        if (meshRenderer.sharedMaterials[1].mainTexture != desiredTexture)
         {
-            meshRenderer.materials[1].mainTexture = desiredTexture;
+            meshRenderer.sharedMaterials[1].mainTexture = desiredTexture;
         }
 
         if (!inEditor)
@@ -411,19 +411,24 @@ public class HexTile : MonoBehaviour {
                 break;
             case TileContents.Guard:
                 var guardInstance = Instantiate(GameObjects.GridGenerator.GuardPrefab, transform.position, Quaternion.Euler(0, 180, 0)) as GameObject;
+                var guardScript = guardInstance.GetComponent<GuardScript>();
+                guardScript.currentLocation = Coordinate;
+                guardScript.indicator = indicator;
                 guardInstance.transform.parent = null;
                 occupied = true;
                 Occupier = guardInstance;
                 OccupierType = UnitType.Enemy;
-                guardInstance.GetComponent<GuardScript>().currentLocation = Coordinate;
+                guardScript.PostSpawn();
                 break;
         }
     }
 
-    public void DestroyContents()
+    public TileContents DestroyContents()
     {
         if (contentInstance != null)
             Destroy(((GameObject) contentInstance));
+
+        return Contents;
     }
 
     // Use this for initialization
@@ -435,7 +440,7 @@ public class HexTile : MonoBehaviour {
 }
 
 [Serializable]
-public enum TileRotation
+public enum Rotation
 {
     ZeroDegrees,
     SixtyDegrees,

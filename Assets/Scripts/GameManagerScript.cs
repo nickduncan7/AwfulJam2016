@@ -19,6 +19,7 @@ public class GameManagerScript : MonoBehaviour {
     private List<GameObject> units;
     private int currentMoveCosts;
     private int currentMoveAvailable;
+    private int collectedCrates = 0;
 
     private List<GameObject> allUnits
     {
@@ -26,7 +27,7 @@ public class GameManagerScript : MonoBehaviour {
     }
 
     // Private members for ray polling
-    private float pollInterval = 0.2f;
+    private float pollInterval = 0.13f;
     private float currentTime;
 
     // Public members
@@ -111,6 +112,13 @@ public class GameManagerScript : MonoBehaviour {
         GetNextUnit();
 
         UpdateNameBadges();
+    }
+
+    private void UpdateUI()
+    {
+        var indicators = GameObject.Find("/Standard HUD").transform.FindChild("Indicators");
+        var crateIndicator = indicators.FindChild("CrateIndicator");
+        crateIndicator.FindChild("Text").GetComponent<Text>().text = collectedCrates.ToString();
     }
 
     private void endTurn()
@@ -382,7 +390,13 @@ public class GameManagerScript : MonoBehaviour {
                 var oldLocationScript = Grid.GetTileAtCoordinates(location).GetComponent<HexTile>();
                 newLocationScript.pathHighlighted = false;
                 newLocationScript.UpdateMaterial();
-                newLocationScript.DestroyContents();
+
+                var destroyedTileContents = newLocationScript.DestroyContents();
+                if (destroyedTileContents == TileContents.Crate)
+                {
+                    collectedCrates++;
+                    UpdateUI();
+                }
 
                 oldLocationScript.occupied = false;
                 oldLocationScript.Occupier = null;
@@ -406,8 +420,10 @@ public class GameManagerScript : MonoBehaviour {
                 {
                     enemyScript = enemy.GetComponent<GuardScript>();
 
-                    if (Coordinate.Distance(enemyScript.currentLocation, destination) <= 9)
+                    if (Coordinate.Distance(enemyScript.currentLocation, destination) <= 7)
+                    {
                         enemyScript.ScanForPlayers();
+                    }
                 }
 
                 startTime = Time.time;

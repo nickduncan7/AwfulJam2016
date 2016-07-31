@@ -13,6 +13,7 @@ public class GuardScript : ICharacterScript
     }
 
     public GameObject target;
+    public GameObject indicator;
     public Coordinate DestinationCoordinate;
 
     // Use this for initialization
@@ -45,7 +46,35 @@ public class GuardScript : ICharacterScript
         Random.InitState(Random.Range(0, 10000).GetHashCode());
 
         substanceMaterial.RebuildTextures();
+    }
 
+    public void PostSpawn()
+    {
+        //Read properties from indicator and change accordingly
+        var indicatorScript = indicator.GetComponent<GuardIndicatorScript>();
+
+        switch (indicatorScript.InitialDirection)
+        {
+            default:
+            case Rotation.ZeroDegrees:
+                transform.rotation = Quaternion.Euler(0, 0, 0);
+                break;
+            case Rotation.SixtyDegrees:
+                transform.rotation = Quaternion.Euler(0, 60, 0);
+                break;
+            case Rotation.HundredTwentyDegrees:
+                transform.rotation = Quaternion.Euler(0, 120, 0);
+                break;
+            case Rotation.OneEightyDegrees:
+                transform.rotation = Quaternion.Euler(0, 180, 0);
+                break;
+            case Rotation.TwoFortyDegrees:
+                transform.rotation = Quaternion.Euler(0, 240, 0);
+                break;
+            case Rotation.ThreeHundredDegrees:
+                transform.rotation = Quaternion.Euler(0, 300, 0);
+                break;
+        }
     }
 
     public WallLocation? GetRotation()

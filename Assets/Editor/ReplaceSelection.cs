@@ -39,19 +39,17 @@ public class ReplaceSelection : ScriptableWizard
         if (replacement == null)
             return;
 
-        Undo.RegisterSceneUndo("Replace Selection");
-
         Transform[] transforms = Selection.GetTransforms(
             SelectionMode.TopLevel | SelectionMode.OnlyUserModifiable);
 
         foreach (Transform t in transforms)
         {
             GameObject g;
-            PrefabType pref = EditorUtility.GetPrefabType(replacement);
+            PrefabType pref = PrefabUtility.GetPrefabType(replacement);
 
             if (pref == PrefabType.Prefab || pref == PrefabType.ModelPrefab)
             {
-                g = (GameObject)EditorUtility.InstantiatePrefab(replacement);
+                g = (GameObject)PrefabUtility.InstantiatePrefab(replacement);
             }
             else
             {

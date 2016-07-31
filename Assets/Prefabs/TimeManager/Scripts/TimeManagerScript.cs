@@ -1,10 +1,12 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class TimeManagerScript : MonoBehaviour {
     private Color sunlightColor;
-    private Color sunriseColor = new Color(255 / 255, 255 / 132, 0);
+    private Color sunriseColor = new Color(1f, 0.5f, 0f);
+    private Color disabledUIColor = new Color(0.16f, 0.16f, 0.16f);
 
     private int dayLength = 14;
     private int dayStart = 6;
@@ -75,6 +77,22 @@ public class TimeManagerScript : MonoBehaviour {
         transitioning = true;
     }
 
+    private void UpdateUI()
+    {
+        var clock = GameObject.Find("/Standard HUD").transform.FindChild("Clock");
+        clock.FindChild("MainText").GetComponent<Text>().text = String.Format("{0}:00", CurrentHour > 12 ? CurrentHour - 12 : (CurrentHour < 1 ? CurrentHour + 12 : CurrentHour));
+        if (CurrentHour < 12)
+        {
+            clock.FindChild("AM").GetComponent<Text>().color = Color.white;
+            clock.FindChild("PM").GetComponent<Text>().color = disabledUIColor;
+        }
+        else
+        {
+            clock.FindChild("AM").GetComponent<Text>().color = disabledUIColor;
+            clock.FindChild("PM").GetComponent<Text>().color = Color.white;
+        }
+    }
+
 	// Use this for initialization
 	void Start () {
         CurrentHour = 8;
@@ -87,6 +105,8 @@ public class TimeManagerScript : MonoBehaviour {
         SolarObject.transform.rotation = Quaternion.Euler(0, 0, angle);
 
         sunlightColor = SolarObject.transform.FindChild("Sunlight").GetComponent<Light>().color;
+
+        UpdateUI();
     }
 	
 	// Update is called once per frame
@@ -117,6 +137,7 @@ public class TimeManagerScript : MonoBehaviour {
 
             if (Math.Abs(percentComplete - 1f) < double.Epsilon)
             {
+                UpdateUI();
                 transitionToDay = false;
                 transitionToNight = false;
                 transitioning = false;
