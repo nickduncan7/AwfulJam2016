@@ -20,6 +20,7 @@ public class GameManagerScript : MonoBehaviour {
     private int currentMoveCosts;
     private int currentMoveAvailable;
     private int collectedCrates = 0;
+    private GameObject temporaryHit;
 
     private List<GameObject> allUnits
     {
@@ -296,10 +297,11 @@ public class GameManagerScript : MonoBehaviour {
 
                 var newPath = new List<Coordinate>();
 
+                if (temporaryHit == null || hit.transform == null || hit.transform.gameObject != temporaryHit)
                 foreach (var tile in GameObjects.GridGenerator.tiles)
                 {
                     var tileScript = tile.GetComponent<HexTile>();
-                    if (!newPath.Contains(tileScript.Coordinate) && tileScript.highlighted)
+                    if (tileScript.highlighted)
                     {
                         tileScript.highlighted = false;
                         tileScript.UpdateMaterial();
@@ -316,26 +318,35 @@ public class GameManagerScript : MonoBehaviour {
                     if (!GameObjects.GridGenerator.graph.Contains(dest.Coordinate))
                         return;
 
-                    newPath = Grid.CalculateRoute(location, dest.Coordinate, false, currentMoveAvailable);
-
-                    if (newPath != highlightedPath)
-                        highlightedPath = newPath;
-
-                    if (highlightedPath != null && highlightedPath.Count > 0)
+                    if (hit.transform.gameObject != temporaryHit)
                     {
-                        locationTile.highlighted = true;
-                        locationTile.UpdateMaterial();
+                        temporaryHit = hit.transform.gameObject;
+                        newPath = Grid.CalculateRoute(location, dest.Coordinate, false, currentMoveAvailable);
 
-                        foreach (var node in highlightedPath)
+
+                        if (newPath != highlightedPath)
+                            highlightedPath = newPath;
+
+                        if (highlightedPath != null && highlightedPath.Count > 0)
                         {
-                            var tile = Grid.GetTileAtCoordinates(node).GetComponent<HexTile>();
-                            if (!tile.highlighted)
+                            locationTile.highlighted = true;
+                            locationTile.UpdateMaterial();
+
+                            foreach (var node in highlightedPath)
                             {
-                                tile.highlighted = true;
-                                tile.UpdateMaterial();
+                                var tile = Grid.GetTileAtCoordinates(node).GetComponent<HexTile>();
+                                if (!tile.highlighted)
+                                {
+                                    tile.highlighted = true;
+                                    tile.UpdateMaterial();
+                                }
                             }
                         }
                     }
+                }
+                else
+                {
+                    temporaryHit = null;
                 }
             }
 

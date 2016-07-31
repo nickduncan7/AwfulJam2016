@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class ICharacterScript : MonoBehaviour {
 
-    private Color notActiveColor = new Color(0.9f, 0.9f, 0.9f);
+    private Color notActiveColor = new Color(0.75f, 0.75f, 0.75f);
     private Color activeColor = new Color(1f, 1f, 1f);
 
     private GameObject _nameCanvas;
