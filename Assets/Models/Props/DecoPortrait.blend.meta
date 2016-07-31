@@ -1,72 +1,17 @@
 fileFormatVersion: 2
-guid: 34255ca974638f7499c1fde0a5712ed7
-timeCreated: 1469896234
+guid: f374c4324843af3489259df40ce93d5f
+timeCreated: 1469821300
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: Armature
-    100002: ArmPoleTarget_L
-    100004: ArmPoleTarget_R
-    100006: //RootNode
-    100008: Chest
-    100010: Cylinder_001
-    100012: Foot_L
-    100014: Foot_R
-    100016: ForeArm_L
-    100018: ForeArm_R
-    100020: Hand_L
-    100022: Hand_R
-    100024: Head
-    100026: LegControl_L
-    100028: LegControl_R
-    100030: LowerBack
-    100032: LowerLeg_L
-    100034: LowerLeg_R
-    100036: MasterBone
-    100038: Neck
-    100040: UpperArm_L
-    100042: UpperArm_R
-    100044: UpperBack
-    100046: UpperLeg_L
-    100048: UpperLeg_R
-    400000: Armature
-    400002: ArmPoleTarget_L
-    400004: ArmPoleTarget_R
-    400006: //RootNode
-    400008: Chest
-    400010: Cylinder_001
-    400012: Foot_L
-    400014: Foot_R
-    400016: ForeArm_L
-    400018: ForeArm_R
-    400020: Hand_L
-    400022: Hand_R
-    400024: Head
-    400026: LegControl_L
-    400028: LegControl_R
-    400030: LowerBack
-    400032: LowerLeg_L
-    400034: LowerLeg_R
-    400036: MasterBone
-    400038: Neck
-    400040: UpperArm_L
-    400042: UpperArm_R
-    400044: UpperBack
-    400046: UpperLeg_L
-    400048: UpperLeg_R
-    4300000: Cylinder_001
+    100000: //RootNode
+    400000: //RootNode
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: Plane_001
     7400000: Default Take
-    7400002: Crouching
-    7400004: CrouchingIdle
-    7400006: FoundItem
-    7400008: Idle
-    7400010: Surrender
-    7400012: Walk
-    7400014: ChairSleeping
-    7400016: VeryIdle
     9500000: //RootNode
-    13700000: Cylinder_001
   materials:
     importMaterials: 1
     materialName: 0
