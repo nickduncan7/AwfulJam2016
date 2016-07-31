@@ -13,7 +13,7 @@ public class PlayerCharacterScript : ICharacterScript
     }
 
 	// Use this for initialization
-    void Awake()
+    void Start()
     {
         UnitReady();
 

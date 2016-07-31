@@ -9,9 +9,11 @@ using System.Linq;
 public class HexTile : MonoBehaviour {
     // Private members
     private object contentInstance;
+    private readonly Color defaultEdgeColor = new Color(0f, 0f, 0f);
+    private readonly Color highlightedEdgeColor = new Color(1f, 1f, 1f);
     private readonly Color defaultColor = new Color(0.5f, 0.5f, 0.5f);
-    private readonly Color highlightColor = new Color(0.6f, 0.6f, 0.6f);
-    private readonly Color pathHighlightColor = new Color(0.7f, 0.7f, 0.7f);
+    private readonly Color highlightColor = new Color(0.7f, 0.7f, 0.7f);
+    private readonly Color pathHighlightColor = new Color(0.8f, 0.8f, 0.8f);
 
     [HideInInspector]
     public GameObject indicator;
@@ -303,14 +305,20 @@ public class HexTile : MonoBehaviour {
         {
             if (pathHighlighted)
             {
+                meshRenderer.materials[0].EnableKeyword("_EMISSION");
+                meshRenderer.materials[0].SetColor("_EmissionColor", highlightedEdgeColor);
                 meshRenderer.materials[1].SetColor("_Color", pathHighlightColor);
             }
             else if (highlighted)
             {
+                meshRenderer.materials[0].DisableKeyword("_EMISSION");
+                meshRenderer.materials[0].SetColor("_EmissionColor", defaultEdgeColor);
                 meshRenderer.materials[1].SetColor("_Color", highlightColor);
             }
             else
             {
+                meshRenderer.materials[0].DisableKeyword("_EMISSION");
+                meshRenderer.materials[0].SetColor("_EmissionColor", defaultEdgeColor);
                 meshRenderer.materials[1].SetColor("_Color", defaultColor);
             }
         }

@@ -456,7 +456,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 172762}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.9687572, y: -1.4306564, z: 5.04778}
+  m_LocalPosition: {x: 51.614258, y: 0.10423756, z: 4.7666283}
   m_LocalScale: {x: 1.6, y: 1.6, z: 1.6}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -804,15 +804,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5976a83d53015e0429bc54cf6a0b2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NameCanvas: {fileID: 0}
   currentLocation:
     q: 0
     r: 0
-  Name: 
+    s: 0
+  Name: Ralph
   Initiative: 0
-  AttackStat: 0
-  DefenseStat: 0
-  MovementStat: 0
+  AttackStat: 10
+  DefenseStat: 20
+  Health: 100
+  MovementStat: 4
+  IsPlayer: 1
+  Type: 1
 --- !u!137 &13701530
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
@@ -822,17 +825,20 @@ SkinnedMeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
   m_Materials:
   - {fileID: -1716326620, guid: 27e9d36c1ad19b9458af38a5e38c2db5, type: 3}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 1
-  m_ReflectionProbeUsage: 1
   m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -842,7 +848,8 @@ SkinnedMeshRenderer:
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
-  m_Mesh: {fileID: 4300000, guid: 3f9533c72919a304ca13d9380499a790, type: 3}
+  m_SkinnedMotionVectors: 1
+  m_Mesh: {fileID: 4300000, guid: 34255ca974638f7499c1fde0a5712ed7, type: 3}
   m_Bones:
   - {fileID: 422490}
   - {fileID: 414750}

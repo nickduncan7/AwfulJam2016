@@ -7,7 +7,16 @@ public class ICharacterScript : MonoBehaviour {
     private Color notActiveColor = new Color(0.9f, 0.9f, 0.9f);
     private Color activeColor = new Color(1f, 1f, 1f);
 
-    public GameObject NameCanvas;
+    private GameObject _nameCanvas;
+    public GameObject NameCanvas
+    {
+        get
+        {
+            if (_nameCanvas == null)
+                _nameCanvas = Instantiate(GameObjects.GameManager.NameCanvasPrefab, transform.position + (2f * Vector3.up), Quaternion.identity) as GameObject;
+            return _nameCanvas;
+        }
+    }
 
     [HideInInspector]
     public Coordinate currentLocation;
@@ -50,8 +59,6 @@ public class ICharacterScript : MonoBehaviour {
 
     public void UnitReady()
     {
-        var nameCanvas = Instantiate(GameObjects.GameManager.NameCanvasPrefab, transform.position + (2f * Vector3.up), Quaternion.identity) as GameObject;
-        NameCanvas = nameCanvas;
         NameCanvas.transform.SetParent(transform);
 
         Active = false;

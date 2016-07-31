@@ -17,7 +17,7 @@ public class GuardScript : ICharacterScript
     public Coordinate DestinationCoordinate;
 
     // Use this for initialization
-    void Awake()
+    void Start()
     {
         UnitReady();
 
@@ -36,12 +36,18 @@ public class GuardScript : ICharacterScript
 
         substanceMaterial.SetProceduralEnum("ShoeSize", Random.Range(0, 3));
         substanceMaterial.SetProceduralEnum("Hair", Random.Range(3, 5));
-        substanceMaterial.SetProceduralEnum("HairColor", Random.Range(0, 3));
+        var hairColor = Random.Range(0, 3);
+        substanceMaterial.SetProceduralEnum("HairColor", hairColor);
+        substanceMaterial.SetProceduralEnum("FacialHairColor", hairColor);
         substanceMaterial.SetProceduralEnum("FacialHairStyle", Random.Range(0, 5));
 
         substanceMaterial.SetProceduralBoolean("Armband", true);
         substanceMaterial.SetProceduralBoolean("Coat", true);
         substanceMaterial.SetProceduralEnum("SkinTone", 1);
+        substanceMaterial.SetProceduralEnum("Coattype", 1);
+
+        substanceMaterial.SetProceduralEnum("CoatColor", 1);
+        substanceMaterial.SetProceduralEnum("PantsColor", 1);
 
         Random.InitState(Random.Range(0, 10000).GetHashCode());
 
