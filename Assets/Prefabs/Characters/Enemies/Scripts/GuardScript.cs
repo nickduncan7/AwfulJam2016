@@ -18,7 +18,8 @@ public class GuardScript : ICharacterScript
 
     public GameObject target;
     public GameObject indicator;
-    public Coordinate DestinationCoordinate;
+    public Coordinate? DestinationCoordinate;
+    public bool Wander;
 
     // Use this for initialization
     void Start()
@@ -85,6 +86,9 @@ public class GuardScript : ICharacterScript
                 transform.rotation = Quaternion.Euler(0, 300, 0);
                 break;
         }
+
+        if (indicatorScript.PatrolRandomly)
+            Wander = true;
     }
 
     public WallLocation? GetRotation()
@@ -158,11 +162,10 @@ public class GuardScript : ICharacterScript
             {
                 var tileScript = GameObjects.GridGenerator.GetTileAtCoordinates(coordinate).GetComponent<HexTile>();
 
-                if (tileScript.OccupierType == UnitType.Friendly)
+                if (tileScript.OccupierType == UnitType.Friendly && !GameObjects.GridGenerator.GetTileAtCoordinates(tileScript.Occupier.GetComponent<PlayerCharacterScript>().currentLocation).GetComponent<HexTile>().Safe)
                 {
                     target = tileScript.Occupier;
                     DestinationCoordinate = tileScript.Coordinate;
-                    Debug.Log("Book 'em, Danno.");
                 }
 
                 //tileScript.highlighted = true;

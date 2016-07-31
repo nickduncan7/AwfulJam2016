@@ -19,6 +19,7 @@ public class GameManagerScript : MonoBehaviour {
     private List<GameObject> units;
     private int currentMoveAvailable;
     private GameObject temporaryHit;
+    private int grandpasSaved = 0;
 
     private List<GameObject> allUnits
     {
@@ -119,12 +120,6 @@ public class GameManagerScript : MonoBehaviour {
         GetNextUnit();
 
         UpdateNameBadges();
-    }
-
-    private void UpdateUI()
-    {
-        var indicators = GameObject.Find("/Standard HUD").transform.FindChild("Indicators");
-        var crateIndicator = indicators.FindChild("CrateIndicator");
     }
 
     private void endTurn()
@@ -282,7 +277,8 @@ public class GameManagerScript : MonoBehaviour {
     // Update is called once per frame
     void Update()
 	{
-        
+
+        if (currentUnit == null) GetNextUnit();
         if (ready)
         {
             if (!currentUnit.GetComponent<ICharacterScript>().IsPlayer)
@@ -446,6 +442,12 @@ public class GameManagerScript : MonoBehaviour {
                 // Completed journey to tile
                 UpdateLocation(newLocationScript.Weight);
 
+                if (newLocationScript.EscapeZone && unitScript.hasDocuments && unitScript.hasLumber && unitScript.hasPickaxe && unitScript.hasShovel)
+                {
+                    grandpasSaved++;
+                    Destroy(currentUnit);
+                }
+
                 // Mark occupied
                 newLocationScript.occupied = true;
                 newLocationScript.Occupier = currentUnit;
@@ -490,17 +492,26 @@ public class GameManagerScript : MonoBehaviour {
         var guardScript = currentUnit.GetComponent<GuardScript>();
         if (!unitMoving)
         {
-            if (guardScript.target == null)
+            if (guardScript.DestinationCoordinate == null)
             {
-                Debug.Log("Unit is guard.");
-                GetNextUnit();
+                if (guardScript.Wander)
+                {
+                    Grid.GetAccessibleTiles(location, false, currentUnit.GetComponent<GuardScript>().MovementStat);
+                    path = Grid.CalculateRoute(location, Grid.graph.OrderBy(x => Guid.NewGuid()).Take(1).First(), true, currentUnit.GetComponent<GuardScript>().MovementStat);
+                    destination = path[0];
+                    unitMoving = true;
+                    return;
+                }
+                else
+                {
+                    GetNextUnit();
+                    return;
+                }
             }
-            else
-            {
-                path = Grid.CalculateRoute(location, destination, true, currentUnit.GetComponent<GuardScript>().MovementStat);
-                destination = path[0];
-                unitMoving = true;
-            }
+
+            path = Grid.CalculateRoute(location, guardScript.DestinationCoordinate.Value, true, currentUnit.GetComponent<GuardScript>().MovementStat);
+            destination = path[0];
+            unitMoving = true;
         }
         else
         {
@@ -531,15 +542,36 @@ public class GameManagerScript : MonoBehaviour {
                 // Completed journey to tile
                 currentUnit.GetComponent<ICharacterScript>().currentLocation = destination;
 
+                if (newLocationScript.Coordinate == guardScript.DestinationCoordinate)
+                {
+                    guardScript.ScanForPlayers();
+                    if (guardScript.target == null)
+                        guardScript.DestinationCoordinate = null;
+                }
+
+                if (newLocationScript.OccupierType == UnitType.Friendly)
+                {
+                    if (newLocationScript.Occupier.GetComponent<PlayerCharacterScript>().hasGun)
+                        Destroy(currentUnit);
+                    else
+                    {
+                        Destroy(newLocationScript.Occupier);
+                        newLocationScript.Occupier = null;
+                        newLocationScript.OccupierType = UnitType.None;
+                    }
+                }
+
                 // Mark occupied
                 newLocationScript.occupied = true;
                 newLocationScript.Occupier = currentUnit;
-                newLocationScript.OccupierType = UnitType.Enemy;
+                newLocationScript.OccupierType = UnitType.Enemy;               
 
                 startTime = Time.time;
 
                 if (path.Count != 0)
                 {
+                    guardScript.ScanForPlayers();
+
                     destination = path[0];
                     path.Remove(destination);
                 }
