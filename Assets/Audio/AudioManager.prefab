@@ -35,7 +35,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011303978530}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 16.54445, y: 10.378626, z: 3.3688252}
+  m_LocalPosition: {x: 32.770042, y: 11.393322, z: -2.5301352}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -140,5 +140,5 @@ MonoBehaviour:
   PickupClip: {fileID: 8300000, guid: 1072ab5a783954a46b9c03864fd03131, type: 3}
   TurnFanfareClip: {fileID: 8300000, guid: e2f9437e28ae6504b9c3b2ab28b9e022, type: 3}
   SpottedClip: {fileID: 8300000, guid: 8b3fde7d828267a4ca5b66a3fee4e4c6, type: 3}
-  UiClickClip: {fileID: 8300000, guid: 1da4b13929da3fd4ab8a4ce51774cc77, type: 3}
+  UIClickClip: {fileID: 8300000, guid: 1da4b13929da3fd4ab8a4ce51774cc77, type: 3}
   playlist: []

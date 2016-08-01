@@ -152,7 +152,7 @@ public class GuardScript : ICharacterScript
                 coordinatesToScan.AddRange(tempNeighbors.Where(neighbor => !scannedCoordinates.Contains(neighbor)));
 
                 // Add all neighbors
-                scannedCoordinates.AddRange(GameObjects.GridGenerator.GetAllNeighbors(tileInDirection, true, scannedCoordinates));
+                scannedCoordinates.AddRange(GameObjects.GridGenerator.GetAllNeighbors(tileInDirection, true));
 
                 origin = tileInDirection;
             }
@@ -161,18 +161,16 @@ public class GuardScript : ICharacterScript
             {
                 var tileScript = GameObjects.GridGenerator.GetTileAtCoordinates(coordinate).GetComponent<HexTile>();
 
-                if (tileScript.OccupierType == UnitType.Friendly && !GameObjects.GridGenerator.GetTileAtCoordinates(tileScript.Occupier.GetComponent<PlayerCharacterScript>().currentLocation).GetComponent<HexTile>().Safe)
+                if (tileScript.occupied && tileScript.OccupierType == UnitType.Friendly && !GameObjects.GridGenerator.GetTileAtCoordinates(coordinate).GetComponent<HexTile>().Safe)
                 {
-                    GameObjects.AudioManager.PlaySound(SoundType.PlayerSpotted);
-                    target = tileScript.Occupier;
-                    DestinationCoordinate = tileScript.Coordinate;
-                }
+                    if (target != tileScript.Occupier)
+                        GameObjects.AudioManager.PlaySound(SoundType.PlayerSpotted);
 
-                //tileScript.highlighted = true;
-                //tileScript.UpdateMaterial();
+                    target = tileScript.Occupier;
+                    DestinationCoordinate = coordinate;
+                }
             }
         }
-
     }
 
     void LateUpdate()

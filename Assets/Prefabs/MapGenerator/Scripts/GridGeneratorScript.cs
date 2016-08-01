@@ -174,14 +174,14 @@ public class GridGeneratorScript : MonoBehaviour {
         return (from neighbor in neighbors where !GameObjects.WallManager.WallExistsBetween(neighbor.Value, target) select neighbor.Value).ToList();
     }
 
-    public List<Coordinate> GetAllNeighbors(Coordinate target, bool traversibleOnly = false, List<Coordinate> coordinatesToExclude = null)
+    public List<Coordinate> GetAllNeighbors(Coordinate target, bool traversibleOnly = false)
     {
         var neighbors = GetNeighborsDirections(target, traversibleOnly);
 
         return neighbors.Select(neighbor => neighbor.Value).ToList();
     }
 
-    public List<KeyValuePair<WallLocation, Coordinate>> GetNeighborsDirections(Coordinate target, bool traversibleOnly = false, List<Coordinate> coordinatesToExclude = null)
+    public List<KeyValuePair<WallLocation, Coordinate>> GetNeighborsDirections(Coordinate target, bool traversibleOnly = false)
     {
         var neighbors = new List<KeyValuePair<WallLocation, Coordinate>>();
         GameObject tile;
@@ -192,8 +192,7 @@ public class GridGeneratorScript : MonoBehaviour {
             tile = GetTileAtCoordinates(target.q, target.r + 1);
             tileScript = tile.GetComponent<HexTile>();
 
-            if (coordinatesToExclude == null || !coordinatesToExclude.Contains(tileScript.Coordinate))
-            if (tile != null && (tileScript.Passable || (tileScript.Passable && traversibleOnly)))
+            if (tile != null && (tileScript.Passable || (tileScript.Passable || traversibleOnly)))
                 neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.Upper, tileScript.Coordinate));
         }
 
@@ -201,8 +200,7 @@ public class GridGeneratorScript : MonoBehaviour {
         {
             tile = GetTileAtCoordinates(target.q, target.r - 1);
             tileScript = tile.GetComponent<HexTile>();
-            if (coordinatesToExclude == null || coordinatesToExclude.Contains(tileScript.Coordinate))
-            if (tile != null && (tileScript.Passable || (tileScript.Passable && traversibleOnly)))
+            if (tile != null && (tileScript.Passable || traversibleOnly))
                 neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.Lower, tileScript.Coordinate));
         }
 
@@ -213,8 +211,7 @@ public class GridGeneratorScript : MonoBehaviour {
                 tile = GetTileAtCoordinates(target.q - 1, target.r);
                 tileScript = tile.GetComponent<HexTile>();
 
-                if (coordinatesToExclude == null || coordinatesToExclude.Contains(tileScript.Coordinate))
-                if (tile != null && (tileScript.Passable || (tileScript.Passable && traversibleOnly)))
+                if (tile != null && (tileScript.Passable || traversibleOnly))
                     neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperLeft, tileScript.Coordinate));
             }
 
@@ -223,8 +220,7 @@ public class GridGeneratorScript : MonoBehaviour {
                 tile = GetTileAtCoordinates(target.q - 1, target.r - 1);
                 tileScript = tile.GetComponent<HexTile>();
 
-                if (coordinatesToExclude == null || coordinatesToExclude.Contains(tileScript.Coordinate))
-                if (tile != null && (tileScript.Passable || (tileScript.Passable && traversibleOnly)))
+                if (tile != null && (tileScript.Passable || traversibleOnly))
                     neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerLeft, tileScript.Coordinate));
             }
 
@@ -233,8 +229,7 @@ public class GridGeneratorScript : MonoBehaviour {
                 tile = GetTileAtCoordinates(target.q + 1, target.r);
                 tileScript = tile.GetComponent<HexTile>();
 
-                if (coordinatesToExclude == null || coordinatesToExclude.Contains(tileScript.Coordinate))
-                if (tile != null && (tileScript.Passable || (tileScript.Passable && traversibleOnly)))
+                if (tile != null && (tileScript.Passable || traversibleOnly))
                     neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperRight, tileScript.Coordinate));
             }
 
@@ -243,8 +238,7 @@ public class GridGeneratorScript : MonoBehaviour {
                 tile = GetTileAtCoordinates(target.q + 1, target.r - 1);
                 tileScript = tile.GetComponent<HexTile>();
 
-                if (coordinatesToExclude == null || coordinatesToExclude.Contains(tileScript.Coordinate))
-                if (tile != null && (tileScript.Passable || (tileScript.Passable && traversibleOnly)))
+                if (tile != null && (tileScript.Passable || traversibleOnly))
                     neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerRight, tileScript.Coordinate));
             }
         }
@@ -255,8 +249,7 @@ public class GridGeneratorScript : MonoBehaviour {
                 tile = GetTileAtCoordinates(target.q - 1, target.r + 1);
                 tileScript = tile.GetComponent<HexTile>();
 
-                if (coordinatesToExclude == null || coordinatesToExclude.Contains(tileScript.Coordinate))
-                if (tile != null && (tileScript.Passable || (tileScript.Passable && traversibleOnly)))
+                if (tile != null && (tileScript.Passable || traversibleOnly))
                     neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperLeft, tileScript.Coordinate));
             }
 
@@ -265,8 +258,7 @@ public class GridGeneratorScript : MonoBehaviour {
                 tile = GetTileAtCoordinates(target.q - 1, target.r);
                 tileScript = tile.GetComponent<HexTile>();
 
-                if (coordinatesToExclude == null || coordinatesToExclude.Contains(tileScript.Coordinate))
-                if (tile != null && (tileScript.Passable || (tileScript.Passable && traversibleOnly)))
+                if (tile != null && (tileScript.Passable || traversibleOnly))
                     neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerLeft, tileScript.Coordinate));
             }
 
@@ -275,8 +267,7 @@ public class GridGeneratorScript : MonoBehaviour {
                 tile = GetTileAtCoordinates(target.q + 1, target.r + 1);
                 tileScript = tile.GetComponent<HexTile>();
 
-                if (coordinatesToExclude == null || coordinatesToExclude.Contains(tileScript.Coordinate))
-                if (tile != null && (tileScript.Passable || (tileScript.Passable && traversibleOnly)))
+                if (tile != null && (tileScript.Passable || traversibleOnly))
                     neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperRight, tileScript.Coordinate));
             }
 
@@ -285,8 +276,7 @@ public class GridGeneratorScript : MonoBehaviour {
                 tile = GetTileAtCoordinates(target.q + 1, target.r);
                 tileScript = tile.GetComponent<HexTile>();
 
-                if (coordinatesToExclude == null || coordinatesToExclude.Contains(tileScript.Coordinate))
-                if (tile != null && (tileScript.Passable || (tileScript.Passable && traversibleOnly)))
+                if (tile != null && (tileScript.Passable || traversibleOnly))
                     neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerRight, tileScript.Coordinate));
             }
         }

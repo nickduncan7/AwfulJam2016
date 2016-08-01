@@ -21,7 +21,6 @@ public class ICharacterScript : MonoBehaviour {
         }
     }
 
-    [HideInInspector]
     public Coordinate currentLocation;
     [HideInInspector]
     public string Name;

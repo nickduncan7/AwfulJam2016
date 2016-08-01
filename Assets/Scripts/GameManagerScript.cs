@@ -18,7 +18,6 @@ public class GameManagerScript : MonoBehaviour {
     private Animator anim;
     private List<GameObject> units;
     private int currentMoveAvailable;
-    private int spaceCount = 0;
     private GameObject temporaryHit;
 
     private List<GameObject> allUnits
@@ -53,21 +52,9 @@ public class GameManagerScript : MonoBehaviour {
 
     [HideInInspector]
     public int grandpasSaved = 0;
-    
-    private GameObject _currentUnit;
-    public GameObject currentUnit
-    {
-        get
-        {
-            if (_currentUnit == null && units.Any())
-                GetNextUnit();
-            return _currentUnit;
-        }
-        set
-        {
-            _currentUnit = value;
-        }
-    }
+
+    [HideInInspector]
+    public GameObject currentUnit;
 
 
     public Coordinate location
@@ -78,13 +65,12 @@ public class GameManagerScript : MonoBehaviour {
     public void GetNextUnit()
     {
         ready = false;
-        spaceCount = 0;
         if (anim != null) anim.SetBool("Walking", false);
 
         if (units.Any())
         {
             ICharacterScript unitScript;
-            if (_currentUnit != null)
+            if (currentUnit != null)
             {
                 unitScript = currentUnit.GetComponent<ICharacterScript>();
                 Grid.GetTileAtCoordinates(location).GetComponent<HexTile>().highlighted = false;
@@ -92,11 +78,11 @@ public class GameManagerScript : MonoBehaviour {
             }
 
             currentUnit = units[0];
-            units.Remove(_currentUnit);
+            units.Remove(currentUnit);
 
             SetupMove();
 
-            if (_currentUnit != null)
+            if (currentUnit != null)
             {
                 unitScript = currentUnit.GetComponent<ICharacterScript>();
                 unitScript.Active = true;
@@ -104,11 +90,10 @@ public class GameManagerScript : MonoBehaviour {
                 if (unitScript.Type == UnitType.Friendly)
                     GameObjects.AudioManager.PlaySound(SoundType.PlayerTurnFanfare);
             }
-
-            UpdateNameBadges();
         }
         else
         {
+            ready = true;
             endTurn();
         }
         ready = true;
@@ -116,7 +101,7 @@ public class GameManagerScript : MonoBehaviour {
 
     private void UpdateNameBadges()
     {
-        if (_currentUnit != null && units.Any())
+        if (currentUnit != null && allUnits.Any())
         {
             var currentUnitScript = currentUnit.GetComponent<ICharacterScript>();
             var hud = GameObject.Find("/Standard HUD");
@@ -135,7 +120,7 @@ public class GameManagerScript : MonoBehaviour {
 
     private void SetupMove()
     {
-        if (_currentUnit != null)
+        if (currentUnit != null)
         {
             anim = currentUnit.GetComponent<Animator>();
             var unitScript = currentUnit.GetComponent<ICharacterScript>();
@@ -160,7 +145,6 @@ public class GameManagerScript : MonoBehaviour {
 
         GetNextUnit();
 
-        UpdateNameBadges();
     }
 
     private void endTurn()
@@ -310,61 +294,71 @@ public class GameManagerScript : MonoBehaviour {
         {
             currentUnit.GetComponent<ICharacterScript>().currentLocation = destination;
             currentMoveAvailable -= weight;
-            UpdateNameBadges();
         }
     }
 
+    void LateUpdate()
+    {
+        UpdateNameBadges();
+    }
 
     private bool ready = false;
     // Update is called once per frame
     void Update()
 	{
-        if (GameObjects.CameraController.Ready && ready)
+        if (ready && !wonGame.HasValue)
         {
-            if (currentUnit.GetComponent<ICharacterScript>().Type == UnitType.Enemy)
+            if (grandpas.Count == 0)
             {
-                GameObjects.CameraController.SetTarget(currentUnit.transform);
+                wonGame = grandpasSaved != 0;
+
+                UnityEngine.SceneManagement.SceneManager.LoadScene("Endgame");
             }
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (currentMoveAvailable == 0)
             {
-                spaceCount += 1;
-            }
-            if (spaceCount >= 4)
-            {
-                var locationTile = Grid.GetTileAtCoordinates(location).GetComponent<HexTile>();
-                locationTile.highlighted = false;
-                locationTile.UpdateMaterial();
+                unitMoving = false;
                 GetNextUnit();
+                foreach (var tile in GameObjects.GridGenerator.tiles)
+                {
+                    var tileScript = tile.GetComponent<HexTile>();
+                    if (tileScript.highlighted || tileScript.pathHighlighted)
+                    {
+                        tileScript.pathHighlighted = tileScript.highlighted = false;
+                        tileScript.UpdateMaterial();
+                    }
+                }
             }
 
-            if (!allUnits.Any()) return;
-            if (currentUnit == null) GetNextUnit();
-            if (currentUnit != null && !wonGame.HasValue)
+            if (GameObjects.CameraController.Ready)
             {
-                if (grandpas.Count == 0)
+                if (currentUnit.GetComponent<ICharacterScript>().Type == UnitType.Enemy)
                 {
-                    if (grandpasSaved != 0)
-                        wonGame = true;
-                    else
-                        wonGame = false;
-
-                    UnityEngine.SceneManagement.SceneManager.LoadScene("Endgame");
+                    GameObjects.CameraController.SetTarget(currentUnit.transform);
                 }
-                if (currentMoveAvailable == 0)
+
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    unitMoving = false;
+                    var locationTile = Grid.GetTileAtCoordinates(location).GetComponent<HexTile>();
+                    locationTile.highlighted = false;
+                    locationTile.UpdateMaterial();
                     GetNextUnit();
                 }
-                if (ready)
+
+                if (!allUnits.Any()) return;
+                if (currentUnit == null) GetNextUnit();
+                if (currentUnit != null)
                 {
-                    if (!currentUnit.GetComponent<ICharacterScript>().IsPlayer)
+                    if (ready)
                     {
-                        GuardMove();
-                    }
-                    else
-                    {
-                        PlayerMove();
+                        if (!currentUnit.GetComponent<ICharacterScript>().IsPlayer)
+                        {
+                            GuardMove();
+                        }
+                        else
+                        {
+                            PlayerMove();
+                        }
                     }
                 }
             }
@@ -399,7 +393,7 @@ public class GameManagerScript : MonoBehaviour {
             }
         }
 
-        if (currentTime >= pollInterval)
+        if (currentTime >= pollInterval && !unitMoving)
         {
             if (!unitMoving && !GameObjects.TimeManager.transitioning)
             {
@@ -556,7 +550,7 @@ public class GameManagerScript : MonoBehaviour {
                 {
                     enemyScript = enemy.GetComponent<GuardScript>();
 
-                    if (Coordinate.Distance(enemyScript.currentLocation, destination) <= 7)
+                    //if (Coordinate.Distance(enemyScript.currentLocation, destination) <= 7)
                     {
                         enemyScript.ScanForPlayers();
                     }
@@ -598,8 +592,14 @@ public class GameManagerScript : MonoBehaviour {
                 }
                 else
                 {
-                    GetNextUnit();
-                    return;
+                    guardScript.ScanForPlayers();
+
+                    if (guardScript.target == null)
+                    {
+                        guardScript.DestinationCoordinate = null;
+                        GetNextUnit();
+                        return;
+                    }
                 }
             }
 

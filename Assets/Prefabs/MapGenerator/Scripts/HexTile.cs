@@ -203,15 +203,12 @@ public class HexTile : MonoBehaviour {
     public Coordinate Coordinate;
 
     [SerializeField]
-    [HideInInspector]
     public bool occupied = false;
 
     [SerializeField]
-    [HideInInspector]
     public UnitType OccupierType = UnitType.None;
 
     [SerializeField]
-    [HideInInspector]
     public GameObject Occupier;
 
     [HideInInspector]
