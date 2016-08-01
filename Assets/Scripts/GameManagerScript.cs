@@ -32,7 +32,7 @@ public class GameManagerScript : MonoBehaviour {
     }
 
     // Private members for ray polling
-    private float pollInterval = 0.13f;
+    private float pollInterval = 0.18f;
     private float currentTime;
 
     // Public members
@@ -75,8 +75,9 @@ public class GameManagerScript : MonoBehaviour {
         get { return currentUnit.GetComponent<ICharacterScript>().currentLocation; }
     }
 
-    public GameObject GetNextUnit()
+    public void GetNextUnit()
     {
+        ready = false;
         spaceCount = 0;
         if (anim != null) anim.SetBool("Walking", false);
 
@@ -99,11 +100,9 @@ public class GameManagerScript : MonoBehaviour {
             {
                 unitScript = currentUnit.GetComponent<ICharacterScript>();
                 unitScript.Active = true;
-                GameObjects.CameraController.cameraInstance.transform.position = currentUnit.transform.position;
+
                 if (unitScript.Type == UnitType.Friendly)
-                {
                     GameObjects.AudioManager.PlaySound(SoundType.PlayerTurnFanfare);
-                }
             }
 
             UpdateNameBadges();
@@ -112,8 +111,7 @@ public class GameManagerScript : MonoBehaviour {
         {
             endTurn();
         }
-
-        return _currentUnit;
+        ready = true;
     }
 
     private void UpdateNameBadges()
@@ -143,6 +141,8 @@ public class GameManagerScript : MonoBehaviour {
             var unitScript = currentUnit.GetComponent<ICharacterScript>();
             unitMoving = false;
             currentMoveAvailable = unitScript.MovementStat;
+
+            GameObjects.CameraController.TransitionTo(currentUnit.transform);
 
             GameObjects.GridGenerator.GetAccessibleTiles(unitScript.currentLocation, unitScript.Type == UnitType.Enemy, unitScript.MovementStat);
         }
@@ -299,12 +299,6 @@ public class GameManagerScript : MonoBehaviour {
             Grid.GetTileAtCoordinates(Grid.SpawnFive).GetComponent<HexTile>().occupied = true;
         }
 
-        StartCoroutine(SetupDelay());
-    }
-
-    private IEnumerator SetupDelay()
-    {
-        yield return new WaitForSeconds(1);
         RollInitiative();
         SetupMove();
         ready = true;
@@ -325,45 +319,53 @@ public class GameManagerScript : MonoBehaviour {
     // Update is called once per frame
     void Update()
 	{
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (GameObjects.CameraController.Ready && ready)
         {
-            spaceCount += 1;
-        }
-        if (spaceCount >= 4)
-        {
-            var locationTile = Grid.GetTileAtCoordinates(location).GetComponent<HexTile>();
-            locationTile.highlighted = false;
-            locationTile.UpdateMaterial();
-            GetNextUnit();
-        }
-
-        if (!allUnits.Any()) return;
-        if (currentUnit == null) GetNextUnit();
-        if (currentUnit != null && !wonGame.HasValue)
-        {
-            if (grandpas.Count == 0)
+            if (currentUnit.GetComponent<ICharacterScript>().Type == UnitType.Enemy)
             {
-                if (grandpasSaved != 0)
-                    wonGame = true;
-                else
-                    wonGame = false;
-
-                UnityEngine.SceneManagement.SceneManager.LoadScene("Endgame");
+                GameObjects.CameraController.SetTarget(currentUnit.transform);
             }
-            if (currentMoveAvailable == 0)
+
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                unitMoving = false;
+                spaceCount += 1;
+            }
+            if (spaceCount >= 4)
+            {
+                var locationTile = Grid.GetTileAtCoordinates(location).GetComponent<HexTile>();
+                locationTile.highlighted = false;
+                locationTile.UpdateMaterial();
                 GetNextUnit();
             }
-            if (ready)
+
+            if (!allUnits.Any()) return;
+            if (currentUnit == null) GetNextUnit();
+            if (currentUnit != null && !wonGame.HasValue)
             {
-                if (!currentUnit.GetComponent<ICharacterScript>().IsPlayer)
+                if (grandpas.Count == 0)
                 {
-                    GuardMove();
+                    if (grandpasSaved != 0)
+                        wonGame = true;
+                    else
+                        wonGame = false;
+
+                    UnityEngine.SceneManagement.SceneManager.LoadScene("Endgame");
                 }
-                else
+                if (currentMoveAvailable == 0)
                 {
-                    PlayerMove();
+                    unitMoving = false;
+                    GetNextUnit();
+                }
+                if (ready)
+                {
+                    if (!currentUnit.GetComponent<ICharacterScript>().IsPlayer)
+                    {
+                        GuardMove();
+                    }
+                    else
+                    {
+                        PlayerMove();
+                    }
                 }
             }
         }
@@ -392,6 +394,7 @@ public class GameManagerScript : MonoBehaviour {
 
                 startTime = Time.time;
                 destination = path[0];
+                GameObjects.CameraController.SetTarget(currentUnit.transform);
                 unitMoving = true;
             }
         }
@@ -570,9 +573,8 @@ public class GameManagerScript : MonoBehaviour {
                 {
                     anim.SetBool("Walking", false);
                     unitMoving = false;
-                    
-                    if (currentMoveAvailable <= 0)
-                        GetNextUnit();
+
+                    GameObjects.CameraController.SetTarget(null);
                 }
             }
         }

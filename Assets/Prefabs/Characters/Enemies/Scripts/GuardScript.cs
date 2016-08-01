@@ -152,7 +152,7 @@ public class GuardScript : ICharacterScript
                 coordinatesToScan.AddRange(tempNeighbors.Where(neighbor => !scannedCoordinates.Contains(neighbor)));
 
                 // Add all neighbors
-                scannedCoordinates.AddRange(GameObjects.GridGenerator.GetAllNeighbors(tileInDirection, true));
+                scannedCoordinates.AddRange(GameObjects.GridGenerator.GetAllNeighbors(tileInDirection, true, scannedCoordinates));
 
                 origin = tileInDirection;
             }
