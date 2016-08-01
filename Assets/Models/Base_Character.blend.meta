@@ -87,7 +87,709 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Default Take
+      takeName: Default Take
+      firstFrame: 0
+      lastFrame: 111
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/MasterBone
+        weight: 1
+      - path: Armature/MasterBone/ArmPoleTarget_L
+        weight: 1
+      - path: Armature/MasterBone/ArmPoleTarget_R
+        weight: 1
+      - path: Armature/MasterBone/LegControl_L
+        weight: 1
+      - path: Armature/MasterBone/LegControl_L/Foot_L
+        weight: 1
+      - path: Armature/MasterBone/LegControl_R
+        weight: 1
+      - path: Armature/MasterBone/LegControl_R/Foot_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/Neck
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/Neck/Head
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L/ForeArm_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L/ForeArm_L/Hand_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R/ForeArm_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R/ForeArm_R/Hand_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_L/LowerLeg_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_R/LowerLeg_R
+        weight: 1
+      - path: Cylinder_001
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: ChairSleeping
+      takeName: ChairSleeping
+      firstFrame: -1
+      lastFrame: 111
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/MasterBone
+        weight: 1
+      - path: Armature/MasterBone/ArmPoleTarget_L
+        weight: 1
+      - path: Armature/MasterBone/ArmPoleTarget_R
+        weight: 1
+      - path: Armature/MasterBone/LegControl_L
+        weight: 1
+      - path: Armature/MasterBone/LegControl_L/Foot_L
+        weight: 1
+      - path: Armature/MasterBone/LegControl_R
+        weight: 1
+      - path: Armature/MasterBone/LegControl_R/Foot_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/Neck
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/Neck/Head
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L/ForeArm_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L/ForeArm_L/Hand_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R/ForeArm_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R/ForeArm_R/Hand_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_L/LowerLeg_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_R/LowerLeg_R
+        weight: 1
+      - path: Cylinder_001
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Crouching
+      takeName: Crouching
+      firstFrame: -1
+      lastFrame: 10
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/MasterBone
+        weight: 1
+      - path: Armature/MasterBone/ArmPoleTarget_L
+        weight: 1
+      - path: Armature/MasterBone/ArmPoleTarget_R
+        weight: 1
+      - path: Armature/MasterBone/LegControl_L
+        weight: 1
+      - path: Armature/MasterBone/LegControl_L/Foot_L
+        weight: 1
+      - path: Armature/MasterBone/LegControl_R
+        weight: 1
+      - path: Armature/MasterBone/LegControl_R/Foot_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/Neck
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/Neck/Head
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L/ForeArm_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L/ForeArm_L/Hand_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R/ForeArm_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R/ForeArm_R/Hand_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_L/LowerLeg_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_R/LowerLeg_R
+        weight: 1
+      - path: Cylinder_001
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: CrouchingIdle
+      takeName: CrouchingIdle
+      firstFrame: -1
+      lastFrame: 95
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/MasterBone
+        weight: 1
+      - path: Armature/MasterBone/ArmPoleTarget_L
+        weight: 1
+      - path: Armature/MasterBone/ArmPoleTarget_R
+        weight: 1
+      - path: Armature/MasterBone/LegControl_L
+        weight: 1
+      - path: Armature/MasterBone/LegControl_L/Foot_L
+        weight: 1
+      - path: Armature/MasterBone/LegControl_R
+        weight: 1
+      - path: Armature/MasterBone/LegControl_R/Foot_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/Neck
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/Neck/Head
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L/ForeArm_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L/ForeArm_L/Hand_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R/ForeArm_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R/ForeArm_R/Hand_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_L/LowerLeg_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_R/LowerLeg_R
+        weight: 1
+      - path: Cylinder_001
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: FoundItem
+      takeName: FoundItem
+      firstFrame: -1
+      lastFrame: 80
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/MasterBone
+        weight: 1
+      - path: Armature/MasterBone/ArmPoleTarget_L
+        weight: 1
+      - path: Armature/MasterBone/ArmPoleTarget_R
+        weight: 1
+      - path: Armature/MasterBone/LegControl_L
+        weight: 1
+      - path: Armature/MasterBone/LegControl_L/Foot_L
+        weight: 1
+      - path: Armature/MasterBone/LegControl_R
+        weight: 1
+      - path: Armature/MasterBone/LegControl_R/Foot_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/Neck
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/Neck/Head
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L/ForeArm_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L/ForeArm_L/Hand_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R/ForeArm_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R/ForeArm_R/Hand_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_L/LowerLeg_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_R/LowerLeg_R
+        weight: 1
+      - path: Cylinder_001
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Idle
+      takeName: Idle
+      firstFrame: -1
+      lastFrame: 48
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/MasterBone
+        weight: 1
+      - path: Armature/MasterBone/ArmPoleTarget_L
+        weight: 1
+      - path: Armature/MasterBone/ArmPoleTarget_R
+        weight: 1
+      - path: Armature/MasterBone/LegControl_L
+        weight: 1
+      - path: Armature/MasterBone/LegControl_L/Foot_L
+        weight: 1
+      - path: Armature/MasterBone/LegControl_R
+        weight: 1
+      - path: Armature/MasterBone/LegControl_R/Foot_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/Neck
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/Neck/Head
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L/ForeArm_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L/ForeArm_L/Hand_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R/ForeArm_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R/ForeArm_R/Hand_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_L/LowerLeg_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_R/LowerLeg_R
+        weight: 1
+      - path: Cylinder_001
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Surrender
+      takeName: Surrender
+      firstFrame: -1
+      lastFrame: 78
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/MasterBone
+        weight: 1
+      - path: Armature/MasterBone/ArmPoleTarget_L
+        weight: 1
+      - path: Armature/MasterBone/ArmPoleTarget_R
+        weight: 1
+      - path: Armature/MasterBone/LegControl_L
+        weight: 1
+      - path: Armature/MasterBone/LegControl_L/Foot_L
+        weight: 1
+      - path: Armature/MasterBone/LegControl_R
+        weight: 1
+      - path: Armature/MasterBone/LegControl_R/Foot_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/Neck
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/Neck/Head
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L/ForeArm_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L/ForeArm_L/Hand_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R/ForeArm_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R/ForeArm_R/Hand_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_L/LowerLeg_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_R/LowerLeg_R
+        weight: 1
+      - path: Cylinder_001
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: VeryIdle
+      takeName: VeryIdle
+      firstFrame: -1
+      lastFrame: 59
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/MasterBone
+        weight: 1
+      - path: Armature/MasterBone/ArmPoleTarget_L
+        weight: 1
+      - path: Armature/MasterBone/ArmPoleTarget_R
+        weight: 1
+      - path: Armature/MasterBone/LegControl_L
+        weight: 1
+      - path: Armature/MasterBone/LegControl_L/Foot_L
+        weight: 1
+      - path: Armature/MasterBone/LegControl_R
+        weight: 1
+      - path: Armature/MasterBone/LegControl_R/Foot_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/Neck
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/Neck/Head
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L/ForeArm_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L/ForeArm_L/Hand_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R/ForeArm_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R/ForeArm_R/Hand_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_L/LowerLeg_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_R/LowerLeg_R
+        weight: 1
+      - path: Cylinder_001
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Walk
+      takeName: Walk
+      firstFrame: -1
+      lastFrame: 31
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/MasterBone
+        weight: 1
+      - path: Armature/MasterBone/ArmPoleTarget_L
+        weight: 1
+      - path: Armature/MasterBone/ArmPoleTarget_R
+        weight: 1
+      - path: Armature/MasterBone/LegControl_L
+        weight: 1
+      - path: Armature/MasterBone/LegControl_L/Foot_L
+        weight: 1
+      - path: Armature/MasterBone/LegControl_R
+        weight: 1
+      - path: Armature/MasterBone/LegControl_R/Foot_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/Neck
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/Neck/Head
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L/ForeArm_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_L/ForeArm_L/Hand_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R/ForeArm_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperBack/Chest/UpperArm_R/ForeArm_R/Hand_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_L/LowerLeg_L
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_R
+        weight: 1
+      - path: Armature/MasterBone/LowerBack/UpperLeg_R/LowerLeg_R
+        weight: 1
+      - path: Cylinder_001
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []

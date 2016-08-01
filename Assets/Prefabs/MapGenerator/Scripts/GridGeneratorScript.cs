@@ -401,6 +401,9 @@ public class GridGeneratorScript : MonoBehaviour {
 
         path.Reverse();
 
+        if (path.Count == 1 && path[0] == end)
+            return null;
+
         return path;
     }
 

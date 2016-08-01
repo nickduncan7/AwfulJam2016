@@ -695,7 +695,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 136152}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 52.85007, y: 0.14641953, z: 19.388445}
+  m_LocalPosition: {x: 37.73011, y: 0.071594715, z: 15.661487}
   m_LocalScale: {x: 1.6, y: 1.6, z: 1.6}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -767,7 +767,7 @@ Animator:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 136152}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 3f9533c72919a304ca13d9380499a790, type: 3}
+  m_Avatar: {fileID: 9000000, guid: 34255ca974638f7499c1fde0a5712ed7, type: 3}
   m_Controller: {fileID: 9100000, guid: 1e8b5c1192a5f19409c8a221b55755dc, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
@@ -804,7 +804,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c69cd94742a647439d3670815ca87e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NameCanvas: {fileID: 0}
+  FullName: 
   currentLocation:
     q: 0
     r: 0
@@ -819,10 +819,7 @@ MonoBehaviour:
   Type: 2
   target: {fileID: 0}
   indicator: {fileID: 0}
-  DestinationCoordinate:
-    q: 0
-    r: 0
-    s: 0
+  Wander: 0
 --- !u!137 &13740626
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
