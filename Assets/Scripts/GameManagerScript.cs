@@ -82,11 +82,12 @@ public class GameManagerScript : MonoBehaviour {
 
         if (units.Any())
         {
+            ICharacterScript unitScript;
             if (_currentUnit != null)
             {
-
+                unitScript = currentUnit.GetComponent<ICharacterScript>();
                 Grid.GetTileAtCoordinates(location).GetComponent<HexTile>().highlighted = false;
-                currentUnit.GetComponent<ICharacterScript>().Active = false;
+                unitScript.Active = false;
             }
 
             currentUnit = units[0];
@@ -96,8 +97,13 @@ public class GameManagerScript : MonoBehaviour {
 
             if (_currentUnit != null)
             {
-                currentUnit.GetComponent<ICharacterScript>().Active = true;
+                unitScript = currentUnit.GetComponent<ICharacterScript>();
+                unitScript.Active = true;
                 GameObjects.CameraController.cameraInstance.transform.position = currentUnit.transform.position;
+                if (unitScript.Type == UnitType.Friendly)
+                {
+                    GameObjects.AudioManager.PlaySound(SoundType.PlayerTurnFanfare);
+                }
             }
 
             UpdateNameBadges();
@@ -331,7 +337,7 @@ public class GameManagerScript : MonoBehaviour {
             GetNextUnit();
         }
 
-        if (!units.Any()) return;
+        if (!allUnits.Any()) return;
         if (currentUnit == null) GetNextUnit();
         if (currentUnit != null && !wonGame.HasValue)
         {

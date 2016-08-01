@@ -163,6 +163,7 @@ public class GuardScript : ICharacterScript
 
                 if (tileScript.OccupierType == UnitType.Friendly && !GameObjects.GridGenerator.GetTileAtCoordinates(tileScript.Occupier.GetComponent<PlayerCharacterScript>().currentLocation).GetComponent<HexTile>().Safe)
                 {
+                    GameObjects.AudioManager.PlaySound(SoundType.PlayerSpotted);
                     target = tileScript.Occupier;
                     DestinationCoordinate = tileScript.Coordinate;
                 }

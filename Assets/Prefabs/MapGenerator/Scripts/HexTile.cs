@@ -486,7 +486,11 @@ public class HexTile : MonoBehaviour {
     public TileContents DestroyContents()
     {
         if (contentInstance != null)
-            Destroy(((GameObject) contentInstance));
+        {
+            Destroy((GameObject) contentInstance);
+            contentInstance = null;
+            GameObjects.AudioManager.PlaySound(SoundType.Pickup);
+        }
 
         return Contents;
     }

@@ -26,5 +26,10 @@ public static class GameObjects
     {
         get { return GameObject.Find("/CameraController").GetComponent<CameraControllerScript>(); }
     }
+
+    public static AudioManagerScript AudioManager
+    {
+        get { return GameObject.Find("/AudioManager").GetComponent<AudioManagerScript>(); }
+    }
 }
 
