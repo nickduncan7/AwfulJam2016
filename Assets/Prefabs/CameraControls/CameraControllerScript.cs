@@ -30,6 +30,11 @@ public class CameraControllerScript : MonoBehaviour {
 	        canMove = !canMove;
 	    }
 
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            cameraInstance.transform.position = GameObjects.GameManager.currentUnit.transform.position;
+        }
+
 	    if (canMove)
 	    {
 	        if (Input.GetKey(KeyCode.D) || Input.mousePosition.x > Screen.width*(1 - cameraEdge))

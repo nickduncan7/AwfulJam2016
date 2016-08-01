@@ -19,11 +19,15 @@ public class GameManagerScript : MonoBehaviour {
     private List<GameObject> units;
     private int currentMoveAvailable;
     private GameObject temporaryHit;
-    private int grandpasSaved = 0;
 
     private List<GameObject> allUnits
     {
         get { return GameObject.FindGameObjectsWithTag("Unit").ToList(); }
+    }
+
+    private List<GameObject> grandpas
+    {
+        get { return allUnits.Where(unit => unit.GetComponent<ICharacterScript>().Type == UnitType.Friendly).ToList(); }
     }
 
     // Private members for ray polling
@@ -43,12 +47,18 @@ public class GameManagerScript : MonoBehaviour {
     public Sprite FilledShovelImage;
     public Sprite FilledPickaxeImage;
 
+    [HideInInspector]
+    public bool? wonGame = null;
+
+    [HideInInspector]
+    public int grandpasSaved = 0;
+    
     private GameObject _currentUnit;
     public GameObject currentUnit
     {
         get
         {
-            if (_currentUnit == null)
+            if (_currentUnit == null && units.Any())
                 GetNextUnit();
             return _currentUnit;
         }
@@ -66,6 +76,8 @@ public class GameManagerScript : MonoBehaviour {
 
     public GameObject GetNextUnit()
     {
+        if (anim != null) anim.SetBool("Walking", false);
+
         if (units.Any())
         {
             if (_currentUnit != null)
@@ -76,15 +88,17 @@ public class GameManagerScript : MonoBehaviour {
             }
 
             currentUnit = units[0];
-            units.Remove(currentUnit);
+            units.Remove(_currentUnit);
 
             SetupMove();
 
-            currentUnit.GetComponent<ICharacterScript>().Active = true;
-            GameObjects.CameraController.cameraInstance.transform.position = currentUnit.transform.position;
+            if (_currentUnit != null)
+            {
+                currentUnit.GetComponent<ICharacterScript>().Active = true;
+                GameObjects.CameraController.cameraInstance.transform.position = currentUnit.transform.position;
+            }
 
-            UpdateNameBadges();   
-
+            UpdateNameBadges();
         }
         else
         {
@@ -96,28 +110,34 @@ public class GameManagerScript : MonoBehaviour {
 
     private void UpdateNameBadges()
     {
-        var currentUnitScript = currentUnit.GetComponent<ICharacterScript>();
-        var hud = GameObject.Find("/Standard HUD");
-        var currentUnitPanel = hud.transform.FindChild("CurrentUnit");
-        var currentUnitName = currentUnitPanel.FindChild("Name").GetComponent<Text>();
-        var currentUnitMoves = currentUnitPanel.FindChild("Moves").GetComponent<Text>();
-        currentUnitName.text = currentUnit.GetComponent<ICharacterScript>().FullName;
-        currentUnitMoves.text = String.Format("{0} out of {1} moves remaining", currentMoveAvailable, currentUnitScript.MovementStat);
+        if (_currentUnit != null && units.Any())
+        {
+            var currentUnitScript = currentUnit.GetComponent<ICharacterScript>();
+            var hud = GameObject.Find("/Standard HUD");
+            var currentUnitPanel = hud.transform.FindChild("CurrentUnit");
+            var currentUnitName = currentUnitPanel.FindChild("Name").GetComponent<Text>();
+            var currentUnitMoves = currentUnitPanel.FindChild("Moves").GetComponent<Text>();
+            currentUnitName.text = currentUnit.GetComponent<ICharacterScript>().FullName;
+            currentUnitMoves.text = String.Format("{0} out of {1} moves remaining", currentMoveAvailable, currentUnitScript.MovementStat);
 
-        var d = hud.transform.FindChild("NextUnit");
-        var e = d.FindChild("Name");
-        var f = e.GetComponent<Text>();
-        f.text = units.Any() ? string.Format("{0} is next!", units[0].GetComponent<ICharacterScript>().FullName) : "Nobody is next.";
+            var d = hud.transform.FindChild("NextUnit");
+            var e = d.FindChild("Name");
+            var f = e.GetComponent<Text>();
+            f.text = units.Any() ? string.Format("{0} is next!", units[0].GetComponent<ICharacterScript>().FullName) : "Nobody is next.";
+        }
     }
 
     private void SetupMove()
     {
-        anim = currentUnit.GetComponent<Animator>();
-        var unitScript = currentUnit.GetComponent<ICharacterScript>();
-        unitMoving = false;
-        currentMoveAvailable = unitScript.MovementStat;
+        if (_currentUnit != null)
+        {
+            anim = currentUnit.GetComponent<Animator>();
+            var unitScript = currentUnit.GetComponent<ICharacterScript>();
+            unitMoving = false;
+            currentMoveAvailable = unitScript.MovementStat;
 
-        GameObjects.GridGenerator.GetAccessibleTiles(unitScript.currentLocation, unitScript.Type == UnitType.Enemy, unitScript.MovementStat);
+            GameObjects.GridGenerator.GetAccessibleTiles(unitScript.currentLocation, unitScript.Type == UnitType.Enemy, unitScript.MovementStat);
+        }
     }
 
     private void RollInitiative()
@@ -215,6 +235,10 @@ public class GameManagerScript : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        // Force to persist
+        DontDestroyOnLoad(this);
+        wonGame = null;
+
         units = new List<GameObject>();
 
         // First Grandpa
@@ -293,17 +317,34 @@ public class GameManagerScript : MonoBehaviour {
     // Update is called once per frame
     void Update()
 	{
-
+        if (!units.Any()) return;
         if (currentUnit == null) GetNextUnit();
-        if (ready)
+        if (currentUnit != null && !wonGame.HasValue)
         {
-            if (!currentUnit.GetComponent<ICharacterScript>().IsPlayer)
+            if (grandpas.Count == 0)
             {
-                GuardMove();
+                if (grandpasSaved != 0)
+                    wonGame = true;
+                else
+                    wonGame = false;
+
+                UnityEngine.SceneManagement.SceneManager.LoadScene("Endgame");
             }
-            else
+            if (currentMoveAvailable == 0)
             {
-                PlayerMove();
+                unitMoving = false;
+                GetNextUnit();
+            }
+            if (ready)
+            {
+                if (!currentUnit.GetComponent<ICharacterScript>().IsPlayer)
+                {
+                    GuardMove();
+                }
+                else
+                {
+                    PlayerMove();
+                }
             }
         }
 	}
@@ -311,8 +352,35 @@ public class GameManagerScript : MonoBehaviour {
     private void PlayerMove()
     {
         currentTime += Time.deltaTime;
-
         var locationTile = Grid.GetTileAtCoordinates(location).GetComponent<HexTile>();
+        if (!unitMoving && !GameObjects.TimeManager.transitioning && Input.GetKeyDown(KeyCode.Space))
+        {
+            locationTile.highlighted = false;
+            locationTile.UpdateMaterial();
+            GetNextUnit();
+        }
+
+        if (!unitMoving && !GameObjects.TimeManager.transitioning && Input.GetMouseButtonDown(1))
+        {
+            locationTile.highlighted = false;
+            locationTile.UpdateMaterial();
+            path = highlightedPath;
+
+            if (path != null && path.Count > 0)
+            {
+                foreach (var node in path)
+                {
+                    var tile = Grid.GetTileAtCoordinates(node).GetComponent<HexTile>();
+                    tile.highlighted = false;
+                    tile.pathHighlighted = true;
+                    tile.UpdateMaterial();
+                }
+
+                startTime = Time.time;
+                destination = path[0];
+                unitMoving = true;
+            }
+        }
 
         if (currentTime >= pollInterval)
         {
@@ -378,31 +446,6 @@ public class GameManagerScript : MonoBehaviour {
             }
 
             currentTime = 0f;
-        }
-
-        if (!unitMoving && !GameObjects.TimeManager.transitioning && Input.GetKeyDown(KeyCode.Space))
-            GetNextUnit();
-
-        if (!unitMoving && !GameObjects.TimeManager.transitioning && Input.GetMouseButtonDown(1))
-        {
-            locationTile.highlighted = false;
-            locationTile.UpdateMaterial();
-            path = highlightedPath;
-
-            if (path != null && path.Count > 0)
-            {
-                foreach (var node in path)
-                {
-                    var tile = Grid.GetTileAtCoordinates(node).GetComponent<HexTile>();
-                    tile.highlighted = false;
-                    tile.pathHighlighted = true;
-                    tile.UpdateMaterial();
-                }
-
-                startTime = Time.time;
-                destination = path[0];
-                unitMoving = true;
-            }
         }
 
         if (unitMoving)
@@ -474,8 +517,11 @@ public class GameManagerScript : MonoBehaviour {
                     }
                     else
                     {
-                        Destroy(currentUnit);
-                        GetNextUnit();
+                        if (!newLocationScript.Safe)
+                        {
+                            Destroy(currentUnit);
+                            GetNextUnit();
+                        }
                     }
                 }
 
@@ -542,7 +588,11 @@ public class GameManagerScript : MonoBehaviour {
             }
 
             path = Grid.CalculateRoute(location, guardScript.DestinationCoordinate.Value, true, currentMoveAvailable);
-            if (path == null) return;
+            if (path == null)
+            {
+                GetNextUnit();
+                return;
+            }
             destination = path[0];
             unitMoving = true;
         }
@@ -611,7 +661,6 @@ public class GameManagerScript : MonoBehaviour {
                 else
                 {
                     guardScript.target = null;
-                    anim.SetBool("Walking", false);
                     unitMoving = false;
                     GetNextUnit();
                 }

@@ -147,8 +147,8 @@ public class TimeManagerScript : MonoBehaviour {
         else
         {
             // TODO: Remove this debugging code
-            if (Input.GetKeyDown(KeyCode.T))
-                AdvanceHour();
+            //if (Input.GetKeyDown(KeyCode.T))
+            //    AdvanceHour();
         }
 	}
 }

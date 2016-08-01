@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -247,7 +246,19 @@ public class HexTile : MonoBehaviour {
     {
         get
         {
-            return (Traversible && !occupied);
+            var isPlayer = GameObjects.GameManager.currentUnit.GetComponent<PlayerCharacterScript>() != null;
+            var isEnemy = GameObjects.GameManager.currentUnit.GetComponent<GuardScript>() != null;
+
+            if (isPlayer)
+            {
+                return ((Traversible && !occupied) || (Traversible && GameObjects.GameManager.currentUnit.GetComponent<PlayerCharacterScript>() != null && GameObjects.GameManager.currentUnit.GetComponent<PlayerCharacterScript>().hasGun));
+            }
+            else if (isEnemy)
+            {
+                return (Traversible && !occupied);
+            }
+
+            return false;
         }
     }
 

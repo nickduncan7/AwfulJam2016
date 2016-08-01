@@ -188,14 +188,14 @@ public class GridGeneratorScript : MonoBehaviour {
         if (graph.Contains(new Coordinate(target.q, target.r + 1)))
         {
             var upper = GetTileAtCoordinates(target.q, target.r + 1);
-            if (upper != null && (upper.GetComponent<HexTile>().Passable || (upper.GetComponent<HexTile>().Traversible && traversibleOnly)))
+            if (upper != null && (upper.GetComponent<HexTile>().Passable || (upper.GetComponent<HexTile>().Passable && traversibleOnly)))
                 neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.Upper, upper.GetComponent<HexTile>().Coordinate));
         }
 
         if (graph.Contains(new Coordinate(target.q, target.r - 1)))
         {
             var lower = GetTileAtCoordinates(target.q, target.r - 1);
-            if (lower != null && (lower.GetComponent<HexTile>().Passable || (lower.GetComponent<HexTile>().Traversible && traversibleOnly)))
+            if (lower != null && (lower.GetComponent<HexTile>().Passable || (lower.GetComponent<HexTile>().Passable && traversibleOnly)))
                 neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.Lower, lower.GetComponent<HexTile>().Coordinate));
         }
 
@@ -204,28 +204,28 @@ public class GridGeneratorScript : MonoBehaviour {
             if (graph.Contains(new Coordinate(target.q - 1, target.r)))
             {
                 var leftUpper = GetTileAtCoordinates(target.q - 1, target.r);
-                if (leftUpper != null && (leftUpper.GetComponent<HexTile>().Passable || (leftUpper.GetComponent<HexTile>().Traversible && traversibleOnly)))
+                if (leftUpper != null && (leftUpper.GetComponent<HexTile>().Passable || (leftUpper.GetComponent<HexTile>().Passable && traversibleOnly)))
                     neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperLeft, leftUpper.GetComponent<HexTile>().Coordinate));
             }
 
             if (graph.Contains(new Coordinate(target.q - 1, target.r - 1)))
             {
                 var leftLower = GetTileAtCoordinates(target.q - 1, target.r - 1);
-                if (leftLower != null && (leftLower.GetComponent<HexTile>().Passable || (leftLower.GetComponent<HexTile>().Traversible && traversibleOnly)))
+                if (leftLower != null && (leftLower.GetComponent<HexTile>().Passable || (leftLower.GetComponent<HexTile>().Passable && traversibleOnly)))
                     neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerLeft, leftLower.GetComponent<HexTile>().Coordinate));
             }
 
             if (graph.Contains(new Coordinate(target.q + 1, target.r)))
             {
                 var rightUpper = GetTileAtCoordinates(target.q + 1, target.r);
-                if (rightUpper != null && (rightUpper.GetComponent<HexTile>().Passable || (rightUpper.GetComponent<HexTile>().Traversible && traversibleOnly)))
+                if (rightUpper != null && (rightUpper.GetComponent<HexTile>().Passable || (rightUpper.GetComponent<HexTile>().Passable && traversibleOnly)))
                     neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperRight, rightUpper.GetComponent<HexTile>().Coordinate));
             }
 
             if (graph.Contains(new Coordinate(target.q + 1, target.r - 1)))
             {
                 var rightLower = GetTileAtCoordinates(target.q + 1, target.r - 1);
-                if (rightLower != null && (rightLower.GetComponent<HexTile>().Passable || (rightLower.GetComponent<HexTile>().Traversible && traversibleOnly)))
+                if (rightLower != null && (rightLower.GetComponent<HexTile>().Passable || (rightLower.GetComponent<HexTile>().Passable && traversibleOnly)))
                     neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerRight, rightLower.GetComponent<HexTile>().Coordinate));
             }
         }
@@ -234,28 +234,28 @@ public class GridGeneratorScript : MonoBehaviour {
             if (graph.Contains(new Coordinate(target.q - 1, target.r + 1)))
             {
                 var leftUpper = GetTileAtCoordinates(target.q - 1, target.r + 1);
-                if (leftUpper != null && (leftUpper.GetComponent<HexTile>().Passable || (leftUpper.GetComponent<HexTile>().Traversible && traversibleOnly)))
+                if (leftUpper != null && (leftUpper.GetComponent<HexTile>().Passable || (leftUpper.GetComponent<HexTile>().Passable && traversibleOnly)))
                     neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperLeft, leftUpper.GetComponent<HexTile>().Coordinate));
             }
 
             if (graph.Contains(new Coordinate(target.q - 1, target.r)))
             {
                 var leftLower = GetTileAtCoordinates(target.q - 1, target.r);
-                if (leftLower != null && (leftLower.GetComponent<HexTile>().Passable || (leftLower.GetComponent<HexTile>().Traversible && traversibleOnly)))
+                if (leftLower != null && (leftLower.GetComponent<HexTile>().Passable || (leftLower.GetComponent<HexTile>().Passable && traversibleOnly)))
                     neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerLeft, leftLower.GetComponent<HexTile>().Coordinate));
             }
 
             if (graph.Contains(new Coordinate(target.q + 1, target.r + 1)))
             {
                 var rightUpper = GetTileAtCoordinates(target.q + 1, target.r + 1);
-                if (rightUpper != null && (rightUpper.GetComponent<HexTile>().Passable || (rightUpper.GetComponent<HexTile>().Traversible && traversibleOnly)))
+                if (rightUpper != null && (rightUpper.GetComponent<HexTile>().Passable || (rightUpper.GetComponent<HexTile>().Passable && traversibleOnly)))
                     neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.UpperRight, rightUpper.GetComponent<HexTile>().Coordinate));
             }
 
             if (graph.Contains(new Coordinate(target.q + 1, target.r)))
             {
                 var rightLower = GetTileAtCoordinates(target.q + 1, target.r);
-                if (rightLower != null && (rightLower.GetComponent<HexTile>().Passable || (rightLower.GetComponent<HexTile>().Traversible && traversibleOnly)))
+                if (rightLower != null && (rightLower.GetComponent<HexTile>().Passable || (rightLower.GetComponent<HexTile>().Passable && traversibleOnly)))
                     neighbors.Add(new KeyValuePair<WallLocation, Coordinate>(WallLocation.LowerRight, rightLower.GetComponent<HexTile>().Coordinate));
             }
         }
