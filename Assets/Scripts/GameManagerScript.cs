@@ -18,6 +18,7 @@ public class GameManagerScript : MonoBehaviour {
     private Animator anim;
     private List<GameObject> units;
     private int currentMoveAvailable;
+    private int spaceCount = 0;
     private GameObject temporaryHit;
 
     private List<GameObject> allUnits
@@ -76,6 +77,7 @@ public class GameManagerScript : MonoBehaviour {
 
     public GameObject GetNextUnit()
     {
+        spaceCount = 0;
         if (anim != null) anim.SetBool("Walking", false);
 
         if (units.Any())
@@ -317,6 +319,18 @@ public class GameManagerScript : MonoBehaviour {
     // Update is called once per frame
     void Update()
 	{
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            spaceCount += 1;
+        }
+        if (spaceCount >= 4)
+        {
+            var locationTile = Grid.GetTileAtCoordinates(location).GetComponent<HexTile>();
+            locationTile.highlighted = false;
+            locationTile.UpdateMaterial();
+            GetNextUnit();
+        }
+
         if (!units.Any()) return;
         if (currentUnit == null) GetNextUnit();
         if (currentUnit != null && !wonGame.HasValue)
@@ -353,13 +367,7 @@ public class GameManagerScript : MonoBehaviour {
     {
         currentTime += Time.deltaTime;
         var locationTile = Grid.GetTileAtCoordinates(location).GetComponent<HexTile>();
-        if (!unitMoving && !GameObjects.TimeManager.transitioning && Input.GetKeyDown(KeyCode.Space))
-        {
-            locationTile.highlighted = false;
-            locationTile.UpdateMaterial();
-            GetNextUnit();
-        }
-
+        
         if (!unitMoving && !GameObjects.TimeManager.transitioning && Input.GetMouseButtonDown(1))
         {
             locationTile.highlighted = false;
