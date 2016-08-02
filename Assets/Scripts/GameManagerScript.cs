@@ -337,11 +337,17 @@ public class GameManagerScript : MonoBehaviour {
                     GameObjects.CameraController.SetTarget(currentUnit.transform);
                 }
 
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (Input.GetKeyDown(KeyCode.Space) && currentUnit.GetComponent<ICharacterScript>().Type == UnitType.Friendly)
                 {
-                    var locationTile = Grid.GetTileAtCoordinates(location).GetComponent<HexTile>();
-                    locationTile.highlighted = false;
-                    locationTile.UpdateMaterial();
+                    foreach (var tile in GameObjects.GridGenerator.tiles)
+                    {
+                        var tileScript = tile.GetComponent<HexTile>();
+                        if (tileScript.highlighted || tileScript.pathHighlighted)
+                        {
+                            tileScript.pathHighlighted = tileScript.highlighted = false;
+                            tileScript.UpdateMaterial();
+                        }
+                    }
                     GetNextUnit();
                 }
 
@@ -420,14 +426,14 @@ public class GameManagerScript : MonoBehaviour {
 
                     if (dest == null)
                         return;
-
+                    
                     if (!GameObjects.GridGenerator.graph.Contains(dest.Coordinate))
                         return;
 
                     if (hit.transform.gameObject != temporaryHit)
                     {
                         temporaryHit = hit.transform.gameObject;
-                        newPath = Grid.CalculateRoute(location, dest.Coordinate, false, currentMoveAvailable);
+                        newPath = Grid.CalculateRoute(location, dest.Coordinate, currentUnit.GetComponent<PlayerCharacterScript>().hasGun, currentMoveAvailable);
                         if (newPath == null) return;
 
                         if (newPath != highlightedPath)
@@ -669,13 +675,35 @@ public class GameManagerScript : MonoBehaviour {
 
                 if (path.Count != 0)
                 {
-                    guardScript.ScanForPlayers();
-
                     destination = path[0];
                     path.Remove(destination);
                 }
                 else
                 {
+                    if (currentMoveAvailable > 0)
+                    {
+                        guardScript.ScanForPlayers();
+                        if (guardScript.target == null)
+                        {
+                            guardScript.DestinationCoordinate = null;
+                            GetNextUnit();
+                            return;
+                        }
+
+                        path = Grid.CalculateRoute(location, guardScript.DestinationCoordinate.Value, true, currentMoveAvailable);
+                        if (path == null)
+                        {
+                            GetNextUnit();
+                            return;
+                        }
+                        else
+                        {
+                            destination = path[0];
+                            unitMoving = true;
+                            return;
+                        }
+                    }
+
                     guardScript.target = null;
                     unitMoving = false;
                     GetNextUnit();

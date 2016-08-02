@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class CameraControllerScript : MonoBehaviour {
     // Constants
@@ -13,6 +14,10 @@ public class CameraControllerScript : MonoBehaviour {
     private bool canChangeCamera = true;
     private bool transitioning = false;
     private Vector3 velocity = Vector3.zero;
+
+    // Private members for finishing transitions
+    private float transitionTime = 2f;
+    private float currentTime;
 
     public Transform TargetTransform;
     public bool Ready = false;
@@ -64,9 +69,11 @@ public class CameraControllerScript : MonoBehaviour {
     {
 	    if (transitioning && TargetTransform)
 	    {
+            currentTime += Time.deltaTime;
             cameraInstance.transform.position = Vector3.SmoothDamp(cameraInstance.transform.position, TargetTransform.position, ref velocity, SlowDamp);
-	        if (cameraInstance.transform.position == TargetTransform.position)
+	        if (Vector3.Distance(cameraInstance.transform.position, TargetTransform.position) < Double.Epsilon || currentTime >= transitionTime)
 	        {
+                currentTime = 0f;
 	            transitioning = false;
 	            Ready = true;
                 SetTarget(null);
